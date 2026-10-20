@@ -1,0 +1,43 @@
+---
+title: python
+description:
+  Python plugin. Generate Python types (pydantic `BaseModel`s, `TypedDict`s and enums) from your
+  GraphQL schema.
+---
+
+This plugin generates Python types based on your `GraphQLSchema`:
+
+- object & interface types become [pydantic](https://docs.pydantic.dev) `BaseModel` classes
+  (snake_case attributes; keys that differ from the GraphQL name are pinned with
+  `Field(alias=...)`)
+- input types become `TypedDict`
+- enums become `class X(str, Enum)`
+- scalars map to native Python types (`ID`/`String` → `str`, `Int` → `int`, `Float` → `float`,
+  `Boolean` → `bool`, custom scalars → `Any`)
+
+Given a schema:
+
+```graphql
+type User {
+  id: ID!
+  name: String!
+  email: String
+}
+```
+
+The plugin generates:
+
+```python
+from typing import Optional
+from pydantic import BaseModel
+
+
+class User(BaseModel):
+    id: 'str'
+    name: 'str'
+    email: 'Optional[str]' = None
+```
+
+It is the base-types counterpart to
+[`python-operations`](/plugins/python/python-operations), analogous to how `typescript` underpins
+`typescript-operations`.

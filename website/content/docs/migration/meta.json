@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "graphql-cli",
+    "from-0-18",
+    "from-0-13",
+    "from-4-0",
+    "operations-and-client-preset-from-5-0",
+    "apollo-tooling"
+  ],
+  "title": "Migration Guides"
+}

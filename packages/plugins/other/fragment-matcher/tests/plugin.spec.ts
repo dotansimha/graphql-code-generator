@@ -143,6 +143,21 @@ describe('Fragment Matcher Plugin', () => {
       expect(jsxContent).toBeSimilarStringTo(output);
     });
 
+    it('should generate correctly indented code', async () => {
+      const jsContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 2,
+        },
+        {
+          outputFile: 'foo.js',
+        },
+      );
+
+      expect(jsContent).toEqual(`export default ${introspection}\n`);
+    });
+
     it('should be able to use commonjs', async () => {
       const jsContent = await plugin(
         schema,
@@ -252,6 +267,28 @@ describe('Fragment Matcher Plugin', () => {
 
       expect(tsContent).toBeSimilarStringTo(output);
       expect(tsxContent).toBeSimilarStringTo(output);
+    });
+
+    it('should generate correctly indented code', async () => {
+      const tsContent = await plugin(
+        schema,
+        [],
+        {
+          apolloClientVersion: 3,
+        },
+        {
+          outputFile: 'foo.ts',
+        },
+      );
+
+      expect(tsContent).toEqual(`export interface PossibleTypesResultData {
+  possibleTypes: {
+    [key: string]: string[]
+  }
+}
+const result: PossibleTypesResultData = ${apolloClient3Result};
+export default result;
+`);
     });
 
     it('should use es2015 even though commonjs is requested', async () => {

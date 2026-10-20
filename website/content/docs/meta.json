@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "getting-started",
+    "guides",
+    "config-reference",
+    "advanced",
+    "integrations",
+    "custom-codegen",
+    "migration"
+  ]
+}

@@ -14,5 +14,5 @@ The plugin `@graphql-cli/codegen` is deprecated, and no longer maintained.
 Please visit
 [Migrating from GraphQL-CLI to Inspector CLI](https://the-guild.dev/graphql/inspector/docs/migration-guides/from-graphql-cli)
 documentation to get more information about migration from `GraphQL-CLI` to `Inspector CLI` or visit
-[GraphQL-CLI documentation](../../website/src/pages/docs/guides/graphql-cli.mdx) in GraphQL Code
+[GraphQL-CLI documentation](../../website/content/docs/guides/graphql-cli.mdx) in GraphQL Code
 Generator.

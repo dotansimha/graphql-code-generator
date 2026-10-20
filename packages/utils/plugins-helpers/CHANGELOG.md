@@ -1,5 +1,207 @@
 # @graphql-codegen/plugin-helpers
 
+## 7.4.2
+
+### Patch Changes
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3)
+    (from `^11.2.0`, in `dependencies`)
+
+- [#11043](https://github.com/dotansimha/graphql-code-generator/pull/11043)
+  [`31761f9`](https://github.com/dotansimha/graphql-code-generator/commit/31761f9e13573ea777621f857546d098f9c4489c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Update `@graphql-tools/utils` to v12, and
+  other `@graphql-tools/*` dependencies and `graphql-config` to releases that use it, to pick up the
+  fix for [GHSA-7mx3-vvmw-hjmv](https://github.com/advisories/GHSA-7mx3-vvmw-hjmv) (prototype
+  pollution in `mergeDeep`, `@graphql-tools/utils` <= 12.0.0).
+
+  `@graphql-codegen/cli` now unwraps the `AggregateError` that newer `@graphql-tools/load` versions
+  throw, so schema and document syntax errors still print the native `GraphQLError` with its file
+  location.
+
+## 7.4.1
+
+### Patch Changes
+
+- [#11025](https://github.com/dotansimha/graphql-code-generator/pull/11025)
+  [`43d0f65`](https://github.com/dotansimha/graphql-code-generator/commit/43d0f65c5a0f19a9743aef875e7a2ef3fe8c6e35)
+  Thanks [@BuddhaBing](https://github.com/BuddhaBing)! - Widen
+  `Types.SchemaWithLoaderOptions['loader']` to accept a custom loader function
+  (`CustomSchemaLoaderFn`) in addition to a path string.
+
+  A per-entry `schema` custom loader (`{ '<pointer>': { loader, ...options } }`) is resolved by
+  `@graphql-tools/load`'s `useCustomLoader`, which already accepts either a path string (resolved
+  via `require()`) or a function value at runtime (`typeof loaderPointer === 'function'`). Only the
+  TypeScript type restricted `loader` to `string`, forcing consumers who pass an imported loader
+  function (or a class instance exposing a bound `loader` property) to cast the `schema` array to
+  bypass the type error, even though it worked correctly at runtime.
+
+  This is additive and backward compatible — `loader: string` continues to type-check exactly as
+  before.
+
+  Also fixes a schema-cache collision for function loaders in `@graphql-codegen/cli`: the cache key
+  is `JSON.stringify(schemaPointerMap)`, and `JSON.stringify` drops functions, so two `generates`
+  targets using different loader functions for the same pointer
+  (`{ 'schema.graphql': { loader: fnA } }` vs `{ loader: fnB }`) both keyed as
+  `{"schema.graphql":{}}` and the second silently reused the first's schema. Function values are now
+  keyed by object identity (via the existing `getJsObjectId`), so distinct loaders load separately
+  while one function reused across targets still loads once.
+
+- [#11020](https://github.com/dotansimha/graphql-code-generator/pull/11020)
+  [`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `cli` under
+  `strict: true`:
+  - `@graphql-codegen/cli`: `loadCodegenConfig` returns `Promise<LoadCodegenConfigResult | null>`,
+    matching the `null` it resolves to when no config file is found. `YamlCliFlags` includes the
+    kebab-case `ignore-no-documents`, `emit-legacy-common-js-imports` and `import-extension` flags
+    that the CLI reads. `CodegenContext.filepath` is optional, and watch mode only watches the
+    config file when the context has a `filepath`. `CodegenContext.getConfig()` without an argument
+    returns `Types.Config`, and `getConfig(extraConfig)` returns `T & Types.Config`.
+    `CodegenContext.checkModeStaleFiles` is typed as `string[]`. Adds `@types/yargs`,
+    `@types/babel__generator` and `@types/babel__template` as dev dependencies.
+  - `@graphql-codegen/plugin-helpers`: `normalizeInstanceOrArray` and `normalizeConfig` accept
+    `null` and `undefined`, returning `[]`.
+
+  Generated output is unchanged.
+
+- [#11019](https://github.com/dotansimha/graphql-code-generator/pull/11019)
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `plugin-helpers` under
+  `strict: true`:
+  - `@graphql-codegen/plugin-helpers`: `ProfilerEvent.cat` is optional, matching the Trace Event
+    format and `Profiler.run`'s optional `cat`. `FederationMeta`'s reference selection sets are
+    typed recursively (`{ [field: string]: true | ReferenceSelectionSet }`), matching the nested
+    selections `@key`/`@requires`/`@provides` produce. `oldVisit`'s `visitor` param is typed as
+    `OldVisitor`: `enter` and `leave` maps keyed by AST node kind, whose callbacks receive the typed
+    node plus graphql's `key`, `parent`, `path` and `ancestors`. Federation directives missing their
+    `fields` argument, and operations whose root type is missing from the schema, throw a
+    descriptive error.
+  - `@graphql-codegen/typescript` and `@graphql-codegen/typescript-operations`: the
+    `InputValueDefinition` visitor methods take `path` and `ancestors` as required params, since the
+    visitor always passes them.
+
+  Generated output is unchanged.
+
+- [#11009](https://github.com/dotansimha/graphql-code-generator/pull/11009)
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `typescript-operations`
+  under `strict: true` by widening the shared types it calls into:
+  - `@graphql-codegen/plugin-helpers`: `Types.ComplexPluginOutput`'s `prepend` and `append` now
+    accept `null` items. Core already skipped them.
+  - `@graphql-codegen/visitor-plugin-common`: `DeclarationBlock.withComment` accepts `undefined`,
+    `parseEnumValues`'s `mapOrStr` is optional (it already defaulted to `{}`),
+    `ImportSource.namespace` accepts `null`, and `optimizeOperations`'s `includeFragments` is
+    optional.
+  - `@graphql-codegen/typescript-operations`: skips document files without a `document`, and no
+    longer throws when called without the plugin info argument.
+
+  Generated output is unchanged.
+
+## 7.4.0
+
+### Minor Changes
+
+- [#10994](https://github.com/dotansimha/graphql-code-generator/pull/10994)
+  [`1d1153b`](https://github.com/dotansimha/graphql-code-generator/commit/1d1153b3b161fa82057d586bb5fe524e1e17efe3)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Type `oldVisit`'s return value instead of
+  returning `any`. For a `DocumentNode`, the result is now `OldVisitDocumentResult`, whose
+  `definitions` are `unknown[]` because leave visitors can replace each definition with any value
+  (usually a string), and definitions without a leave visitor stay as AST nodes. When a `Document`
+  leave visitor returns its own value, pass its type as `oldVisit<TResult>(...)`. For other roots,
+  the result is `unknown` unless `TResult` is given.
+
+  Code that used the result as `any`, for example
+  `const definitions: string[] = result.definitions`, now needs to filter for strings, cast
+  (`result.definitions as string[]`), or pass `oldVisit<any>(...)`. Runtime behavior and generated
+  output are unchanged.
+
+## 7.3.0
+
+### Minor Changes
+
+- [#10928](https://github.com/dotansimha/graphql-code-generator/pull/10928)
+  [`90229a5`](https://github.com/dotansimha/graphql-code-generator/commit/90229a5406ffeaa16422a0172340fcb53b94b1b9)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add
+  `contentComparison?: 'cache-first' | 'disk'` to control disk-vs-cache write comparison in watch
+  mode.
+
+  In watch mode the CLI caches the hash of the content it last wrote per file and compares new
+  output against that cached hash to skip redundant writes. This assumes generated output is a pure
+  function of the codegen inputs. An output whose content depends on the file's existing content
+  (e.g. a preset that reads the file and rewrites part of it) breaks that assumption: if the file is
+  changed on disk and codegen regenerates content identical to a previous run, the cached hash still
+  matches and the write is skipped, so the on-disk change is never corrected.
+
+  `contentComparison: 'disk'` opts an output into comparing the generated content against the file
+  on disk instead of the in-memory record of what codegen last wrote, so the file is rewritten when
+  it was changed externally. It can be set:
+  - by a preset, on the `GenerateOptions` it returns from `buildGeneratesSection`, or
+  - on the output config (`generates[output].contentComparison`) for any output, including plain
+    plugin outputs without a preset.
+
+  When both are present, the preset's value takes precedence. The default, `'cache-first'`, keeps
+  the existing in-memory-cache behaviour for outputs that are a pure function of their inputs.
+
+### Patch Changes
+
+- [#10930](https://github.com/dotansimha/graphql-code-generator/pull/10930)
+  [`448431a`](https://github.com/dotansimha/graphql-code-generator/commit/448431a6c4bdbfeb68d7e4a3c3d417139f2e1565)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `overwrite` being ignored for
+  preset-based `generates` outputs.
+
+  A `generates` entry that used a preset and set `overwrite` (e.g.
+  `overwrite: { removeStaleFiles: false }`) had that setting silently ignored, so in watch mode its
+  generated files could still be deleted as stale.
+
+  The CLI resolved `overwrite` per generated file by looking the file's path up in
+  `config.generates`. That fails for a preset: its `generates` entry is keyed by the preset's
+  `baseOutputDir`, not by any generated file's path (and a preset can emit files outside that
+  directory), and the lookup additionally required a `plugins` key that preset entries don't have.
+  Both cases fell through to the global `config.overwrite` (default `true`).
+
+## 7.2.1
+
+### Patch Changes
+
+- [#10924](https://github.com/dotansimha/graphql-code-generator/pull/10924)
+  [`0c8f5ba`](https://github.com/dotansimha/graphql-code-generator/commit/0c8f5ba763b6cfb714814d1666f066dbdb91ef02)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix profiler output not being written to the
+  filesystem in watch mode (`--profile --watch`)
+
+  The profiler trace was only written on the non-watch code path, after the watch-mode early return,
+  so a profiled watch session never produced a `codegen-*.json` file.
+
+  The profiler now writes a fresh trace file after the initial run and after every rebuild, with
+  each file containing only that run's events. A failed rebuild does not produce a trace and its
+  events are discarded so they don't leak into the next successful run.
+
+  The `Profiler` now owns its own trace lifecycle:
+  - a new `clear()` method starts a new trace
+  - a new `outputName` property provides the filename for the current trace (`null` for the noop
+    profiler)
+  - filename generation was removed from `CodegenContext`
+
+## 7.2.0
+
+### Minor Changes
+
+- [#10921](https://github.com/dotansimha/graphql-code-generator/pull/10921)
+  [`58cdb31`](https://github.com/dotansimha/graphql-code-generator/commit/58cdb31a4acfa88a3cf7bfcf188de894495c7e1c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Extend `overwrite` with
+  `overwrite.removeStaleFiles` and `overwrite.updateExistingFiles`
+
+  `overwrite` was being used to both remove stale files in watch mode and update existing files.
+  Some plugins such as Server Preset may dynamically return files to write between watch runs (for
+  performance purposes).
+
+  The `overwrite` can now take an object with `overwrite.removeStaleFiles` and
+  `overwrite.updateExistingFiles` fields to allow granular control over actions.
+
+  This is not a breaking change because `overwrite=true|false` still works.
+
 ## 7.1.0
 
 ### Minor Changes

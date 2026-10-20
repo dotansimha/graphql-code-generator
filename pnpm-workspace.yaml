@@ -10,7 +10,6 @@ packages:
   - website
   - examples/**/*
   - dev-test/*
-  - dev-test-apollo-tooling
 allowBuilds:
   '@parcel/watcher': false
   '@swc/core': false
@@ -23,6 +22,15 @@ allowBuilds:
   vue-demi: false
   workerd: false
 overrides:
+  # Without this, transitive deps (e.g. msw, used by @graphql-codegen/typescript-msw via
+  # website) resolve their own graphql@16.x copy alongside the root's graphql@17.x, creating
+  # two physically distinct `graphql` installs. TypeScript then treats types like
+  # `GraphQLSchema` from each copy as incompatible with each other (a "dual package
+  # hazard"), which breaks `pnpm build` with a TS2345 error. Forcing a single resolved
+  # version keeps the whole workspace on one graphql install. Keep this in sync with the
+  # root devDependency's graphql version, and with scripts/match-graphql.js, which applies
+  # the same kind of override for CI's graphql 15/16/17 test matrix.
+  graphql: 17.0.2
   '@rushstack/eslint-patch': 1.16.1
   '@typescript-eslint/eslint-plugin': 8.59.3
   '@typescript-eslint/parser': 8.59.3
@@ -32,3 +40,6 @@ overrides:
   '@typescript-eslint/typescript-estree': 8.59.3
   '@typescript-eslint/utils': 8.59.3
   '@typescript-eslint/visitor-keys': 8.59.3
+  jiti: 2.7.0 # single resolution avoids a duplicate vitest instance breaking init.spec.ts's SnapshotClient
+patchedDependencies:
+  bob-the-bundler@7.0.1: patches/bob-the-bundler@7.0.1.patch

@@ -1,5 +1,38 @@
 # @graphql-codegen/typed-document-node
 
+## 7.2.0
+
+### Minor Changes
+
+- [#11011](https://github.com/dotansimha/graphql-code-generator/pull/11011)
+  [`b3fbb13`](https://github.com/dotansimha/graphql-code-generator/commit/b3fbb13203d4f7683027ba871e13eb5e9cbc6a93)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add `documentMode: 'plainString'`. Documents
+  are generated as plain template strings with fragments embedded, instead of `TypedDocumentString`
+  instances. No class, import or type cast is generated, so each document is typed as `string`.
+
+### Patch Changes
+
+- Updated dependencies
+  [[`b3fbb13`](https://github.com/dotansimha/graphql-code-generator/commit/b3fbb13203d4f7683027ba871e13eb5e9cbc6a93)]:
+  - @graphql-codegen/visitor-plugin-common@7.3.0
+
+## 7.1.1
+
+### Patch Changes
+
+- [#10994](https://github.com/dotansimha/graphql-code-generator/pull/10994)
+  [`1d1153b`](https://github.com/dotansimha/graphql-code-generator/commit/1d1153b3b161fa82057d586bb5fe524e1e17efe3)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Skip documents without a `document` AST
+  instead of throwing from `concatAST` when the plugin is called directly with one, and don't add an
+  empty import when `documentNodeImport` has no module. Generated output from the CLI is unchanged.
+
+- Updated dependencies
+  [[`e5361bc`](https://github.com/dotansimha/graphql-code-generator/commit/e5361bcb7ba0c21d94ead07d7b7dfc3d2b11e98c),
+  [`1d1153b`](https://github.com/dotansimha/graphql-code-generator/commit/1d1153b3b161fa82057d586bb5fe524e1e17efe3),
+  [`be69e9d`](https://github.com/dotansimha/graphql-code-generator/commit/be69e9d1a9c234061754a1922b8b961ec80a2fcb)]:
+  - @graphql-codegen/visitor-plugin-common@7.2.6
+  - @graphql-codegen/plugin-helpers@7.4.0
+
 ## 7.1.0
 
 ### Minor Changes

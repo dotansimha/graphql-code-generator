@@ -5,7 +5,12 @@ import {
   printIntrospectionSchema,
   type DocumentNode,
 } from 'graphql';
-import { oldVisit, PluginFunction, Types } from '@graphql-codegen/plugin-helpers';
+import {
+  oldVisit,
+  type OldVisitDocumentResult,
+  type PluginFunction,
+  type Types,
+} from '@graphql-codegen/plugin-helpers';
 import { transformSchemaAST } from '@graphql-codegen/schema-ast';
 import { optimizeOperations } from '@graphql-codegen/visitor-plugin-common';
 import { TypeScriptDocumentsPluginConfig } from './config.js';
@@ -14,7 +19,7 @@ import { TypeScriptDocumentsVisitor } from './visitor.js';
 export const plugin: PluginFunction<
   TypeScriptDocumentsPluginConfig,
   Types.ComplexPluginOutput
-> = async (inputSchema, rawDocuments, config, { outputFile }) => {
+> = async (inputSchema, rawDocuments, config, { outputFile = '' } = {}) => {
   const schema = config.nullability?.errorHandlingClient
     ? await semanticToStrict(inputSchema)
     : inputSchema;
@@ -36,6 +41,10 @@ export const plugin: PluginFunction<
     };
   }>(
     (prev, document) => {
+      if (!document.document) {
+        return prev;
+      }
+
       prev.all.documentFiles.push(document);
       prev.all.documentNodes.push(document.document);
 
@@ -58,19 +67,27 @@ export const plugin: PluginFunction<
   // For Fragment types to resolve correctly, we must get read all docs (`standard` and `external`)
   // Fragment types are usually (but not always) in `external` files in certain setup, like a monorepo.
   const allDocumentsAST = concatAST(parsedDocuments.all.documentNodes);
-  const visitor = new TypeScriptDocumentsVisitor(schema, config, allDocumentsAST, outputFile);
 
   // We only visit `standard` documents to generate types.
   // `external` documents are included as references for typechecking and completeness i.e. only used for reading purposes, no writing.
   const documentsToVisitAST = concatAST(parsedDocuments.standard.documentNodes);
+
+  const visitor = new TypeScriptDocumentsVisitor(
+    schema,
+    config,
+    allDocumentsAST,
+    documentsToVisitAST,
+    outputFile,
+  );
   const operationsResult = oldVisit(documentsToVisitAST, {
     leave: visitor,
   });
 
-  const operationsDefinitions: string[] = operationsResult.definitions;
+  // FIXME(strict=true) this is the existing logic, casting to avoid runtime differences
+  const operationsDefinitions: string[] = operationsResult.definitions as string[];
   if (config.addOperationExport) {
     for (const d of allDocumentsAST.definitions) {
-      if ('name' in d) {
+      if ('name' in d && d.name) {
         operationsDefinitions.push(
           `export declare const ${d.name.value}: import("graphql").DocumentNode;`,
         );
@@ -154,6 +171,6 @@ const semanticToStrict = async (schema: GraphQLSchema): Promise<GraphQLSchema> =
 //
 // This helper function filters in nodes that have been turned into strings, i.e. they have been transformed
 // This way, we do not have to explicitly declare a method for every node type to convert them to null
-const findTransformedDefinitions = (visitedResult: any): string[] => {
-  return visitedResult.definitions.filter(def => typeof def === 'string');
+const findTransformedDefinitions = (visitedResult: OldVisitDocumentResult): string[] => {
+  return visitedResult.definitions.filter((def): def is string => typeof def === 'string');
 };

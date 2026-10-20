@@ -9,9 +9,10 @@ export const plugin: PluginFunction<TimePluginConfig> = async (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: TimePluginConfig,
-  { outputFile },
+  info,
 ): Promise<string> => {
-  let format: string;
+  const outputFile = info?.outputFile;
+  let format: string | undefined;
   let message = 'Generated on ';
 
   if (config && typeof config === 'object') {

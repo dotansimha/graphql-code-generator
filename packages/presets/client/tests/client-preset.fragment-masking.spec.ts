@@ -1,5 +1,8 @@
+import * as fs from 'fs';
 import path from 'path';
 import { executeCodegen } from '@graphql-codegen/cli';
+import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
+import { validateTs } from '@graphql-codegen/testing';
 import { preset } from '../src/index.js';
 
 describe('client-preset - fragment masking', () => {
@@ -32,9 +35,12 @@ describe('client-preset - fragment masking', () => {
     expect(fileNames).toContain('out1/graphql.ts');
 
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toMatchInlineSnapshot(`"export * from "./gql";"`);
+    expect(indexFile?.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      export * from "./gql";"
+    `);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import * as types from './graphql';
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -147,7 +153,7 @@ describe('client-preset - fragment masking', () => {
 
     expect(result).toHaveLength(4);
     const gqlFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -267,7 +273,7 @@ describe('client-preset - fragment masking', () => {
 
     const fragmentFile = result.find(file => file.filename.includes('fragment-masking.ts'));
 
-    expect(fragmentFile.content).toMatchInlineSnapshot(`
+    expect(fragmentFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -358,18 +364,17 @@ describe('client-preset - fragment masking', () => {
       "
     `);
 
-    // FIXME(pnpm-update): TypeScript errors. Maybe content shouldn't be merged?
-    // const content = mergeOutputs([
-    //   ...result,
-    //   fs.readFileSync(docPath, 'utf8'),
-    //   `
-    //   function App(props: { data: FooQuery }) {
-    //     const fragment: FooFragment | null | undefined = useFragment(Fragment, props.data.foo);
-    //     return fragment == null ? "no data" : fragment.value;
-    //   }
-    //   `,
-    // ]);
-    // validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    const content = mergeOutputs([
+      ...result,
+      fs.readFileSync(docPath, 'utf8'),
+      `
+      function App(props: { data: FooQuery }) {
+        const fragment: FooFragment | null | undefined = useFragment(Fragment, props.data.foo);
+        return fragment == null ? "no data" : fragment.value;
+      }
+      `,
+    ]);
+    validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
   });
 
   it('can accept list in useFragment', async () => {
@@ -400,7 +405,7 @@ describe('client-preset - fragment masking', () => {
 
     const fragmentFile = result.find(file => file.filename.includes('fragment-masking.ts'));
 
-    expect(fragmentFile.content).toMatchInlineSnapshot(`
+    expect(fragmentFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -491,18 +496,17 @@ describe('client-preset - fragment masking', () => {
       "
     `);
 
-    // FIXME(pnpm-update): TypeScript errors. Maybe content shouldn't be merged?
-    // const content = mergeOutputs([
-    //   ...result,
-    //   fs.readFileSync(docPath, 'utf8'),
-    //   `
-    //   function App(props: { foos: Array<FragmentType<typeof Fragment>> }) {
-    //     const fragments: Array<FooFragment> = useFragment(Fragment, props.foos);
-    //     return fragments.map(f => f.value);
-    //   }
-    //   `,
-    // ]);
-    // validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    const content = mergeOutputs([
+      ...result,
+      fs.readFileSync(docPath, 'utf8'),
+      `
+      function App(props: { foos: Array<FragmentType<typeof Fragment>> }) {
+        const fragments: Array<FooFragment> = useFragment(Fragment, props.foos);
+        return fragments.map(f => f.value);
+      }
+      `,
+    ]);
+    validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
   });
 
   it('useFragment preserves ReadonlyArray<T> type', async () => {
@@ -533,7 +537,7 @@ describe('client-preset - fragment masking', () => {
 
     const fragmentFile = result.find(file => file.filename.includes('fragment-masking.ts'));
 
-    expect(fragmentFile.content).toMatchInlineSnapshot(`
+    expect(fragmentFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -624,18 +628,17 @@ describe('client-preset - fragment masking', () => {
       "
     `);
 
-    // FIXME(pnpm-update): TypeScript errors. Maybe content shouldn't be merged?
-    // const content = mergeOutputs([
-    //   ...result,
-    //   fs.readFileSync(docPath, 'utf8'),
-    //   `
-    //   function App(props: { data: FoosQuery }) {
-    //     const fragments: ReadonlyArray<FooFragment> | null | undefined = useFragment(Fragment, props.data.foos);
-    //     return fragments == null ? "no data" : fragments.map(f => f.value);
-    //   }
-    //   `,
-    // ]);
-    // validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
+    const content = mergeOutputs([
+      ...result,
+      fs.readFileSync(docPath, 'utf8'),
+      `
+      function App(props: { data: FoosQuery }) {
+        const fragments: ReadonlyArray<FooFragment> | null | undefined = useFragment(Fragment, props.data.foos);
+        return fragments == null ? "no data" : fragments.map(f => f.value);
+      }
+      `,
+    ]);
+    validateTs(content, undefined, false, true, [`Duplicate identifier 'DocumentNode'.`], true);
   });
 
   it('#10896 - reserves fragmentMasking=true behaviour, even when used with conditional directives @include/@skip', async () => {
@@ -679,7 +682,7 @@ describe('client-preset - fragment masking', () => {
     expect(result).toHaveLength(4);
 
     const typeFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(typeFile.content).toMatchInlineSnapshot(`
+    expect(typeFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -699,7 +702,7 @@ describe('client-preset - fragment masking', () => {
       export const GetUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"withNicknames"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"UserNicknames"},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"BooleanValue","value":true}}]}]},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"BooleanValue","value":true}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"age"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserNicknames"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"nicknames"}}]}}]} as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;"
     `);
     const fragmentMaskingFile = result.find(file => file.filename === 'out1/fragment-masking.ts');
-    expect(fragmentMaskingFile.content).toMatchInlineSnapshot(`
+    expect(fragmentMaskingFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import { ResultOf, DocumentTypeDecoration, TypedDocumentNode } from '@graphql-typed-document-node/core';
       import { FragmentDefinitionNode } from 'graphql';
@@ -791,13 +794,14 @@ describe('client-preset - fragment masking', () => {
     `);
 
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toMatchInlineSnapshot(`
-      "export * from "./fragment-masking";
+    expect(indexFile?.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      export * from "./fragment-masking";
       export * from "./gql";"
     `);
 
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -844,6 +848,223 @@ describe('client-preset - fragment masking', () => {
       }
 
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
+    `);
+  });
+
+  it('inline fragment in union with conditional directives must make inline fragment fields optional', async () => {
+    const schema = /* GraphQL */ `
+      type Mutation {
+        doSomething: DoSomethingPayload!
+        doAnother: DoAnotherPayload!
+      }
+
+      union DoSomethingPayload =
+        | SystemError
+        | SystemSuccess
+        | ClientError
+        | ClientMissingServiceError
+        | ClientMissingUrlError
+        | ClientRetry
+        | ClientSuccess
+
+      type SystemError {
+        message: String!
+      }
+
+      type SystemSuccess {
+        message: String!
+      }
+
+      type ClientError {
+        changes: ChangeConnection
+        errors: ErrorConnection
+        linkToWebsite: String
+        valid: Boolean!
+      }
+
+      type ClientMissingServiceError {
+        message: String!
+      }
+
+      type ClientMissingUrlError {
+        message: String!
+      }
+
+      type ClientRetry {
+        reason: String!
+      }
+
+      type ClientSuccess {
+        changes: ChangeConnection
+        initial: Boolean!
+        linkToWebsite: String
+        message: String
+        valid: Boolean!
+      }
+
+      union DoAnotherPayload = DoAnotherSuccess | DoAnotherError
+
+      type DoAnotherSuccess {
+        changes: ChangeConnection
+      }
+      type DoAnotherError {
+        errors: ErrorConnection!
+      }
+
+      type ChangeConnection {
+        edges: [ChangeEdge!]!
+      }
+      type ChangeEdge {
+        cursor: String!
+        node: ChangeNode!
+      }
+      type ChangeNode {
+        value: String
+      }
+
+      type ErrorConnection {
+        edges: [ErrorEdge!]!
+      }
+      type ErrorEdge {
+        cursor: String!
+        node: ErrorNode!
+      }
+      type ErrorNode {
+        message: String!
+      }
+    `;
+    const document = /* GraphQL */ `
+      mutation Test($skip: Boolean!) {
+        doSomething {
+          __typename
+          ... on ClientSuccess @skip(if: $skip) {
+            initial
+            valid
+            successMessage: message
+            linkToWebsite
+            changes {
+              edges {
+                __typename
+              }
+              ...Changes
+            }
+          }
+          ... on ClientError @skip(if: $skip) {
+            valid
+            linkToWebsite
+            changes {
+              edges {
+                __typename
+              }
+              ...Changes
+            }
+            errors {
+              ...Errors
+            }
+          }
+          ... on ClientMissingServiceError @skip(if: $skip) {
+            missingServiceError: message
+          }
+          ... on ClientMissingUrlError @skip(if: $skip) {
+            missingUrlError: message
+          }
+          ... on SystemSuccess @include(if: $skip) {
+            message
+          }
+          ... on SystemError @include(if: $skip) {
+            message
+          }
+          ... on ClientRetry {
+            reason
+          }
+        }
+
+        doAnother {
+          __typename
+          ... on DoAnotherSuccess {
+            changes {
+              edges {
+                __typename
+              }
+              ...Changes
+            }
+          }
+          ... on DoAnotherError {
+            errors {
+              ...Errors
+            }
+          }
+        }
+      }
+
+      fragment Changes on ChangeConnection {
+        edges {
+          node {
+            value
+          }
+        }
+      }
+
+      fragment Errors on ErrorConnection {
+        edges {
+          node {
+            message
+          }
+        }
+      }
+    `;
+    const { result } = await executeCodegen({
+      schema,
+      documents: document,
+      generates: {
+        'out1/': {
+          preset,
+        },
+      },
+    });
+
+    const typeFile = result.find(file => file.filename === 'out1/graphql.ts');
+    expect(typeFile?.content).toMatchInlineSnapshot(`
+      "/* eslint-disable */
+      /** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+      export type TestMutationVariables = Exact<{
+        skip: boolean;
+      }>;
+
+
+      export type TestMutation = { doSomething:
+          | { __typename: 'ClientError' } & { valid?: boolean, linkToWebsite?: string | null, changes?: (
+              { edges: Array<{ __typename: 'ChangeEdge' }> }
+              & { ' $fragmentRefs'?: { 'ChangesFragment': ChangesFragment } }
+            ) | null, errors?: { ' $fragmentRefs'?: { 'ErrorsFragment': ErrorsFragment } } | null }
+          | { __typename: 'ClientMissingServiceError' } & { missingServiceError?: string }
+          | { __typename: 'ClientMissingUrlError' } & { missingUrlError?: string }
+          | { __typename: 'ClientRetry', reason: string }
+          | { __typename: 'ClientSuccess' } & { initial?: boolean, valid?: boolean, linkToWebsite?: string | null, successMessage?: string | null, changes?: (
+              { edges: Array<{ __typename: 'ChangeEdge' }> }
+              & { ' $fragmentRefs'?: { 'ChangesFragment': ChangesFragment } }
+            ) | null }
+          | { __typename: 'SystemError' } & { message?: string }
+          | { __typename: 'SystemSuccess' } & { message?: string }
+        , doAnother:
+          | { __typename: 'DoAnotherError', errors: { ' $fragmentRefs'?: { 'ErrorsFragment': ErrorsFragment } } }
+          | { __typename: 'DoAnotherSuccess', changes: (
+              { edges: Array<{ __typename: 'ChangeEdge' }> }
+              & { ' $fragmentRefs'?: { 'ChangesFragment': ChangesFragment } }
+            ) | null }
+         };
+
+      export type ChangesFragment = { edges: Array<{ node: { value: string | null } }> } & { ' $fragmentName'?: 'ChangesFragment' };
+
+      export type ErrorsFragment = { edges: Array<{ node: { message: string } }> } & { ' $fragmentName'?: 'ErrorsFragment' };
+
+      export const ChangesFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Changes"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChangeConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<ChangesFragment, unknown>;
+      export const ErrorsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Errors"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ErrorConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<ErrorsFragment, unknown>;
+      export const TestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Test"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skip"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"doSomething"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientSuccess"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"initial"}},{"kind":"Field","name":{"kind":"Name","value":"valid"}},{"kind":"Field","alias":{"kind":"Name","value":"successMessage"},"name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"linkToWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"changes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Changes"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientError"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"valid"}},{"kind":"Field","name":{"kind":"Name","value":"linkToWebsite"}},{"kind":"Field","name":{"kind":"Name","value":"changes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Changes"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Errors"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientMissingServiceError"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"missingServiceError"},"name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientMissingUrlError"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"missingUrlError"},"name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemSuccess"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"SystemError"}},"directives":[{"kind":"Directive","name":{"kind":"Name","value":"include"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skip"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ClientRetry"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"reason"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"doAnother"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"DoAnotherSuccess"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"changes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}}]}},{"kind":"FragmentSpread","name":{"kind":"Name","value":"Changes"}}]}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"DoAnotherError"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Errors"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Changes"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ChangeConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Errors"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ErrorConnection"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"message"}}]}}]}}]}}]} as unknown as DocumentNode<TestMutation, TestMutationVariables>;"
     `);
   });
 });

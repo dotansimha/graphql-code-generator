@@ -48,7 +48,7 @@ export async function findAndLoadGraphQLConfig(filepath?: string): Promise<Graph
 
 // Kamil: user might load a config that is not GraphQL Config
 //        so we need to check if it's a regular config or not
-function isGraphQLConfig(config: GraphQLConfig): config is GraphQLConfig {
+function isGraphQLConfig(config: GraphQLConfig | undefined): config is GraphQLConfig {
   if (!config) {
     return false;
   }

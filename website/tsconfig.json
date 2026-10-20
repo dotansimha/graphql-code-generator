@@ -1,28 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2019",
-    "baseUrl": "./src",
+    "target": "es2022",
     "module": "esnext",
+    "moduleResolution": "Bundler",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "noEmit": true,
-    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "useUnknownInCatchVariables": false,
     "types": ["node"],
-    "allowImportingTsExtensions": true,
-    "ignoreDeprecations": "6.0",
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "noEmit": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["scripts"]
 }

@@ -14,7 +14,7 @@ export function parseEnumValues({
   naming,
 }: {
   schema: GraphQLSchema;
-  mapOrStr: EnumValuesMap;
+  mapOrStr?: EnumValuesMap;
   ignoreEnumValuesFromSchema?: boolean;
   naming: {
     convert: ConvertFn;

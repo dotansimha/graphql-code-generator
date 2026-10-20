@@ -2,6 +2,7 @@ import fs from 'fs';
 import { createRequire } from 'module';
 import { cpus } from 'os';
 import path from 'path';
+import { pathToFileURL } from 'url';
 import { buildASTSchema, DocumentNode, GraphQLError, GraphQLSchema, isSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
 import { codegen } from '@graphql-codegen/core';
@@ -31,18 +32,17 @@ const makeDefaultLoader = (from: string) => {
   const relativeRequire = createRequire(from);
 
   return async (mod: string) => {
-    return import(
-      isESMModule
-        ? /**
-           * For ESM we currently have no "resolve path" solution
-           * as import.meta is unavailable in a CommonJS context
-           * and furthermore unavailable in stable Node.js.
-           **/
-          // FIXME(pnpm-update): this causes dev-test devDeps to be brought into CLI's package.json, which is not ideal.
-          // Note that `relativeRequire.resolve(mod)` seems to work correctly for ESM as well.
-          mod
-        : relativeRequire.resolve(mod)
-    );
+    const resolved = relativeRequire.resolve(mod);
+    /**
+     * `resolved` is always an absolute filesystem path. In the CJS build, TypeScript
+     * rewrites `import()` into `require()`, which accepts native OS paths as-is. In
+     * the ESM build, `import()` stays a real dynamic import, whose loader parses the
+     * specifier as a URL — a raw Windows path (e.g. `C:\...`) is misread as a `c:`
+     * protocol scheme and rejected with `ERR_UNSUPPORTED_ESM_URL_SCHEME` (see #10935,
+     * which hit the same issue in `@graphql-tools/code-file-loader`). Converting to a
+     * `file://` URL only for the real-ESM case avoids that.
+     */
+    return import(isESMModule ? pathToFileURL(resolved).href : resolved);
   };
 };
 
@@ -87,17 +87,18 @@ export async function executeCodegen(
 
   const cache = createCache();
 
-  // We need a simple string to uniqually identify the provided GraphQLSchema objects for the above cache.
+  // We need a simple string to uniqually identify the provided objects (e.g. GraphQLSchema
+  // instances passed inline, or custom loader functions) for the above cache.
   // Because JavaScript does not provide access to its internal object ids, we need a workaround.
   // Below is a common way to get unique ids for objects in JavaScript,
   // by using a WeakMap and autoincrementing the id.
-  const jsObjectIds = new WeakMap<GraphQLSchema, number>();
+  const jsObjectIds = new WeakMap<object, number>();
   let jsObjectIdCounter = 0;
-  function getJsObjectId(schema: GraphQLSchema): number {
-    if (!jsObjectIds.has(schema)) {
-      jsObjectIds.set(schema, jsObjectIdCounter++);
+  function getJsObjectId(obj: object): number {
+    if (!jsObjectIds.has(obj)) {
+      jsObjectIds.set(obj, jsObjectIdCounter++);
     }
-    return jsObjectIds.get(schema)!;
+    return jsObjectIds.get(obj)!;
   }
 
   function wrapTask(task: () => void | Promise<void>, source: string, taskName: string, ctx: Ctx) {
@@ -220,7 +221,6 @@ export async function executeCodegen(
         task: (ctx, task) => {
           const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
             const outputConfig = generates[filename];
-            const hasPreset = !!outputConfig.preset;
 
             const title = `Generate to ${filename}`;
 
@@ -240,11 +240,20 @@ export async function executeCodegen(
                 let outputSpecificExternalDocuments =
                   normalizeInstanceOrArray<Types.OperationDocument>(outputConfig.externalDocuments);
 
-                const preset: Types.OutputPreset | null = hasPreset
-                  ? typeof outputConfig.preset === 'string'
-                    ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
-                    : outputConfig.preset
-                  : null;
+                let preset: Types.OutputPreset | null;
+                try {
+                  preset = outputConfig.preset
+                    ? typeof outputConfig.preset === 'string'
+                      ? await getPresetByName(outputConfig.preset, makeDefaultLoader(context.cwd))
+                      : outputConfig.preset
+                    : null;
+                } catch (error: any) {
+                  // ctx.errors is what determines CLI success/failure, so it must be pushed here
+                  // before rethrowing — otherwise the CLI reports success even though the
+                  // terminal printed this error.
+                  ctx.errors.push(error);
+                  throw error;
+                }
 
                 if (preset?.prepareDocuments) {
                   outputSpecificDocuments = await preset.prepareDocuments(
@@ -282,8 +291,12 @@ export async function executeCodegen(
                           }
 
                           const hash =
-                            JSON.stringify(schemaPointerMap) +
-                            parsedSchemas.map(getJsObjectId).join(',');
+                            // `JSON.stringify` drops functions, so custom loader functions
+                            // would all serialize to the same key and collide in the cache.
+                            // Key them by object identity instead, like `parsedSchemas` below.
+                            JSON.stringify(schemaPointerMap, (_key, value) =>
+                              typeof value === 'function' ? `[fn:${getJsObjectId(value)}]` : value,
+                            ) + parsedSchemas.map(getJsObjectId).join(',');
                           const result = await cache('schema', hash, async () => {
                             // collect parsed schemas
                             const schemasToMerge: GraphQLSchema[] = [...parsedSchemas];
@@ -522,6 +535,17 @@ export async function executeCodegen(
                               filename: outputArgs.filename,
                               content: output,
                               hooks: outputConfig.hooks || {},
+                              // A preset sets `outputArgs` per output via `buildGeneratesSection`.
+                              // Fall back to `outputConfig` so plugin outputs can opt in too.
+                              contentComparison:
+                                outputArgs.contentComparison ?? outputConfig.contentComparison,
+
+                              // Carry the entry's `overwrite` onto the file so the CLI can honor it per file.
+                              // Unlike `contentComparison`, this is intentionally not
+                              // `outputArgs.overwrite ?? outputConfig.overwrite`: presets should not
+                              // be able to set `overwrite` per file from buildGeneratesSection
+                              // (a capability this doesn't need).
+                              overwrite: outputConfig.overwrite,
                             });
                           };
 

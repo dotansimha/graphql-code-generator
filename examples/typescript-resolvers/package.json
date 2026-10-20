@@ -11,7 +11,7 @@
     "test:end2end": "exit 0"
   },
   "dependencies": {
-    "graphql": "16.14.0",
+    "graphql": "17.0.2",
     "graphql-yoga": "5.21.0"
   },
   "devDependencies": {

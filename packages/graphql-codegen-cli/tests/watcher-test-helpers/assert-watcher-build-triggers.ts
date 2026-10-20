@@ -161,7 +161,7 @@ export const assertBuildTriggers = async (
     );
     expect(onWatchTriggeredMock).toHaveBeenCalledTimes(shouldTriggerBuild.length);
 
-    const ignore = subscribeOpts.ignore ?? [];
+    const ignore = subscribeOpts?.ignore ?? [];
     if (pathsWouldBeIgnoredByParcelWatcher) {
       for (const relPathFromCwd of pathsWouldBeIgnoredByParcelWatcher) {
         if (isGlob(relPathFromCwd)) {
@@ -275,14 +275,16 @@ const assertParcelWouldIgnorePath = (
     const relPathFromCwd = relative(process.cwd(), absPath);
 
     // NOTE: This will not include "./"
-    return relPathFromCwd;
+    // Test expectations are always written with "/" (glob-style), regardless
+    // of platform, so normalize away Windows' "\" separator before comparing.
+    return relPathFromCwd.split(sep).join('/');
   });
 
-  // Match on exact match, or exact match with ./ prefix (or .\ on windows)
+  // Match on exact match, or exact match with "./" prefix
   const hasMatch = parcelIgnoredPathsRelativeFromCwd.some(
     ignorePathRelFromCwd =>
       expectToIgnoreRelPathFromCwd === ignorePathRelFromCwd ||
-      expectToIgnoreRelPathFromCwd === `.${sep}${ignorePathRelFromCwd}`,
+      expectToIgnoreRelPathFromCwd === `./${ignorePathRelFromCwd}`,
   );
 
   try {

@@ -1209,6 +1209,119 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
   });
 });
 
+describe('TypeScript Operations Plugin - @include and @skip with union', () => {
+  it('inline fragment in union with conditional directives must make inline fragment fields optional', async () => {
+    const schema = buildSchema(/* GraphQL */ `
+      type Mutation {
+        doSomething: Payload!
+      }
+
+      union Payload =
+        | SystemError
+        | SystemSuccess
+        | ClientError
+        | ClientMissingServiceError
+        | ClientMissingUrlError
+        | ClientRetry
+        | ClientSuccess
+
+      type SystemError {
+        message: String!
+      }
+
+      type SystemSuccess {
+        message: String!
+      }
+
+      type ClientError {
+        changes: [String!]!
+        errors: [String!]!
+        linkToWebsite: String
+        valid: Boolean!
+      }
+
+      type ClientMissingServiceError {
+        message: String!
+      }
+
+      type ClientMissingUrlError {
+        message: String!
+      }
+
+      type ClientRetry {
+        reason: String!
+      }
+
+      type ClientSuccess {
+        changes: [String!]!
+        initial: Boolean!
+        linkToWebsite: String
+        message: String
+        valid: Boolean!
+      }
+    `);
+    const document = parse(/* GraphQL */ `
+      mutation Test($skip: Boolean!) {
+        doSomething {
+          __typename
+          ... on ClientSuccess @skip(if: $skip) {
+            initial
+            valid
+            successMessage: message
+            linkToWebsite
+            changes
+          }
+          ... on ClientError @skip(if: $skip) {
+            valid
+            linkToWebsite
+            changes
+            errors
+          }
+          ... on ClientMissingServiceError @skip(if: $skip) {
+            missingServiceError: message
+          }
+          ... on ClientMissingUrlError @skip(if: $skip) {
+            missingUrlError: message
+          }
+          ... on SystemSuccess @include(if: $skip) {
+            message
+          }
+          ... on SystemError @include(if: $skip) {
+            message
+          }
+          ... on ClientRetry {
+            reason
+          }
+        }
+      }
+    `);
+    const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
+
+    expect(result).toMatchInlineSnapshot(`
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type TestMutationVariables = Exact<{
+        skip: boolean;
+      }>;
+
+
+      export type TestMutation = { doSomething:
+          | { __typename: 'SystemError' } & { message?: string }
+          | { __typename: 'SystemSuccess' } & { message?: string }
+          | { __typename: 'ClientError' } & { valid?: boolean, linkToWebsite?: string | null, changes?: Array<string>, errors?: Array<string> }
+          | { __typename: 'ClientMissingServiceError' } & { missingServiceError?: string }
+          | { __typename: 'ClientMissingUrlError' } & { missingUrlError?: string }
+          | { __typename: 'ClientRetry', reason: string }
+          | { __typename: 'ClientSuccess' } & { initial?: boolean, valid?: boolean, linkToWebsite?: string | null, changes?: Array<string>, successMessage?: string | null }
+         };
+      "
+    `);
+    validateTs(result, undefined, undefined, undefined, undefined, true);
+  });
+});
+
 describe('TypeScript Operations Plugin - @include and @skip with @defer', () => {
   it('generates conditional object with defer fields when @skip and @include are used with @defer', async () => {
     const schema = buildSchema(/* GraphQL */ `

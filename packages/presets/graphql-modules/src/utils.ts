@@ -182,6 +182,10 @@ export function groupSourcesByModule(
   const grouped: Record<string, Source[]> = {};
 
   for (const source of sources) {
+    if (!source.location) {
+      continue;
+    }
+
     const relativePath = getRelativePath(source.location, basePath);
 
     if (relativePath) {

@@ -1,4 +1,4 @@
-import { dirname, join, resolve } from 'path';
+import { dirname, join, posix } from 'path';
 import * as LZString from 'lz-string'; // lz-string is a package which has CJS/ESM issues. So, we cannot do `import { something } from 'lz-string'`
 import {
   CompilerOptions,
@@ -15,6 +15,7 @@ import {
   ScriptTarget as ScriptTargetType,
   version as tsVersion,
 } from 'typescript';
+import { expect } from 'vitest';
 import { Types } from '@graphql-codegen/plugin-helpers';
 
 export function validateTs(
@@ -26,7 +27,7 @@ export function validateTs(
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
     target: ScriptTarget.ES5,
-    typeRoots: [resolve(require.resolve('typescript'), '../../../@types/')],
+    typeRoots: resolveTypeRoots(),
     jsx: JsxEmit.React,
     allowJs: true,
     skipLibCheck: true,
@@ -58,7 +59,7 @@ export function validateTs(
   }
   if (tsVersion.startsWith('6.')) {
     options.ignoreDeprecations ||= '6.0';
-    // options.types ||= ['node']; FIXME(pnpm-update): causing errors about missing node. Maybe resolving at the wrong location?
+    options.types ||= ['node'];
   }
 
   const contents: string =
@@ -72,7 +73,8 @@ export function validateTs(
           ]),
         ].join('\n');
 
-  const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+  const cwd = resolveCallerDirectory();
+  const testFile = posix.join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
   const errors: string[] = [];
 
   if (compileProgram) {
@@ -86,7 +88,7 @@ export function validateTs(
         shouldCreateNewSourceFile?: boolean,
       ) => {
         if (fileName === testFile) {
-          return createSourceFile(fileName, contents, options.target);
+          return createSourceFile(fileName, contents, options.target ?? languageVersion);
         }
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
@@ -99,7 +101,7 @@ export function validateTs(
         return filename;
       },
       getCurrentDirectory() {
-        return '';
+        return cwd;
       },
       getNewLine() {
         return '\n';
@@ -109,7 +111,7 @@ export function validateTs(
     const allDiagnostics = emitResult.diagnostics;
 
     for (const diagnostic of allDiagnostics) {
-      if (diagnostic.file) {
+      if (diagnostic.file && diagnostic.start !== undefined) {
         const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         errors.push(`${line + 1},${character + 1}: ${message} ->
@@ -177,7 +179,7 @@ export function compileTs(
     experimentalDecorators: true,
     emitDecoratorMetadata: true,
     target: ScriptTarget.ES5,
-    typeRoots: [resolve(require.resolve('typescript'), '../../../@types/')],
+    typeRoots: resolveTypeRoots(),
     jsx: JsxEmit.Preserve,
     allowJs: true,
     lib: [
@@ -198,7 +200,8 @@ export function compileTs(
   }
 
   try {
-    const testFile = `test-file.${isTsx ? 'tsx' : 'ts'}`;
+    const cwd = resolveCallerDirectory();
+    const testFile = posix.join(cwd, `test-file.${isTsx ? 'tsx' : 'ts'}`);
     const host = createCompilerHost(options);
     const program = createProgram([testFile], options, {
       ...host,
@@ -209,7 +212,7 @@ export function compileTs(
         shouldCreateNewSourceFile?: boolean,
       ) => {
         if (fileName === testFile) {
-          return createSourceFile(fileName, contents, options.target);
+          return createSourceFile(fileName, contents, options.target ?? languageVersion);
         }
 
         return host.getSourceFile(fileName, languageVersion, onError, shouldCreateNewSourceFile);
@@ -222,7 +225,7 @@ export function compileTs(
         return filename;
       },
       getCurrentDirectory() {
-        return '';
+        return cwd;
       },
       getNewLine() {
         return '\n';
@@ -233,7 +236,7 @@ export function compileTs(
     const errors: string[] = [];
 
     for (const diagnostic of allDiagnostics) {
-      if (diagnostic.file) {
+      if (diagnostic.file && diagnostic.start !== undefined) {
         const { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start);
         const message = flattenDiagnosticMessageText(diagnostic.messageText, '\n');
         errors.push(`${line + 1},${character + 1}: ${message} ->
@@ -257,3 +260,49 @@ export function compileTs(
     throw e;
   }
 }
+
+/**
+ * Resolve the directory of the test file currently being run.
+ *
+ * The file these helpers type-check exists only in memory, but TypeScript still needs a real
+ * directory to anchor Node module resolution to. `process.cwd()` is not usable: it is the repo
+ * root, and under pnpm's isolated layout a package's dependencies live in that package's own
+ * `node_modules`.
+ *
+ * The result uses forward slashes, as does the synthetic file path built from it: TypeScript
+ * normalizes every path it hands back to the host that way, so on Windows a backslash path would
+ * never match the `fileName === testFile` check in `getSourceFile`.
+ *
+ * Throws outside a vitest test rather than falling back to `process.cwd()`, which would silently
+ * reintroduce unresolved imports.
+ */
+const resolveCallerDirectory = (): string => {
+  const testPath = expect.getState().testPath;
+
+  if (!testPath) {
+    throw new Error('validateTs / compileTs must be called from within a vitest test');
+  }
+
+  return dirname(testPath).replace(/\\/g, '/');
+};
+
+/**
+ * Resolve the `@types` directory that actually contains `@types/node`.
+ *
+ * This used to be derived from `require.resolve('typescript')` as
+ * `<ts>/lib/../../../@types`, which only lands on `node_modules/@types` in a flat
+ * (npm/yarn) layout. Under pnpm's default isolated layout `require.resolve` returns the
+ * realpath inside the virtual store, so it pointed at
+ * `node_modules/.pnpm/typescript@<version>/node_modules/@types` -- a directory that does
+ * not exist -- and no ambient typings were ever loaded.
+ *
+ * Locating the directory from `@types/node` itself keeps it correct under every layout.
+ */
+const resolveTypeRoots = (): string[] => {
+  // A `typeRoots` entry is a *container* directory, not a type package: TypeScript resolves
+  // every name in `types` as `<typeRoot>/<name>`, so `types: ['node']` looks for
+  // `<typeRoot>/node`. Hence two steps up from the manifest -- to the package, then to the
+  // `@types` directory holding it.
+  const nodeTypesPackageDir = dirname(require.resolve('@types/node/package.json')); // <..>/@types/node
+  return [dirname(nodeTypesPackageDir)]; // <..>/@types
+};

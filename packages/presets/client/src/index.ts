@@ -98,6 +98,28 @@ export type ClientPresetConfig = {
          */
         hashAlgorithm?: 'sha1' | 'sha256' | (string & {}) | ((operation: string) => string);
       };
+  /**
+   * @description Skip generating the `index.ts` barrel file that re-exports the other generated files.
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```tsx
+   * const config = {
+   *    schema: 'https://graphql.org/graphql/',
+   *    documents: ['src/**\/*.tsx', '!src\/gql/**\/*'],
+   *    generates: {
+   *       './src/gql/': {
+   *          preset: 'client',
+   *          presetConfig: {
+   *            skipIndexFile: true,
+   *          }
+   *        },
+   *    },
+   * };
+   * export default config;
+   * ```
+   */
+  skipIndexFile?: boolean;
 };
 
 const isOutputFolderLike = (baseOutputDir: string) => baseOutputDir.endsWith('/');
@@ -122,9 +144,13 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         '[client-preset] providing typescript-based `plugins` with `preset: "client" leads to duplicated generated types',
       );
     }
+    if (!options.schemaAst) {
+      throw new Error('[client-preset] missing `schemaAst` in preset options');
+    }
+
     const isPersistedOperations = !!options.presetConfig?.persistedDocuments;
     if (options.config.nullability?.errorHandlingClient) {
-      options.schemaAst = await semanticToStrict(options.schemaAst!);
+      options.schemaAst = await semanticToStrict(options.schemaAst);
       options.schema = parse(printSchema(options.schemaAst));
     }
 
@@ -260,7 +286,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       importExtension: options.config.importExtension,
     });
 
-    if (isMaskingFragments === true) {
+    if (fragmentMaskingConfig !== null) {
       const fragmentMaskingArtifactFileExtension = '.ts';
 
       reexports.push('fragment-masking');
@@ -292,13 +318,14 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     let indexFileGenerateConfig: Types.GenerateOptions | null = null;
 
-    if (reexports.length) {
+    if (reexports.length && !options.presetConfig?.skipIndexFile) {
       indexFileGenerateConfig = {
         filename: `${options.baseOutputDir}index.ts`,
         pluginMap: {
           [`add`]: addPlugin,
         },
         plugins: [
+          { [`add`]: { content: `/* eslint-disable */` } },
           {
             [`add`]: {
               content: reexports

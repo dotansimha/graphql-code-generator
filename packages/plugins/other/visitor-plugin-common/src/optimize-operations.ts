@@ -5,11 +5,18 @@ import { optimizeDocuments } from '@graphql-tools/relay-operation-optimizer';
 export function optimizeOperations(
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
-  options?: { includeFragments: boolean },
+  options?: { includeFragments?: boolean },
 ): Types.DocumentFile[] {
   const newDocuments = optimizeDocuments(
     schema,
-    documents.map(s => s.document),
+    documents.map(s => {
+      if (!s.document) {
+        throw new Error(
+          `Cannot optimize the document at "${s.location}": it has no parsed document`,
+        );
+      }
+      return s.document;
+    }),
     options,
   );
 

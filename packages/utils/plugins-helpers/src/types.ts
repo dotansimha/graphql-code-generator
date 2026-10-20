@@ -4,6 +4,22 @@ import { Source } from '@graphql-tools/utils';
 import type { Profiler } from './profiler.js';
 
 export namespace Types {
+  /**
+   * @description Controls how the CLI decides whether the generated content already
+   * matches the output file so the write can be skipped:
+   *
+   * - `'cache-first'` (default): compare against the in-memory hash of what codegen
+   *   last wrote, falling back to reading the file from disk when there is no cached
+   *   entry. Assumes the output is a pure function of the codegen inputs.
+   * - `'disk'`: always compare against the file on disk. Use this when the output
+   *   depends on the file's existing content (e.g. a preset that reads the file and
+   *   rewrites part of it), so a file that was changed on disk is not wrongly skipped
+   *   in watch mode.
+   *
+   * @default 'cache-first'
+   */
+  export type ContentComparison = 'cache-first' | 'disk';
+
   export interface GenerateOptions {
     filename: string;
     plugins: Types.ConfiguredPlugin[];
@@ -22,6 +38,11 @@ export namespace Types {
     documentTransforms?: ConfiguredDocumentTransform[];
     emitLegacyCommonJSImports?: boolean;
     importExtension?: '' | `.${string}`;
+    /**
+     * @description How the CLI compares generated content against the output file
+     * to decide whether the write can be skipped. See {@link Types.ContentComparison}.
+     */
+    contentComparison?: Types.ContentComparison;
   }
 
   export type FileOutput = {
@@ -31,6 +52,17 @@ export namespace Types {
       beforeOneFileWrite?: LifecycleHooksDefinition['beforeOneFileWrite'];
       afterOneFileWrite?: LifecycleHooksDefinition['afterOneFileWrite'];
     };
+    /**
+     * @description How the CLI compares generated content against the output file
+     * to decide whether the write can be skipped. See {@link Types.ContentComparison}.
+     */
+    contentComparison?: Types.ContentComparison;
+    /**
+     * @description Carries the `overwrite` setting from the `generates` entry that
+     * produced this file, so the CLI can honor it per file (e.g. a preset keyed by a
+     * directory, which can't be looked up by a generated file's path).
+     */
+    overwrite?: boolean | Partial<NormalizedOverwriteOption>;
   };
 
   export interface DocumentFile extends Source {
@@ -42,15 +74,22 @@ export namespace Types {
   export type Promisable<T> = T | Promise<T>;
   export type InstanceOrArray<T> = T | T[];
 
+  export type CustomSchemaLoaderFn = (
+    pointer: string,
+    config: any,
+    pointerOptionMap?: Record<string, any>,
+  ) => Promisable<GraphQLSchema | DocumentNode | Source | void>;
+
   /**
    * @additionalProperties false
-   * @description Loads schema using a pointer, with a custom loader (code file).
+   * @description Loads schema using a pointer, with a custom loader (code file or function).
    */
   export interface SchemaWithLoaderOptions {
     /**
-     * @description Specify a path to a custom code file (local or module) that will handle the schema loading.
+     * @description Specify a path to a custom code file (local or module), or a
+     * custom loader function directly, that will handle the schema loading.
      */
-    loader: string;
+    loader: string | CustomSchemaLoaderFn;
   }
   export interface SchemaWithLoader {
     [pointer: string]: SchemaWithLoaderOptions;
@@ -288,7 +327,15 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
-    overwrite?: boolean;
+    overwrite?: boolean | Partial<NormalizedOverwriteOption>;
+    /**
+     * @description How the CLI compares generated content against the output file
+     * to decide whether the write can be skipped. See {@link Types.ContentComparison}.
+     *
+     * A preset can also set this per output from `buildGeneratesSection`; the value
+     * returned there takes precedence over this one.
+     */
+    contentComparison?: Types.ContentComparison;
     /**
      * @description A pointer(s) to your GraphQL documents: query, mutation, subscription and fragment. These documents will be loaded into for all your output files.
      * You can use one of the following:
@@ -471,7 +518,7 @@ export namespace Types {
      *
      * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
-    overwrite?: boolean;
+    overwrite?: boolean | Partial<NormalizedOverwriteOption>;
     /**
      * @description A flag to trigger codegen when there are changes in the specified GraphQL schemas.
      *
@@ -571,10 +618,15 @@ export namespace Types {
     cwd?: string;
   }
 
+  export type NormalizedOverwriteOption = {
+    removeStaleFiles: boolean;
+    updateExistingFiles: boolean;
+  };
+
   export type ComplexPluginOutput<M = Record<string, unknown>> = {
     content: string;
-    prepend?: string[];
-    append?: string[];
+    prepend?: Array<string | null>;
+    append?: Array<string | null>;
     meta?: M;
   };
   export type PluginOutput = string | ComplexPluginOutput;

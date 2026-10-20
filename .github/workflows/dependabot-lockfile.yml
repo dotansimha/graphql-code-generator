@@ -1,0 +1,45 @@
+name: dependabot-lockfile
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '**/package.json'
+
+permissions: {}
+
+jobs:
+  # Dependabot jobs that run from a workspace member directory (e.g. /dev-test/*, /examples/*)
+  # update that package.json but not the root pnpm-lock.yaml. Regenerate it and push it back.
+  update-lockfile:
+    name: Update pnpm-lock.yaml
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # allows pushing the lockfile to the Dependabot branch
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }} # the Dependabot branch, not the PR merge commit
+      - name: Install pnpm and Node
+        uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        with:
+          install: false # a frozen install would fail on the stale lockfile
+      - name: Update lockfile
+        run: pnpm install --lockfile-only --no-frozen-lockfile --ignore-scripts
+      - name: Commit and push
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          if git diff --quiet -- pnpm-lock.yaml; then
+            echo "pnpm-lock.yaml is up to date"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add pnpm-lock.yaml
+          git commit -m 'chore(deps): update pnpm-lock.yaml'
+          # Other workflows (e.g. changesets-dependencies) may push to the same branch
+          git pull --rebase origin "$HEAD_REF"
+          git push origin "HEAD:$HEAD_REF"

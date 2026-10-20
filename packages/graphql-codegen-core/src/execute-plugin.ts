@@ -46,12 +46,13 @@ export async function executePlugin(
   const pluginContext = options.pluginContext || {};
   const profiler = options.profiler ?? createNoopProfiler();
 
-  if (plugin.validate && typeof plugin.validate === 'function') {
+  const validate = plugin.validate;
+  if (validate && typeof validate === 'function') {
     try {
       // FIXME: Sync validate signature with plugin signature
       await profiler.run(
         async () =>
-          plugin.validate(
+          validate(
             outputSchema,
             documents,
             options.config,

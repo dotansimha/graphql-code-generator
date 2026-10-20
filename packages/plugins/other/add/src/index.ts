@@ -25,7 +25,7 @@ export const plugin: PluginFunction<AddPluginConfig> = async (
   }
 
   return {
-    content: null,
+    content: '',
     [placement]: Array.isArray(content) ? content : [content],
   };
 };

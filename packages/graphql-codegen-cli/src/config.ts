@@ -47,6 +47,9 @@ export type YamlCliFlags = {
   ignoreNoDocuments?: boolean;
   emitLegacyCommonJSImports?: boolean;
   importExtension?: '' | `.${string}`;
+  'ignore-no-documents'?: boolean;
+  'emit-legacy-common-js-imports'?: boolean;
+  'import-extension'?: '' | `.${string}`;
 };
 
 export function generateSearchPlaces(moduleName: string) {
@@ -132,7 +135,7 @@ export async function loadCodegenConfig({
   searchPlaces: additionalSearchPlaces,
   packageProp,
   loaders: customLoaders,
-}: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult> {
+}: LoadCodegenConfigOptions): Promise<LoadCodegenConfigResult | null> {
   configFilePath ||= process.cwd();
   moduleName ||= 'codegen';
   packageProp ||= moduleName;
@@ -194,14 +197,14 @@ export async function loadContext(configFilePath?: string): Promise<CodegenConte
 
   return new CodegenContext({
     filepath: result.filepath,
-    config: result.config as Types.Config,
+    config: result.config,
   });
 }
 
-function getCustomConfigPath(cliFlags: YamlCliFlags): string | null | never {
+function getCustomConfigPath(cliFlags: YamlCliFlags): string | undefined {
   const configFile = cliFlags.config;
 
-  return configFile ? resolve(process.cwd(), configFile) : null;
+  return configFile ? resolve(process.cwd(), configFile) : undefined;
 }
 
 export function buildOptions() {
@@ -262,6 +265,10 @@ export function buildOptions() {
       describe: 'output more detailed information about performed tasks',
       type: 'boolean' as const,
       default: false,
+    },
+    check: {
+      describe: 'Enable dry-run mode to check if some new changes are detected',
+      type: 'boolean' as const,
     },
     d: {
       alias: 'debug',
@@ -370,18 +377,17 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
 }
 
 export class CodegenContext {
-  private _config: Types.Config;
+  private _config?: Types.Config;
   private _graphqlConfig?: GraphQLConfig;
-  private config: Types.Config;
+  private config?: Types.Config;
   private _project?: string;
   private _checkMode = false;
   private _pluginContext: { [key: string]: any } = {};
 
   cwd: string;
-  filepath: string;
+  filepath?: string;
   profiler: Profiler;
-  profilerOutput?: string;
-  checkModeStaleFiles = [];
+  checkModeStaleFiles: string[] = [];
 
   constructor({
     config,
@@ -403,7 +409,9 @@ export class CodegenContext {
     this._project = name;
   }
 
-  getConfig<T>(extraConfig?: T): T & Types.Config {
+  getConfig(): Types.Config;
+  getConfig<T>(extraConfig: T): T & Types.Config;
+  getConfig<T>(extraConfig?: T): Types.Config | (T & Types.Config) {
     if (!this.config) {
       if (this._graphqlConfig) {
         const project = this._graphqlConfig.getProject(this._project);
@@ -415,7 +423,11 @@ export class CodegenContext {
           pluginContext: this._pluginContext,
         };
       } else {
-        this.config = { ...this._config, pluginContext: this._pluginContext };
+        this.config = {
+          generates: {},
+          ...this._config,
+          pluginContext: this._pluginContext,
+        };
       }
     }
 
@@ -452,12 +464,6 @@ export class CodegenContext {
 
   useProfiler() {
     this.profiler = createProfiler();
-
-    const now = new Date(); // 2011-10-05T14:48:00.000Z
-    const datetime = now.toISOString().split('.')[0]; // 2011-10-05T14:48:00
-    const datetimeNormalized = datetime.replace(/-|:/g, ''); // 20111005T144800
-
-    this.profilerOutput = `codegen-${datetimeNormalized}.json`;
   }
 
   getPluginContext(): { [key: string]: any } {

@@ -1,5 +1,12 @@
 import autoBind from 'auto-bind';
-import { GraphQLSchema } from 'graphql';
+import {
+  Kind,
+  type ASTNode,
+  type FragmentDefinitionNode,
+  type GraphQLSchema,
+  type OperationDefinitionNode,
+  type SelectionSetNode,
+} from 'graphql';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import {
   ClientSideBasePluginConfig,
@@ -48,18 +55,26 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
         this.config.documentNodeImport || 'graphql#DocumentNode',
       );
       const tagImport = this._generateImport(documentNodeImport, 'DocumentNode', true);
-      this._imports.add(tagImport);
+      if (tagImport) {
+        this._imports.add(tagImport);
+      }
     } else if (this.config.documentMode === DocumentMode.string) {
       const tagImport = this._generateImport(
         typedDocumentString.import,
         typedDocumentString.import.propName,
         true,
       );
-      this._imports.add(tagImport);
+      if (tagImport) {
+        this._imports.add(tagImport);
+      }
     }
   }
 
-  public SelectionSet(node, _, parent) {
+  public SelectionSet(
+    node: SelectionSetNode,
+    _: unknown,
+    parent?: ASTNode,
+  ): SelectionSetNode | void {
     if (!this.pluginConfig.addTypenameToSelectionSets) {
       return;
     }
@@ -90,9 +105,9 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
       selections: [
         ...selections,
         {
-          kind: 'Field',
+          kind: Kind.FIELD,
           name: {
-            kind: 'Name',
+            kind: Kind.NAME,
             value: '__typename',
           },
         },
@@ -100,7 +115,11 @@ export class TypeScriptDocumentNodesVisitor extends ClientSideBaseVisitor<
     };
   }
 
-  protected getDocumentNodeSignature(resultType: string, variablesTypes: string, node) {
+  protected getDocumentNodeSignature(
+    resultType: string,
+    variablesTypes: string,
+    node: FragmentDefinitionNode | OperationDefinitionNode,
+  ): string {
     const shouldUseImportPrefix = !!this.config.importOperationTypesFrom;
     const resultImportPrefix = shouldUseImportPrefix && resultType !== 'unknown' ? 'Types.' : '';
     const variablesImportPrefix =

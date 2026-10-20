@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import path from 'path';
-import { print } from 'graphql';
+import { Kind, print, type DocumentNode } from 'graphql';
 import { executeCodegen } from '@graphql-codegen/cli';
 // import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 // import { validateTs } from '@graphql-codegen/testing';
@@ -30,12 +30,13 @@ describe('client-preset', () => {
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+    expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
 export * from "./gql";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -123,12 +124,13 @@ export * from "./gql";`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+    expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
 export * from "./gql";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -213,7 +215,7 @@ export * from "./gql";`);
       },
     });
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -299,7 +301,7 @@ export * from "./gql";`);
 
     expect(result.length).toBe(4);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -360,7 +362,7 @@ export * from "./gql";`);
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -384,10 +386,10 @@ export * from "./gql";`);
       export const BDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"B"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"b"}}]}}]} as unknown as DocumentNode<BQuery, BQueryVariables>;"
     `);
 
-    expect(graphqlFile.content).toContain(
+    expect(graphqlFile?.content).toContain(
       "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'",
     );
-    expect(gqlFile.content).toContain(
+    expect(gqlFile?.content).toContain(
       "import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'",
     );
   });
@@ -416,7 +418,7 @@ export * from "./gql";`);
 
     expect(result.length).toBe(4);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -477,7 +479,7 @@ export * from "./gql";`);
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -545,7 +547,7 @@ export * from "./gql";`);
     });
 
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -589,7 +591,7 @@ export * from "./gql";`);
 
     expect(result.length).toBe(4);
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql';
       import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -638,7 +640,7 @@ export * from "./gql";`);
       export type DocumentType<TDocumentNode extends DocumentNode<any, any>> = TDocumentNode extends DocumentNode<  infer TType,  any>  ? TType  : never;"
     `);
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -654,7 +656,7 @@ export * from "./gql";`);
       export const ADocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"a"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"a"}}]}}]} as unknown as DocumentNode<AQuery, AQueryVariables>;"
     `);
 
-    expect(gqlFile.content.match(/query a {/g).length).toBe(4);
+    expect(gqlFile?.content.match(/query a {/g)?.length).toBe(4);
   });
 
   it('generates correct named imports for ESM', async () => {
@@ -680,12 +682,13 @@ export * from "./gql";`);
     expect(result).toHaveLength(4);
     // index.ts (re-exports)
     const indexFile = result.find(file => file.filename === 'out1/index.ts');
-    expect(indexFile.content).toEqual(`export * from "./fragment-masking.js";
+    expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.js";
 export * from "./gql.js";`);
 
     // gql.ts
     const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-    expect(gqlFile.content).toMatchInlineSnapshot(`
+    expect(gqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       import * as types from './graphql.js';
       import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -895,12 +898,13 @@ export * from "./gql.js";`);
       expect(result).toHaveLength(4);
       // index.ts (re-exports)
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.js";
+      expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.js";
 export * from "./gql.js";`);
 
       // gql.ts
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toMatchInlineSnapshot(`
+      expect(gqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import * as types from './graphql.js';
         import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
@@ -955,11 +959,12 @@ export * from "./gql.js";`);
 
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.mjs";
+      expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.mjs";
 export * from "./gql.mjs";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toContain(`import * as types from './graphql.mjs';`);
+      expect(gqlFile?.content).toContain(`import * as types from './graphql.mjs';`);
     });
 
     it('generates imports with no extension when importExtension is empty string', async () => {
@@ -984,11 +989,12 @@ export * from "./gql.mjs";`);
 
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+      expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
 export * from "./gql";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toContain(`import * as types from './graphql';`);
+      expect(gqlFile?.content).toContain(`import * as types from './graphql';`);
     });
 
     it('uses importExtension over emitLegacyCommonJSImports when both are set', async () => {
@@ -1015,11 +1021,12 @@ export * from "./gql";`);
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
       // Should use .mjs from importExtension, not .js from emitLegacyCommonJSImports: false
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.mjs";
+      expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.mjs";
 export * from "./gql.mjs";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toContain(`import * as types from './graphql.mjs';`);
+      expect(gqlFile?.content).toContain(`import * as types from './graphql.mjs';`);
     });
 
     it('uses importExtension set to empty string even when emitLegacyCommonJSImports is false', async () => {
@@ -1046,11 +1053,12 @@ export * from "./gql.mjs";`);
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
       // Should use empty string from importExtension, not .js from emitLegacyCommonJSImports: false
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking";
+      expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking";
 export * from "./gql";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toContain(`import * as types from './graphql';`);
+      expect(gqlFile?.content).toContain(`import * as types from './graphql';`);
     });
 
     it('generates imports with custom .cjs extension when importExtension is set to .cjs', async () => {
@@ -1075,11 +1083,12 @@ export * from "./gql";`);
 
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile.content).toEqual(`export * from "./fragment-masking.cjs";
+      expect(indexFile?.content).toEqual(`/* eslint-disable */
+export * from "./fragment-masking.cjs";
 export * from "./gql.cjs";`);
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toContain(`import * as types from './graphql.cjs';`);
+      expect(gqlFile?.content).toContain(`import * as types from './graphql.cjs';`);
     });
   });
 
@@ -1110,9 +1119,13 @@ export * from "./gql.cjs";`);
         'out1/': {
           preset,
           presetConfig: {
-            onExecutableDocumentNode(node) {
+            onExecutableDocumentNode(node: DocumentNode) {
+              const [definition] = node.definitions;
+              if (definition.kind !== Kind.OPERATION_DEFINITION || !definition.name) {
+                throw new Error('expected a named operation');
+              }
               return {
-                cacheKeys: [node.definitions[0].name.value],
+                cacheKeys: [definition.name.value],
               };
             },
           },
@@ -1121,7 +1134,7 @@ export * from "./gql.cjs";`);
       emitLegacyCommonJSImports: false,
     });
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1174,7 +1187,7 @@ export * from "./gql.cjs";`);
         file => file.filename === 'out1/persisted-documents.json',
       );
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
           "sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
@@ -1182,7 +1195,7 @@ export * from "./gql.cjs";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1238,7 +1251,7 @@ export * from "./gql.cjs";`);
         file => file.filename === 'out1/persisted-documents.json',
       );
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
           "sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
@@ -1246,7 +1259,7 @@ export * from "./gql.cjs";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1302,7 +1315,7 @@ export * from "./gql.cjs";`);
         file => file.filename === 'out1/persisted-documents.json',
       );
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
           "sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
@@ -1310,7 +1323,7 @@ export * from "./gql.cjs";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1363,9 +1376,13 @@ export * from "./gql.cjs";`);
             preset,
             presetConfig: {
               persistedDocuments: true,
-              onExecutableDocumentNode(node) {
+              onExecutableDocumentNode(node: DocumentNode) {
+                const [definition] = node.definitions;
+                if (definition.kind !== Kind.OPERATION_DEFINITION || !definition.name) {
+                  throw new Error('expected a named operation');
+                }
                 return {
-                  cacheKeys: [node.definitions[0].name.value],
+                  cacheKeys: [definition.name.value],
                 };
               },
             },
@@ -1374,7 +1391,7 @@ export * from "./gql.cjs";`);
         emitLegacyCommonJSImports: false,
       });
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1428,7 +1445,7 @@ export * from "./gql.cjs";`);
         file => file.filename === 'out1/persisted-documents.json',
       );
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "sha256:7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
           "sha256:a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
@@ -1436,7 +1453,7 @@ export * from "./gql.cjs";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1496,7 +1513,7 @@ export * from "./gql.cjs";`);
         file => file.filename === 'out1/persisted-documents.json',
       );
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "queryA{a}": "query A { a }",
           "queryB{b}": "query B { b }"
@@ -1504,7 +1521,7 @@ export * from "./gql.cjs";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1565,7 +1582,7 @@ export * from "./gql.cjs";`);
         file => file.filename === 'out1/persisted-documents.json',
       );
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "7d0eedabb966107835cf307a0ebaf93b5d2cb8c30228611ffe3d27a53c211a0c": "query A { a }",
           "a62a11aa72041e38d8c12ef77e1e7c208d9605db60bb5abb1717e8af98e4b410": "query B { b }"
@@ -1573,7 +1590,7 @@ export * from "./gql.cjs";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1634,7 +1651,7 @@ export * from "./gql.cjs";`);
         file => file.filename === 'out1/persisted-documents.json',
       );
 
-      expect(persistedDocuments.content).toMatchInlineSnapshot(`
+      expect(persistedDocuments?.content).toMatchInlineSnapshot(`
         "{
           "a82d8b22f2bf805563146dc8ad80b2eb054845441539e3a5a69d1f534bb5bc0bd4f9470053b9f61b6aa1966cfc2f67406258102e5ee3a356a5d171506f3ede50": "query A { a }",
           "bdc3d5b1e0dc35d9d21f8baadf515c472850baf279c8dd266fb21e8b8b29758d2386329f19a93dc101f3a6dd1214f5214835451e7eaf4410408d5c89f2e20a09": "query B { b }"
@@ -1642,7 +1659,7 @@ export * from "./gql.cjs";`);
       `);
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1715,7 +1732,7 @@ export * from "./gql.cjs";`);
       },
     });
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1795,7 +1812,7 @@ export * from "./gql.cjs";`);
       },
     });
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1851,7 +1868,7 @@ export * from "./gql.cjs";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1915,7 +1932,7 @@ export * from "./gql.cjs";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -1979,7 +1996,7 @@ export * from "./gql.cjs";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -2116,7 +2133,7 @@ export * from "./gql.cjs";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -2251,7 +2268,7 @@ export * from "./gql.cjs";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -2340,7 +2357,7 @@ export * from "./gql.cjs";`);
       });
 
       const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile.content).toMatchInlineSnapshot(`
+      expect(gqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         import * as types from './graphql';
 
@@ -2442,7 +2459,7 @@ export * from "./gql.cjs";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -2627,7 +2644,7 @@ export * from "./gql.cjs";`);
       });
 
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-      expect(graphqlFile.content).toMatchInlineSnapshot(`
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
         "/* eslint-disable */
         /** Internal type. DO NOT USE DIRECTLY. */
         type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -2706,7 +2723,7 @@ export * from "./gql.cjs";`);
     });
 
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
-    expect(graphqlFile.content).toMatchInlineSnapshot(`
+    expect(graphqlFile?.content).toMatchInlineSnapshot(`
       "/* eslint-disable */
       /** Internal type. DO NOT USE DIRECTLY. */
       type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };

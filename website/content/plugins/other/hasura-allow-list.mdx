@@ -1,0 +1,28 @@
+---
+title: hasura-allow-list
+description: Generate hasura allow list metadata from graphql files.
+---
+
+Generate hasura allow list metadata from graphql files
+
+You can use this plugin to generate an
+[allow list](https://hasura.io/docs/latest/graphql/cloud/security/allow-lists.html) for your
+[hasura](https://hasura.io) project.
+
+This can be useful to keep your allow list and front end code in sync.
+
+## Examples
+
+```ts title="codegen.ts" {7}
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'path/to/metadata/allow_list.yaml': {
+      plugins: ['hasura-allow-list']
+    }
+  }
+}
+export default config
+```

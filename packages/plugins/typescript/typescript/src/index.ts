@@ -1,5 +1,4 @@
 import {
-  DocumentNode,
   getNamedType,
   GraphQLNamedType,
   GraphQLSchema,
@@ -64,7 +63,8 @@ export function includeIntrospectionTypesDefinitions(
   const usedTypes: GraphQLNamedType[] = [];
   const documentsVisitor = visitWithTypeInfo(typeInfo, {
     Field() {
-      const type = getNamedType(typeInfo.getType());
+      const fieldType = typeInfo.getType();
+      const type = fieldType ? getNamedType(fieldType) : undefined;
 
       if (type && isIntrospectionType(type) && !usedTypes.includes(type)) {
         usedTypes.push(type);
@@ -73,6 +73,9 @@ export function includeIntrospectionTypesDefinitions(
   });
 
   for (const doc of documents) {
+    if (!doc.document) {
+      continue;
+    }
     visit(doc.document, documentsVisitor);
   }
 
@@ -83,7 +86,7 @@ export function includeIntrospectionTypesDefinitions(
   }
 
   const visitor = new TsIntrospectionVisitor(schema, config, typesToInclude);
-  const result: DocumentNode = oldVisit(parse(printIntrospectionSchema(schema)), {
+  const result = oldVisit(parse(printIntrospectionSchema(schema)), {
     leave: visitor,
   });
 
@@ -107,5 +110,6 @@ export function includeIntrospectionTypesDefinitions(
     }
   }
 
-  return result.definitions as any[];
+  // FIXME(strict=true) this is the existing logic, casting to avoid runtime differences
+  return result.definitions as string[];
 }

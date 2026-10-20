@@ -1,5 +1,123 @@
 # @graphql-codegen/typescript-operations
 
+## 6.1.10
+
+### Patch Changes
+
+- [#11019](https://github.com/dotansimha/graphql-code-generator/pull/11019)
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `plugin-helpers` under
+  `strict: true`:
+  - `@graphql-codegen/plugin-helpers`: `ProfilerEvent.cat` is optional, matching the Trace Event
+    format and `Profiler.run`'s optional `cat`. `FederationMeta`'s reference selection sets are
+    typed recursively (`{ [field: string]: true | ReferenceSelectionSet }`), matching the nested
+    selections `@key`/`@requires`/`@provides` produce. `oldVisit`'s `visitor` param is typed as
+    `OldVisitor`: `enter` and `leave` maps keyed by AST node kind, whose callbacks receive the typed
+    node plus graphql's `key`, `parent`, `path` and `ancestors`. Federation directives missing their
+    `fields` argument, and operations whose root type is missing from the schema, throw a
+    descriptive error.
+  - `@graphql-codegen/typescript` and `@graphql-codegen/typescript-operations`: the
+    `InputValueDefinition` visitor methods take `path` and `ancestors` as required params, since the
+    visitor always passes them.
+
+  Generated output is unchanged.
+
+- [#11009](https://github.com/dotansimha/graphql-code-generator/pull/11009)
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix type errors in `typescript-operations`
+  under `strict: true` by widening the shared types it calls into:
+  - `@graphql-codegen/plugin-helpers`: `Types.ComplexPluginOutput`'s `prepend` and `append` now
+    accept `null` items. Core already skipped them.
+  - `@graphql-codegen/visitor-plugin-common`: `DeclarationBlock.withComment` accepts `undefined`,
+    `parseEnumValues`'s `mapOrStr` is optional (it already defaulted to `{}`),
+    `ImportSource.namespace` accepts `null`, and `optimizeOperations`'s `includeFragments` is
+    optional.
+  - `@graphql-codegen/typescript-operations`: skips document files without a `document`, and no
+    longer throws when called without the plugin info argument.
+
+  Generated output is unchanged.
+
+- Updated dependencies
+  [[`43d0f65`](https://github.com/dotansimha/graphql-code-generator/commit/43d0f65c5a0f19a9743aef875e7a2ef3fe8c6e35),
+  [`82ebbb5`](https://github.com/dotansimha/graphql-code-generator/commit/82ebbb548b67eb8445cbc4ab71b782e65b29a973),
+  [`eae0e62`](https://github.com/dotansimha/graphql-code-generator/commit/eae0e6263d658333069784969b6e13bbabccee52),
+  [`1f7566f`](https://github.com/dotansimha/graphql-code-generator/commit/1f7566f0bead301b21d4f7da49a4bc6924d07ef3),
+  [`7a376ef`](https://github.com/dotansimha/graphql-code-generator/commit/7a376effc2dcb7ac8decaf53c2c18eb0e28e71e6),
+  [`3caccd3`](https://github.com/dotansimha/graphql-code-generator/commit/3caccd34f191c7e95b09ff8e80a426b8b133be62),
+  [`ccc0d5c`](https://github.com/dotansimha/graphql-code-generator/commit/ccc0d5c205842405dbe95f5b95aded5b5e487e8e)]:
+  - @graphql-codegen/plugin-helpers@7.4.1
+  - @graphql-codegen/visitor-plugin-common@7.2.8
+
+## 6.1.9
+
+### Patch Changes
+
+- [#11001](https://github.com/dotansimha/graphql-code-generator/pull/11001)
+  [`65e5599`](https://github.com/dotansimha/graphql-code-generator/commit/65e55991740a23f05886fa07770f8bc7be4bf8a5)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `typescript-operations` generating
+  invalid `interface` declarations for `@oneOf` inputs when `declarationKind` is `interface`
+  ([#10996](https://github.com/dotansimha/graphql-code-generator/issues/10996)).
+
+  A `@oneOf` input with multiple fields is a union, so it is always generated as a `type` alias; a
+  single-field `@oneOf` input keeps the configured `declarationKind.input`. `typescript` and
+  `typescript-operations` share this rule through the new `getOneOfInputDeclarationKind` export from
+  `@graphql-codegen/visitor-plugin-common`.
+
+- Updated dependencies
+  [[`65e5599`](https://github.com/dotansimha/graphql-code-generator/commit/65e55991740a23f05886fa07770f8bc7be4bf8a5)]:
+  - @graphql-codegen/visitor-plugin-common@7.2.7
+
+## 6.1.8
+
+### Patch Changes
+
+- [#10982](https://github.com/dotansimha/graphql-code-generator/pull/10982)
+  [`e5361bc`](https://github.com/dotansimha/graphql-code-generator/commit/e5361bcb7ba0c21d94ead07d7b7dfc3d2b11e98c)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix out-of-memory errors with deeply nested,
+  widely reused fragments
+  ([#10940](https://github.com/dotansimha/graphql-code-generator/issues/10940)).
+
+  The type cache used while generating selection set types was keyed by every fragment-expanded
+  field path, so its keys grew exponentially with fragment nesting. Keys are now built from the
+  selection set as written, referencing fragment spreads by name, so they stay linear in the size of
+  the documents. The exported `getFieldNames` helper from `@graphql-codegen/visitor-plugin-common`,
+  which built those expanded paths, is removed.
+
+- Updated dependencies
+  [[`e5361bc`](https://github.com/dotansimha/graphql-code-generator/commit/e5361bcb7ba0c21d94ead07d7b7dfc3d2b11e98c),
+  [`1d1153b`](https://github.com/dotansimha/graphql-code-generator/commit/1d1153b3b161fa82057d586bb5fe524e1e17efe3),
+  [`be69e9d`](https://github.com/dotansimha/graphql-code-generator/commit/be69e9d1a9c234061754a1922b8b961ec80a2fcb)]:
+  - @graphql-codegen/visitor-plugin-common@7.2.6
+  - @graphql-codegen/plugin-helpers@7.4.0
+
+## 6.1.7
+
+### Patch Changes
+
+- [#10954](https://github.com/dotansimha/graphql-code-generator/pull/10954)
+  [`2deb08f`](https://github.com/dotansimha/graphql-code-generator/commit/2deb08fd705da2f2e29cffec01b781e383b8d55e)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix `typescript-operations` emitting an
+  unused `import type * as Types from '...'` (with `importSchemaTypesFrom`) or an unused local
+  enum/input declaration (without it) when `inlineFragmentTypes` is `'combine'` or `'mask'` and the
+  generated file only ever references a schema type through a fragment spread that collapses to a
+  bare `FooFragment` reference, never naming the type itself. The schema-type import/declaration
+  decision, and the enum/scalar re-export decisions, are now based on the schema types actually
+  named by this file's own generated output, rather than every schema type reachable through the
+  document (including via fragments defined elsewhere).
+
+## 6.1.6
+
+### Patch Changes
+
+- [#10918](https://github.com/dotansimha/graphql-code-generator/pull/10918)
+  [`6a3b734`](https://github.com/dotansimha/graphql-code-generator/commit/6a3b734efe8a6ca3826296d3baf2fda3dfca4352)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Fix union and conditional directives
+  resulting in no field types
+
+- Updated dependencies
+  [[`6a3b734`](https://github.com/dotansimha/graphql-code-generator/commit/6a3b734efe8a6ca3826296d3baf2fda3dfca4352)]:
+  - @graphql-codegen/visitor-plugin-common@7.2.5
+
 ## 6.1.5
 
 ### Patch Changes

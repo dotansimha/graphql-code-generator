@@ -1,5 +1,20 @@
 # @graphql-codegen/add
 
+## 7.1.1
+
+### Patch Changes
+
+- [#10986](https://github.com/dotansimha/graphql-code-generator/pull/10986)
+  [`9597b5b`](https://github.com/dotansimha/graphql-code-generator/commit/9597b5bc76c24b66f3e7b000e1038ad8d6ab3450)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - The plugin output's `content` is now an empty
+  string (`''`) instead of `null` when `placement` is `prepend` or `append`. This matches the
+  `ComplexPluginOutput` type (`content: string`). Code that calls the plugin directly and checks
+  `content === null` should check for an empty string instead. Generated files are unchanged.
+
+- Updated dependencies
+  [[`1d1153b`](https://github.com/dotansimha/graphql-code-generator/commit/1d1153b3b161fa82057d586bb5fe524e1e17efe3)]:
+  - @graphql-codegen/plugin-helpers@7.4.0
+
 ## 7.1.0
 
 ### Minor Changes

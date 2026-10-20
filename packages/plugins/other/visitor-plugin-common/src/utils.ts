@@ -10,6 +10,7 @@ import {
   GraphQLOutputType,
   GraphQLScalarType,
   GraphQLSchema,
+  GraphQLType,
   InlineFragmentNode,
   InputValueDefinitionNode,
   isAbstractType,
@@ -21,6 +22,7 @@ import {
   Kind,
   NamedTypeNode,
   NameNode,
+  print,
   SelectionNode,
   SelectionSetNode,
   StringValueNode,
@@ -31,13 +33,13 @@ import { parseMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import type { EnrichedFieldNode } from './selection-set-to-object.js';
 import type {
-  LoadedFragment,
+  DeclarationKind,
   NormalizedScalarsMap,
   ParsedScalarsMap,
   ScalarsMap,
 } from './types.js';
 
-export const getConfigValue = <T = any>(value: T, defaultValue: T): T => {
+export const getConfigValue = <T = any>(value: T | null | undefined, defaultValue: T): T => {
   if (value === null || value === undefined) {
     return defaultValue;
   }
@@ -55,7 +57,7 @@ export function quoteIfNeeded(array: string[], joinWith = ' & '): string {
   return `(${array.join(joinWith)})`;
 }
 
-export function block(array) {
+export function block(array: string[] | null | undefined): string {
   return array && array.length !== 0 ? '{\n' + array.join('\n') + '\n}' : '';
 }
 
@@ -105,7 +107,7 @@ export interface DeclarationBlockConfig {
 }
 
 export function transformComment(
-  comment: string | StringValueNode,
+  comment: string | StringValueNode | undefined | null,
   indentLevel = 0,
   disabled = false,
 ): string {
@@ -127,15 +129,15 @@ export function transformComment(
 }
 
 export class DeclarationBlock {
-  _decorator = null;
+  _decorator: string | null = null;
   _export = false;
-  _name = null;
-  _kind = null;
-  _methodName = null;
-  _content = null;
-  _block = null;
-  _nameGenerics = null;
-  _comment = null;
+  _name: string | NameNode | null = null;
+  _kind: string | null = null;
+  _methodName: string | null = null;
+  _content: string | null = null;
+  _block: string | null = null;
+  _nameGenerics: string | null = null;
+  _comment: string | null = null;
   _ignoreBlockWrapper = false;
 
   constructor(private _config: DeclarationBlockConfig) {
@@ -167,10 +169,13 @@ export class DeclarationBlock {
     return this;
   }
 
-  withComment(comment: string | StringValueNode | null, disabled = false): DeclarationBlock {
+  withComment(
+    comment: string | StringValueNode | null | undefined,
+    disabled = false,
+  ): DeclarationBlock {
     const nonEmptyComment = !!(isStringValueNode(comment) ? comment.value : comment);
 
-    if (nonEmptyComment && !disabled) {
+    if (comment && nonEmptyComment && !disabled) {
       this._comment = transformComment(comment, 0);
     }
 
@@ -184,7 +189,7 @@ export class DeclarationBlock {
     return this;
   }
 
-  withBlock(block: string): DeclarationBlock {
+  withBlock(block: string | null): DeclarationBlock {
     this._block = block;
 
     return this;
@@ -205,6 +210,7 @@ export class DeclarationBlock {
 
   public get string(): string {
     let result = '';
+    const blockTransformer = this._config.blockTransformer || (block => block);
 
     if (this._decorator) {
       result += this._decorator + '\n';
@@ -240,14 +246,14 @@ export class DeclarationBlock {
       const block = [before, this._block, after].filter(val => !!val).join('\n');
 
       if (this._methodName) {
-        result += `${this._methodName}(${this._config.blockTransformer(block)})`;
+        result += `${this._methodName}(${blockTransformer(block)})`;
       } else {
-        result += this._config.blockTransformer(block);
+        result += blockTransformer(block);
       }
     } else if (this._content) {
       result += this._content;
     } else if (this._kind) {
-      result += this._config.blockTransformer('{}');
+      result += blockTransformer('{}');
     }
 
     return stripTrailingSpaces(
@@ -288,7 +294,7 @@ export function buildScalarsFromConfig(
 
 export function buildScalars(
   schema: GraphQLSchema | undefined,
-  scalarsMapping: ScalarsMap,
+  scalarsMapping: ScalarsMap | undefined,
   defaultScalarsMapping: NormalizedScalarsMap = DEFAULT_SCALARS,
   defaultScalarType: string | null = 'unknown',
 ): ParsedScalarsMap {
@@ -506,16 +512,16 @@ export function separateSelectionSet(selections: ReadonlyArray<SelectionNode>): 
 
 export function getPossibleTypes(
   schema: GraphQLSchema,
-  type: GraphQLNamedType,
+  type: GraphQLType | null | undefined,
 ): GraphQLObjectType[] {
   if (isListType(type) || isNonNullType(type)) {
-    return getPossibleTypes(schema, type.ofType as GraphQLNamedType);
+    return getPossibleTypes(schema, type.ofType);
   }
   if (isObjectType(type)) {
     return [type];
   }
   if (isAbstractType(type)) {
-    return schema.getPossibleTypes(type) as Array<GraphQLObjectType>;
+    return [...schema.getPossibleTypes(type)];
   }
 
   return [];
@@ -607,6 +613,20 @@ function stripTrailingSpaces(str: string): string {
   return str.replace(/ +\n/g, '\n');
 }
 
+/**
+ * A @oneOf input with multiple fields is emitted as a union, which only a `type` alias can declare,
+ * so the configured declaration kind applies only when there is a single field.
+ */
+export function getOneOfInputDeclarationKind({
+  fieldCount,
+  inputDeclarationKind,
+}: {
+  fieldCount: number;
+  inputDeclarationKind: DeclarationKind;
+}): DeclarationKind {
+  return fieldCount === 1 ? inputDeclarationKind : 'type';
+}
+
 const isOneOfTypeCache = new WeakMap<GraphQLNamedType, boolean>();
 export function isOneOfInputObjectType(
   namedType: GraphQLNamedType | null | undefined,
@@ -622,8 +642,11 @@ export function isOneOfInputObjectType(
 
   isOneOfType =
     isInputObjectType(namedType) &&
-    ((namedType as unknown as Record<'isOneOf', boolean | undefined>).isOneOf ||
-      namedType.astNode?.directives?.some(d => d.name.value === 'oneOf'));
+    // `isOneOf` only exists on GraphQLInputObjectType from graphql 16.9; removing this cast needs
+    // dropping support for older graphql versions
+    (((namedType as unknown as Record<'isOneOf', boolean | undefined>).isOneOf ||
+      namedType.astNode?.directives?.some(d => d.name.value === 'oneOf')) ??
+      false);
 
   isOneOfTypeCache.set(namedType, isOneOfType);
 
@@ -647,69 +670,75 @@ export function flatten<T>(array: Array<Array<T>>): Array<T> {
 
 export function unique<T>(
   array: Array<T>,
-  key: (item: T) => string | number = item => item.toString(),
+  key: (item: T) => string | number = item => String(item),
 ): Array<T> {
   return Object.values(array.reduce((acc, item) => ({ [key(item)]: item, ...acc }), {}));
 }
 
-function getFullPathFieldName(selection: FieldNode, parentName: string) {
-  const fullName =
-    'alias' in selection && selection.alias
-      ? `${selection.alias.value}@${selection.name.value}`
-      : selection.name.value;
-  return parentName ? `${parentName}.${fullName}` : fullName;
-}
+/**
+ * Memoizes `getSelectionSetCacheKey` per selection set node. Entries are dropped once the node's
+ * document is no longer referenced.
+ *
+ * @internal Exported for tests only; not part of the public API.
+ */
+export const selectionSetCacheKeys = new WeakMap<SelectionSetNode, string>();
 
-export const getFieldNames = ({
-  selections,
-  fieldNames = new Set(),
-  parentName = '',
-  loadedFragments,
-}: {
-  selections: readonly SelectionNode[];
-  fieldNames?: Set<string>;
-  parentName?: string;
-  loadedFragments: LoadedFragment[];
-}) => {
-  for (const selection of selections) {
+/**
+ * Builds a cache key describing a selection set as written: fragment spreads are referenced by
+ * name rather than expanded, so the key stays linear in the size of the document even when
+ * fragments are deeply nested and widely reused. The parts are sorted so the key does not depend
+ * on selection order.
+ *
+ * Examples:
+ * - `{ user { id name } }` becomes `user{id,name}` (the inner `{ id name }` becomes `id,name`)
+ * - `{ id ...UserFields }` becomes `...UserFields,id` (the fragment is referenced by name, not
+ *   expanded)
+ * - `{ ... on Admin { role } }` becomes `... on Admin{role}`
+ * - `{ me: user { id ...UserFields @include(if: $withFields) ... on Admin { role } } }` becomes
+ *   `me@user{... on Admin{role},...UserFields @include(if: $withFields),id}`
+ *
+ * @internal Not part of the public API.
+ */
+export function getSelectionSetCacheKey(selectionSet: SelectionSetNode): string {
+  const cached = selectionSetCacheKeys.get(selectionSet);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  const printDirectives = (directives: readonly DirectiveNode[] | undefined): string =>
+    directives?.length ? ` ${directives.map(directive => print(directive)).join(' ')}` : '';
+
+  const parts = new Set<string>();
+  for (const selection of selectionSet.selections) {
     switch (selection.kind) {
       case Kind.FIELD: {
-        const fieldName = getFullPathFieldName(selection, parentName);
-        fieldNames.add(fieldName);
-        if (selection.selectionSet) {
-          getFieldNames({
-            selections: selection.selectionSet.selections,
-            fieldNames,
-            parentName: fieldName,
-            loadedFragments,
-          });
-        }
+        const name = selection.alias
+          ? `${selection.alias.value}@${selection.name.value}`
+          : selection.name.value;
+        const subKey = selection.selectionSet
+          ? `{${getSelectionSetCacheKey(selection.selectionSet)}}`
+          : '';
+        parts.add(`${name}${printDirectives(selection.directives)}${subKey}`);
         break;
       }
       case Kind.FRAGMENT_SPREAD: {
-        getFieldNames({
-          selections: loadedFragments
-            .filter(def => def.name === selection.name.value)
-            .flatMap(s => s.node.selectionSet.selections),
-          fieldNames,
-          parentName,
-          loadedFragments,
-        });
+        parts.add(`...${selection.name.value}${printDirectives(selection.directives)}`);
         break;
       }
       case Kind.INLINE_FRAGMENT: {
-        getFieldNames({
-          selections: selection.selectionSet.selections,
-          fieldNames,
-          parentName,
-          loadedFragments,
-        });
+        const onType = selection.typeCondition ? ` on ${selection.typeCondition.name.value}` : '';
+        parts.add(
+          `...${onType}${printDirectives(selection.directives)}{${getSelectionSetCacheKey(selection.selectionSet)}}`,
+        );
         break;
       }
     }
   }
-  return fieldNames;
-};
+
+  const key = [...parts].sort().join(',');
+  selectionSetCacheKeys.set(selectionSet, key);
+  return key;
+}
 
 export const getNodeComment = (
   node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode,
@@ -727,7 +756,7 @@ export const getNodeComment = (
 const getDeprecationReason = (directive: DirectiveNode): string | void => {
   if (directive.name.value === 'deprecated') {
     let reason = 'Field no longer supported';
-    const deprecatedReason = directive.arguments[0];
+    const deprecatedReason = directive.arguments?.[0];
     if (deprecatedReason && deprecatedReason.value.kind === Kind.STRING) {
       reason = deprecatedReason.value.value;
     }

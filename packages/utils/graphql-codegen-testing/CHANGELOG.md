@@ -1,5 +1,124 @@
 # @graphql-codegen/testing
 
+## 5.0.6
+
+### Patch Changes
+
+- [#10985](https://github.com/dotansimha/graphql-code-generator/pull/10985)
+  [`d8aa07f`](https://github.com/dotansimha/graphql-code-generator/commit/d8aa07fed45a2787f46da30a7ffb52651b32dc67)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Build with `strict: true`, which changes
+  these emitted type declarations:
+  - `@graphql-codegen/cli`: `mkdirp` returns `Promise<string | undefined>`, and the `require` (`-r`)
+    CLI option's `default` is typed `never[]` instead of `any[]`.
+  - `@graphql-codegen/visitor-plugin-common`: `BaseResolversVisitor` and `BaseTypesVisitor`
+    `SchemaDefinition()`/`SchemaExtension()` return `null` instead of `any`.
+  - `@graphql-codegen/visitor-plugin-common`: `BaseSelectionSetProcessor.typeCache` is keyed by
+    `Location | undefined`.
+  - `@graphql-codegen/visitor-plugin-common`: `SelectionSetToObject.buildSelectionSet` returns
+    `typeInfo` as `{ name: string; type: string } | null`.
+  - `@graphql-codegen/visitor-plugin-common`: `getPossibleTypes` accepts `null` as the type, which
+    graphql 15's `schema.getType()` can return.
+  - `@graphql-codegen/visitor-plugin-common`: `removeDescription` returns nodes with
+    `description: undefined` instead of `any`.
+  - `@graphql-codegen/typescript`: `TsIntrospectionVisitor`'s constructor takes `pluginConfig` as
+    `TypeScriptPluginConfig | undefined`, `DirectiveDefinition()` returns `null` and
+    `ObjectTypeDefinition()` returns `string | null`.
+  - `@graphql-codegen/client-preset`: the babel preset accepts `options` as
+    `ClientBabelPresetOptions | null | undefined`.
+  - `@graphql-codegen/testing`: `mockGraphQLServer` returns `nock.Scope | null`.
+  - `@graphql-codegen/graphql-modules-preset`: a schema without `extensions` (graphql 15) throws the
+    "requires to use GraphQL SDL" error instead of a `TypeError`.
+
+  Generated output is unchanged.
+
+## 5.0.5
+
+### Patch Changes
+
+- [#10992](https://github.com/dotansimha/graphql-code-generator/pull/10992)
+  [`024fa34`](https://github.com/dotansimha/graphql-code-generator/commit/024fa34a88073d073c7fa10db0092ee5000dfdca)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Make `validateTs`/`compileTs` type-check
+  under `strict: true`: fall back to the compiler host's script target when the passed options have
+  no `target`, and only compute a diagnostic's line/column when it has a `start` position. Adds
+  `@types/common-tags` as a devDependency.
+
+- Updated dependencies
+  [[`1d1153b`](https://github.com/dotansimha/graphql-code-generator/commit/1d1153b3b161fa82057d586bb5fe524e1e17efe3)]:
+  - @graphql-codegen/plugin-helpers@7.4.0
+
+## 5.0.4
+
+### Patch Changes
+
+- [#10979](https://github.com/dotansimha/graphql-code-generator/pull/10979)
+  [`2052509`](https://github.com/dotansimha/graphql-code-generator/commit/205250908d52b8496d366efaf1d7188e7f5baa94)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Added dependency [`vitest@^4.0.0` ↗︎](https://www.npmjs.com/package/vitest/v/4.0.0) (to
+    `peerDependencies`)
+
+- [#10979](https://github.com/dotansimha/graphql-code-generator/pull/10979)
+  [`2052509`](https://github.com/dotansimha/graphql-code-generator/commit/205250908d52b8496d366efaf1d7188e7f5baa94)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Anchor `validateTs` / `compileTs` module
+  resolution at the directory of the test being run.
+
+  The file these helpers type-check exists only in memory, but TypeScript still needs a real
+  directory to anchor Node module resolution to. The compiler host reported `''` as the current
+  directory, so nothing resolved — and every resulting diagnostic was swallowed by the blanket
+  `Cannot find module` filter, leaving generics to silently degrade to `never` with only a confusing
+  downstream overload error to show for it.
+
+  `process.cwd()` is not a usable anchor either: it is the repo root, and under pnpm's isolated
+  layout a package's dependencies live in that package's own `node_modules`. The directory of the
+  running test file is, so it is taken from `expect.getState().testPath`; calling these helpers
+  outside a vitest test now throws instead of silently resolving from the wrong place.
+
+  `vitest` is now declared as a peer dependency rather than relied on as a phantom one —
+  `src/index.ts` already imported it, and `validateTs` now does too.
+
+  This is an internal test-utility fix; no exported signature changes.
+
+## 5.0.3
+
+### Patch Changes
+
+- [#10977](https://github.com/dotansimha/graphql-code-generator/pull/10977)
+  [`9f28176`](https://github.com/dotansimha/graphql-code-generator/commit/9f281768c4a6458e642328586e4247ccf17cfba2)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Resolve the `@types` directory from
+  `@types/node`'s own location rather than from TypeScript's.
+
+  `validateTs` and `compileTs` derived `typeRoots` as
+  `resolve(require.resolve('typescript'), '../../../@types/')`, which only lands on
+  `node_modules/@types` in a flat npm/yarn layout. Under pnpm's default isolated layout
+  `require.resolve` returns the realpath inside the virtual store, so it pointed at a directory that
+  does not exist and no ambient Node typings were ever loaded — which is why
+  `options.types ||= ['node']` had to be disabled on TypeScript 6. Locating the directory from
+  `@types/node` itself is correct under every layout, and the `types` option is restored alongside
+  it.
+
+  `@types/node` is now a declared devDependency of this package rather than a phantom dependency of
+  the workspace root. This is an internal test-utility fix; no exported signature changes.
+
+## 5.0.2
+
+### Patch Changes
+
+- [#10951](https://github.com/dotansimha/graphql-code-generator/pull/10951)
+  [`464b531`](https://github.com/dotansimha/graphql-code-generator/commit/464b531bd954dc3cd283a281f132e93ab395f291)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Added dependency [`graphql-yoga@^5.21.0` ↗︎](https://www.npmjs.com/package/graphql-yoga/v/5.21.0)
+    (to `dependencies`)
+  - Removed dependency
+    [`graphql-helix@1.13.0` ↗︎](https://www.npmjs.com/package/graphql-helix/v/1.13.0) (from
+    `dependencies`)
+
+- [#10951](https://github.com/dotansimha/graphql-code-generator/pull/10951)
+  [`464b531`](https://github.com/dotansimha/graphql-code-generator/commit/464b531bd954dc3cd283a281f132e93ab395f291)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Replace unmaintained `graphql-helix`
+  dependency with `graphql-yoga` in the internal `mockGraphQLServer` test utility. `graphql-helix`
+  has had no releases in years; `graphql-yoga` is actively maintained and already used elsewhere in
+  this monorepo. This is an internal implementation detail — the `mockGraphQLServer` function
+  signature is unchanged.
+
 ## 5.0.1
 
 ### Patch Changes

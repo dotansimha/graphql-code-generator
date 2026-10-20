@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "vanilla-typescript",
+    "react-query",
+    "react-vue",
+    "angular",
+    "svelte",
+    "flutter-freezed",
+    "graphql-server-apollo-yoga",
+    "graphql-server-apollo-yoga-with-server-preset",
+    "api-testing",
+    "graphql-modules",
+    "further-reading"
+  ],
+  "title": "Guides"
+}

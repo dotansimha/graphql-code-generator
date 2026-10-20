@@ -30,16 +30,18 @@ export async function generate(
     'Lifecycle: afterStart',
   );
 
-  let previouslyGeneratedFilenames: string[] = [];
+  // Store only the projection (`filename` + `overwrite`) rather than full results, so a
+  // file that disappears is still judged by the `overwrite` of the entry that produced it.
+  let previouslyGeneratedFiles: Pick<Types.FileOutput, 'filename' | 'overwrite'>[] = [];
 
   function removeStaleFiles(config: Types.Config, generationResult: Types.FileOutput[]) {
     const filenames = generationResult.map(o => o.filename);
     // find stale files from previous build which are not present in current build
-    const staleFilenames = previouslyGeneratedFilenames.filter(f => !filenames.includes(f));
-    for (const filename of staleFilenames) {
-      if (shouldOverwrite(config, filename)) {
-        unlinkFile(filename, err => {
-          const prettyFilename = filename.replace(`${input.cwd || process.cwd()}/`, '');
+    const staleFiles = previouslyGeneratedFiles.filter(f => !filenames.includes(f.filename));
+    for (const staleFile of staleFiles) {
+      if (normalizeOverwriteConfig(config.overwrite, staleFile.overwrite).removeStaleFiles) {
+        unlinkFile(staleFile.filename, err => {
+          const prettyFilename = staleFile.filename.replace(`${input.cwd || process.cwd()}/`, '');
           if (err) {
             debugLog(`Cannot remove stale file: ${prettyFilename}\n${err}`);
           } else {
@@ -48,9 +50,16 @@ export async function generate(
         });
       }
     }
-    previouslyGeneratedFilenames = filenames;
+    previouslyGeneratedFiles = generationResult.map(res => ({
+      filename: res.filename,
+      overwrite: res.overwrite,
+    }));
   }
 
+  // Records the hash of the content codegen last wrote per file. This is always
+  // kept up to date; `FileOutput.contentComparison` only decides whether the
+  // skip-check trusts this record ('cache-first') or re-reads the file from disk
+  // ('disk'), for outputs whose content depends on the file's existing content.
   const recentOutputHash = new Map<string, string>();
 
   async function writeOutput(generationResult: Types.FileOutput[]): Promise<Types.FileOutput[]> {
@@ -69,17 +78,36 @@ export async function generate(
     await context.profiler.run(
       () =>
         Promise.all(
-          generationResult.map(async (result: Types.FileOutput) => {
-            const previousHash =
-              recentOutputHash.get(result.filename) || (await hashFile(result.filename));
+          generationResult.map(async result => {
+            // The "previous" hash the skip-check compares against:
+            // - 'cache-first' trusts the in-memory record of what codegen last wrote
+            // (falling back to disk when there's no entry).
+            // - 'disk' always re-reads the file, because the output's content
+            // depends on the file's existing content
+            // (e.g. a preset that reads the file and rewrites part of it), so the
+            // in-memory record could wrongly skip a write when the file was changed
+            // on disk but the regenerated content matches a previous run.
+            const previousHash = await (async function getPreviousHash(): Promise<string | null> {
+              const { contentComparison = 'cache-first' } = result;
+
+              if (contentComparison === 'disk') {
+                return await hashFile(result.filename);
+              }
+
+              return recentOutputHash.get(result.filename) || (await hashFile(result.filename));
+            })();
             const exists = previousHash !== null;
 
-            // Store previous hash to avoid reading from disk again
+            // Always update the cache, regardless of `cache-first` or `disk` option,
+            // so subsequent runs have consistent entry to compare against
             if (previousHash) {
               recentOutputHash.set(result.filename, previousHash);
             }
 
-            if (!shouldOverwrite(config, result.filename) && exists) {
+            if (
+              !normalizeOverwriteConfig(config.overwrite, result.overwrite).updateExistingFiles &&
+              exists
+            ) {
               return;
             }
 
@@ -143,9 +171,22 @@ export async function generate(
     return generationResult;
   }
 
+  // Flush the collected profiler events to disk, then reset the profiler so the
+  // next run produces its own trace under a fresh filename. No-op when profiling
+  // is disabled (the noop profiler has no `outputName`).
+  async function writeProfilerOutput(): Promise<void> {
+    const { profiler } = context;
+    if (!profiler.outputName) {
+      return;
+    }
+
+    await writeFile(join(context.cwd, profiler.outputName), JSON.stringify(profiler.collect()));
+    profiler.clear();
+  }
+
   // watch mode
   if (config.watch) {
-    return createWatcher(context, writeOutput).runningWatcher;
+    return createWatcher(context, writeOutput, writeProfilerOutput).runningWatcher;
   }
 
   const { result: outputFiles, error } = await context.profiler.run(
@@ -179,34 +220,34 @@ export async function generate(
     'Lifecycle: beforeDone',
   );
 
-  if (context.profilerOutput) {
-    await writeFile(
-      join(context.cwd, context.profilerOutput),
-      JSON.stringify(context.profiler.collect()),
-    );
-  }
+  await writeProfilerOutput();
 
   return outputFiles;
 }
 
-function shouldOverwrite(config: Types.Config, outputPath: string): boolean {
-  const globalValue = config.overwrite === undefined ? true : !!config.overwrite;
-  const outputConfig = config.generates[outputPath];
+function normalizeOverwriteConfig(
+  configOverwrite: Types.Config['overwrite'],
+  fileOverwrite: Types.FileOutput['overwrite'],
+): Types.NormalizedOverwriteOption {
+  const overwrite = fileOverwrite ?? configOverwrite ?? true;
 
-  if (!outputConfig) {
-    debugLog(`Couldn't find a config of ${outputPath}`);
-    return globalValue;
+  if (overwrite === true) {
+    return {
+      removeStaleFiles: true,
+      updateExistingFiles: true,
+    };
   }
 
-  if (isConfiguredOutput(outputConfig) && typeof outputConfig.overwrite === 'boolean') {
-    return outputConfig.overwrite;
+  if (overwrite === false) {
+    return {
+      removeStaleFiles: false,
+      updateExistingFiles: false,
+    };
   }
 
-  return globalValue;
-}
+  const { removeStaleFiles = true, updateExistingFiles = true } = overwrite;
 
-function isConfiguredOutput(output: any): output is Types.ConfiguredOutput {
-  return typeof output.plugins !== 'undefined';
+  return { removeStaleFiles, updateExistingFiles };
 }
 
 async function hashFile(filePath: string): Promise<string | null> {

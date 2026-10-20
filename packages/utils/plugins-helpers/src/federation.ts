@@ -46,10 +46,14 @@ export const federationSpec = parse(/* GraphQL */ `
  */
 interface DirectiveSelectionSet {
   name: string;
-  selection: boolean | DirectiveSelectionSet[];
+  selection: true | ReferenceSelectionSet;
 }
 
-type ReferenceSelectionSet = Record<string, boolean>; // TODO: handle nested
+/**
+ * Leaf fields map to `true`, fields with a selection set map to a nested `ReferenceSelectionSet`
+ * e.g. `id company { taxCode }` -> `{ id: true, company: { taxCode: true } }`
+ */
+type ReferenceSelectionSet = { [field: string]: true | ReferenceSelectionSet };
 
 interface TypeMeta {
   hasResolveReference: boolean;
@@ -562,7 +566,7 @@ export class ApolloFederation {
         for (const field of Object.values(objectType.getFields())) {
           const provides = getDirectivesByName('provides', field.astNode)
             .map(extractReferenceSelectionSet)
-            .reduce((prev, curr) => [...prev, ...Object.keys(curr)], []); // FIXME: this is not taking into account nested selection sets e.g. `company { taxCode }`
+            .reduce<string[]>((prev, curr) => [...prev, ...Object.keys(curr)], []); // FIXME: this is not taking into account nested selection sets e.g. `company { taxCode }`
           const ofType = getBaseType(field.type);
 
           providesMap[ofType.name] ||= [];
@@ -585,7 +589,8 @@ function checkTypeFederationDetails(
   schema: GraphQLSchema,
 ): { resolvableKeyDirectives: readonly DirectiveNode[] } | false {
   const name = node.name.value;
-  const directives = node.directives;
+  // This `|| []` is only to satisfy type safety: graphql's `directives` is optional, and a type without directives has no `@key`
+  const directives = node.directives || [];
 
   const rootTypeNames = getRootTypeNames(schema);
   const isNotRoot = !rootTypeNames.has(name);
@@ -599,7 +604,8 @@ function checkTypeFederationDetails(
   }
 
   const resolvableKeyDirectives = keyDirectives.filter(d => {
-    for (const arg of d.arguments) {
+    // This `|| []` is only to satisfy type safety: a `@key` without arguments has no `resolvable: false`
+    for (const arg of d.arguments || []) {
       if (
         arg.name.value === 'resolvable' &&
         arg.value.kind === 'BooleanValue' &&
@@ -621,22 +627,33 @@ function checkTypeFederationDetails(
  */
 function getDirectivesByName(
   name: string,
-  node: ObjectTypeDefinitionNode | FieldDefinitionNode | InterfaceTypeDefinitionNode,
+  node:
+    | ObjectTypeDefinitionNode
+    | FieldDefinitionNode
+    | InterfaceTypeDefinitionNode
+    | null
+    | undefined,
 ): readonly DirectiveNode[] {
   return node?.directives?.filter(d => d.name.value === name) || [];
 }
 
 function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelectionSet {
-  const arg = directive.arguments.find(arg => arg.name.value === 'fields');
+  const arg = directive.arguments?.find(arg => arg.name.value === 'fields');
+  if (!arg) {
+    throw new Error(`Unable to find "fields" argument in @${directive.name.value} directive!`);
+  }
   const { value } = arg.value as StringValueNode;
 
-  return oldVisit(parse(`{${value}}`), {
+  return oldVisit<ReferenceSelectionSet>(parse(`{${value}}`), {
     leave: {
       SelectionSet(node) {
-        return (node.selections as any as DirectiveSelectionSet[]).reduce((accum, field) => {
-          accum[field.name] = field.selection;
-          return accum;
-        }, {});
+        return (node.selections as any as DirectiveSelectionSet[]).reduce<ReferenceSelectionSet>(
+          (accum, field) => {
+            accum[field.name] = field.selection;
+            return accum;
+          },
+          {},
+        );
       },
       Field(node) {
         return {
@@ -645,10 +662,16 @@ function extractReferenceSelectionSet(directive: DirectiveNode): ReferenceSelect
         } as DirectiveSelectionSet;
       },
       Document(node) {
-        return node.definitions.find(
+        const queryDefinition = node.definitions.find(
           (def: DefinitionNode): def is OperationDefinitionNode =>
             def.kind === 'OperationDefinition' && def.operation === 'query',
-        ).selectionSet;
+        );
+        if (!queryDefinition) {
+          throw new Error(
+            `Unable to parse "fields" argument of @${directive.name.value} directive!`,
+          );
+        }
+        return queryDefinition.selectionSet;
       },
     },
   });

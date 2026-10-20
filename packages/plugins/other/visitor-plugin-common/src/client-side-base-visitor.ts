@@ -30,6 +30,7 @@ export enum DocumentMode {
   documentNodeImportFragments = 'documentNodeImportFragments',
   external = 'external',
   string = 'string',
+  plainString = 'plainString',
 }
 
 const EXTENSIONS_TO_REMOVE = ['.ts', '.tsx', '.js', '.jsx'];
@@ -134,6 +135,8 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    * - `documentNode`: document nodes will be generated as objects when we generate the templates.
    * - `documentNodeImportFragments`: Similar to documentNode except it imports external fragments instead of embedding them.
    * - `external`: document nodes are imported from an external file. To be used with `importDocumentNodeExternallyFrom`
+   * - `string`: documents are generated as `TypedDocumentString` instances, a `String` subclass that carries result and variables types. The class is generated into the output.
+   * - `plainString`: documents are generated as plain template strings, with fragments embedded. No class, import or type cast is generated, so the documents are typed as `string`.
    *
    * Note that some plugins (like `typescript-graphql-request`) also supports `string` for this parameter.
    *
@@ -256,7 +259,7 @@ export class ClientSideBaseVisitor<
     fragments: LoadedFragment[],
     rawConfig: TRawConfig,
     additionalConfig: Partial<TPluginConfig>,
-    documents?: Types.DocumentFile[],
+    documents: Types.DocumentFile[] = [],
   ) {
     super(rawConfig, {
       scalars: buildScalarsFromConfig(_schema, rawConfig),
@@ -335,7 +338,8 @@ export class ClientSideBaseVisitor<
     if (fragments && fragments.length > 0) {
       if (
         this.config.documentMode === DocumentMode.documentNode ||
-        this.config.documentMode === DocumentMode.string
+        this.config.documentMode === DocumentMode.string ||
+        this.config.documentMode === DocumentMode.plainString
       ) {
         return Array.from(this._fragments.values())
           .filter(f => fragments.includes(this.getFragmentVariableName(f.name)))
@@ -362,6 +366,7 @@ export class ClientSideBaseVisitor<
     const includeNestedFragments =
       this.config.documentMode === DocumentMode.documentNode ||
       this.config.documentMode === DocumentMode.string ||
+      this.config.documentMode === DocumentMode.plainString ||
       node.kind === 'OperationDefinition';
     const fragmentNames = this._extractFragments(node, includeNestedFragments);
     const fragments = this._transformFragments(fragmentNames);
@@ -453,6 +458,10 @@ export class ClientSideBaseVisitor<
       return `new TypedDocumentString(\`${doc}\`)`;
     }
 
+    if (this.config.documentMode === DocumentMode.plainString) {
+      return `\`${doc}\``;
+    }
+
     const gqlImport = this._parseImport(this.config.gqlImport || 'graphql-tag');
 
     return (gqlImport.propName || 'gql') + '`' + doc + '`';
@@ -464,10 +473,10 @@ export class ClientSideBaseVisitor<
   ): Record<string, any> | void | undefined {
     let meta: Record<string, any> | void | undefined;
 
-    if (node.kind === Kind.OPERATION_DEFINITION) {
+    if (node.kind === Kind.OPERATION_DEFINITION && this._onExecutableDocumentNode) {
       meta = this._onExecutableDocumentNode({
         kind: Kind.DOCUMENT,
-        definitions,
+        definitions: definitions || [],
       });
     }
 
@@ -487,8 +496,8 @@ export class ClientSideBaseVisitor<
   } {
     const deferredFields: { [fargmentName: string]: string[] } = {};
     const queue: SelectionNode[] = [...node.selectionSet.selections];
-    while (queue.length) {
-      const selection = queue.shift();
+    // `for...of` also visits the selections pushed to `queue` while iterating
+    for (const selection of queue) {
       if (
         selection.kind === Kind.FRAGMENT_SPREAD &&
         selection.directives?.some((d: DirectiveNode) => d.name.value === 'defer')
@@ -675,7 +684,7 @@ export class ClientSideBaseVisitor<
             this.config.importDocumentNodeExternallyFrom === 'near-operation-file' &&
             this._documents.length === 1
           ) {
-            let documentPath = `./${this.clearExtension(basename(this._documents[0].location))}`;
+            let documentPath = `./${this.clearExtension(basename(this._documents[0].location || ''))}`;
             documentPath += normalizeImportExtension({
               emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
               importExtension: this.config.importExtension,
@@ -692,7 +701,7 @@ export class ClientSideBaseVisitor<
 
             this._imports.add(
               `import * as Operations from '${this.clearExtension(
-                this.config.importDocumentNodeExternallyFrom,
+                this.config.importDocumentNodeExternallyFrom || '',
               )}';`,
             );
           }
@@ -722,7 +731,7 @@ export class ClientSideBaseVisitor<
             importSource: {
               ...fragmentImports[0].importSource,
               identifiers: unique(
-                flatten(fragmentImports.map(fi => fi.importSource.identifiers)),
+                flatten(fragmentImports.map(fi => fi.importSource.identifiers || [])),
                 identifier => identifier.name,
               ),
             },
@@ -747,7 +756,7 @@ export class ClientSideBaseVisitor<
     _operationResultType: string,
     _operationVariablesTypes: string,
     _hasRequiredVariables: boolean,
-  ): string {
+  ): string | null {
     return null;
   }
 

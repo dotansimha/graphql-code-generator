@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "index",
+    "plugin-structure",
+    "validate-configuration",
+    "extend-schema",
+    "using-visitor",
+    "contributing"
+  ],
+  "title": "Writing Plugins"
+}

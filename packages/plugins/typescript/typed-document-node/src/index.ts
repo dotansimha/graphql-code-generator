@@ -19,7 +19,7 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
   const documents = config.flattenGeneratedTypes
     ? optimizeOperations(schema, rawDocuments)
     : rawDocuments;
-  const allAst = concatAST(documents.map(v => v.document));
+  const allAst = concatAST(documents.flatMap(v => (v.document ? [v.document] : [])));
 
   const allFragments: LoadedFragment[] = [
     ...(

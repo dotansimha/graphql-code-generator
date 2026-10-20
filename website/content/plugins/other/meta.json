@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "add",
+    "fragment-matcher",
+    "hasura-allow-list",
+    "introspection",
+    "jsdoc",
+    "reason-client",
+    "schema-ast",
+    "time",
+    "urql-introspection"
+  ]
+}

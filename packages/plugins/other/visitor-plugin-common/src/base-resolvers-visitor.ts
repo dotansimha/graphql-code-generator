@@ -32,13 +32,7 @@ import { getRootTypeNames } from '@graphql-tools/utils';
 import { normalizeAvoidOptionals } from './avoid-optionals.js';
 import { BaseVisitor, BaseVisitorConvertOptions, ParsedConfig, RawConfig } from './base-visitor.js';
 import { parseEnumValues } from './enum-values.js';
-import {
-  buildMapperImport,
-  ExternalParsedMapper,
-  ParsedMapper,
-  parseMapper,
-  transformMappers,
-} from './mappers.js';
+import { buildMapperImport, parseMapper, transformMappers, type ParsedMapper } from './mappers.js';
 import { DEFAULT_SCALARS } from './scalars.js';
 import {
   AvoidOptionalsConfig,
@@ -749,7 +743,7 @@ export class BaseResolversVisitor<
 
   constructor(
     rawConfig: TRawConfig,
-    additionalConfig: TPluginConfig,
+    additionalConfig: Partial<TPluginConfig>,
     private _schema: GraphQLSchema,
     defaultScalars: NormalizedScalarsMap = DEFAULT_SCALARS,
     federationMeta: FederationMeta = {},
@@ -793,7 +787,7 @@ export class BaseResolversVisitor<
         false,
       ),
       ...additionalConfig,
-    } as TPluginConfig);
+    });
 
     this.config.enumValues = parseEnumValues({
       schema: _schema,
@@ -953,7 +947,7 @@ export class BaseResolversVisitor<
       const isRootType = this._rootTypeNames.has(typeName);
       const isMapped = this.config.mappers[typeName];
       const isScalar = this.config.scalars[typeName];
-      const hasDefaultMapper = !!this.config.defaultMapper?.type;
+      const defaultMapperType = this.config.defaultMapper?.type;
 
       // Check for mappers first, even for root types, to allow overriding rootValueType
       if (
@@ -976,9 +970,11 @@ export class BaseResolversVisitor<
         const isExternalFile = !!this.config.enumValues[typeName].sourceFile;
         prev[typeName] = isExternalFile
           ? this.config.enumValues[typeName].typeIdentifierConverted
-          : this.config.enumValues[typeName].sourceIdentifier;
-      } else if (hasDefaultMapper && !hasPlaceholder(this.config.defaultMapper.type)) {
-        prev[typeName] = applyWrapper(this.config.defaultMapper.type);
+          : // `sourceIdentifier` is `null` when `enumValues` maps this enum with an object, and
+            // `String()` prints it as the `null` type, e.g. `MyEnum: null`
+            String(this.config.enumValues[typeName].sourceIdentifier);
+      } else if (defaultMapperType && !hasPlaceholder(defaultMapperType)) {
+        prev[typeName] = applyWrapper(defaultMapperType);
       } else if (isScalar) {
         prev[typeName] = applyWrapper(this._getScalar(typeName));
       } else if (isInterfaceType(schemaType)) {
@@ -1039,15 +1035,15 @@ export class BaseResolversVisitor<
         }
       }
 
-      if (!isMapped && hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+      if (!isMapped && defaultMapperType && hasPlaceholder(defaultMapperType)) {
         const originalTypeName = isScalar ? this._getScalar(typeName) : prev[typeName];
 
         if (isUnionType(schemaType)) {
           // Don't clear ResolverTypeWrapper from Unions
-          prev[typeName] = replacePlaceholder(this.config.defaultMapper.type, originalTypeName);
+          prev[typeName] = replacePlaceholder(defaultMapperType, originalTypeName);
         } else {
           const name = clearWrapper(originalTypeName);
-          const replaced = replacePlaceholder(this.config.defaultMapper.type, name);
+          const replaced = replacePlaceholder(defaultMapperType, name);
           prev[typeName] = applyWrapper(replaced);
         }
       }
@@ -1164,7 +1160,7 @@ export class BaseResolversVisitor<
   }: {
     typeName: string;
     memberTypes: readonly GraphQLObjectType[] | GraphQLObjectType[];
-    isTypenameNonOptional: boolean;
+    isTypenameNonOptional?: boolean;
   }): string {
     const members = memberTypes
       .map(type => {
@@ -1198,13 +1194,13 @@ export class BaseResolversVisitor<
         }
 
         // 2d. If has default mapper with placeholder, use the "type with maybe Omit" as {T}
-        const hasDefaultMapper = !!this.config.defaultMapper?.type;
+        const defaultMapperType = this.config.defaultMapper?.type;
         const isScalar = this.config.scalars[typeName];
-        if (hasDefaultMapper && hasPlaceholder(this.config.defaultMapper.type)) {
+        if (defaultMapperType && hasPlaceholder(defaultMapperType)) {
           const finalTypename = isScalar ? this._getScalar(typeName) : typeValue;
           return {
             typename: type.name,
-            typeValue: replacePlaceholder(this.config.defaultMapper.type, finalTypename),
+            typeValue: replacePlaceholder(defaultMapperType, finalTypename),
           };
         }
 
@@ -1412,6 +1408,9 @@ export class BaseResolversVisitor<
   }
 
   public get defaultMapperType(): string {
+    if (!this.config.defaultMapper) {
+      throw new Error('defaultMapperType is only available when the "defaultMapper" config is set');
+    }
     return this.config.defaultMapper.type;
   }
 
@@ -1449,15 +1448,11 @@ export class BaseResolversVisitor<
       }
     };
 
-    for (const { mapper } of Object.keys(this.config.mappers)
-      .map(gqlTypeName => ({
-        gqlType: gqlTypeName,
-        mapper: this.config.mappers[gqlTypeName],
-      }))
-      .filter(({ mapper }) => mapper.isExternal)) {
-      const externalMapper = mapper as ExternalParsedMapper;
-      const identifier = stripMapperTypeInterpolation(externalMapper.import);
-      addMapper(externalMapper.source, identifier, externalMapper.default);
+    for (const mapper of Object.values(this.config.mappers)) {
+      if (mapper.isExternal) {
+        const identifier = stripMapperTypeInterpolation(mapper.import);
+        addMapper(mapper.source, identifier, mapper.default);
+      }
     }
 
     if (this.config.contextType.isExternal) {
@@ -1495,7 +1490,7 @@ export class BaseResolversVisitor<
 
     return Object.keys(groupedMappers)
       .map(source => buildMapperImport(source, groupedMappers[source], this.config.useTypeImports))
-      .filter(Boolean);
+      .filter((mapperImport): mapperImport is string => !!mapperImport);
   }
 
   setDeclarationBlockConfig(config: DeclarationBlockConfig): void {
@@ -1600,6 +1595,8 @@ export class BaseResolversVisitor<
   }
 
   ListType(node: ListTypeNode): string {
+    // On leave, oldVisit has already replaced `node.type` with the string its visitor returned.
+    // Removing this cast needs a node type whose children are the visitors' return types.
     const asString = node.type as any as string;
 
     return this.wrapWithArray(asString);
@@ -1618,10 +1615,12 @@ export class BaseResolversVisitor<
       return this._getScalar(nameStr);
     }
 
-    return this.convertName(node, null, true);
+    return this.convertName(node, {}, true);
   }
 
   NonNullType(node: NonNullTypeNode): string {
+    // On leave, oldVisit has already replaced `node.type` with the string its visitor returned.
+    // Removing this cast needs a node type whose children are the visitors' return types.
     const asString = node.type as any as string;
 
     return asString;
@@ -1654,6 +1653,8 @@ export class BaseResolversVisitor<
   FieldDefinition(
     node: FieldDefinitionNode,
     key: string | number,
+    // `parent` is `any` like in `OldVisitorKindMap`, where oldVisit passes it untyped.
+    // Typing it needs oldVisit to pass a typed parent per node kind.
     parent: any,
   ): FieldDefinitionResult {
     const hasArguments = node.arguments && node.arguments.length > 0;
@@ -1665,7 +1666,6 @@ export class BaseResolversVisitor<
       node: original,
       printContent: (parentNode, avoidResolverOptionals) => {
         const parentName = parentNode.name.value;
-        const parentType = this.schema.getType(parentName);
         const meta: ReturnType<FieldDefinitionPrintFn>['meta'] = {};
         const typeName = node.name.value;
 
@@ -1701,14 +1701,15 @@ export class BaseResolversVisitor<
         const avoidInputsOptionals = this.config.avoidOptionals.inputValue;
 
         if (argsType !== null) {
-          const argsToForceRequire = original.arguments.filter(
+          const originalArguments = original.arguments || [];
+          const argsToForceRequire = originalArguments.filter(
             arg => !!arg.defaultValue || arg.type.kind === 'NonNullType',
           );
 
           if (argsToForceRequire.length > 0) {
             argsType = this.applyRequireFields(argsType, argsToForceRequire);
-          } else if (original.arguments.length > 0 && avoidInputsOptionals !== true) {
-            argsType = this.applyOptionalFields(argsType, original.arguments);
+          } else if (originalArguments.length > 0 && avoidInputsOptionals !== true) {
+            argsType = this.applyOptionalFields(argsType, originalArguments);
           }
         }
 
@@ -1767,11 +1768,11 @@ export class BaseResolversVisitor<
             this.getParentTypeForSignature(node),
             contextType,
             argsType,
-          ].filter(f => f),
+          ].filter((f): f is string => !!f),
         };
 
         if (this._federation.isResolveReferenceField(node)) {
-          if (!this._federation.getMeta()[parentType.name].hasResolveReference) {
+          if (!this._federation.getMeta()[parentName].hasResolveReference) {
             return { value: '', meta };
           }
           const resultType = `${mappedTypeKey} | FederationReferenceType`;
@@ -1804,7 +1805,7 @@ export class BaseResolversVisitor<
   private getContextType(parentName: string, node: FieldDefinitionNode): string {
     let contextType = this.getFieldContextType(parentName, node);
 
-    for (const directive of node.directives) {
+    for (const directive of node.directives || []) {
       const name = directive.name.value;
       const directiveMap = this._directiveContextTypesMap[name];
       if (directiveMap) {
@@ -1896,6 +1897,9 @@ export class BaseResolversVisitor<
       return false;
     })();
 
+    // On leave, oldVisit has already replaced each field with the `FieldDefinitionResult` that
+    // `FieldDefinition` returned. Removing this cast needs a node type whose children are the
+    // visitors' return types.
     const fieldsContent = (node.fields as unknown as FieldDefinitionResult[])
       .map(({ printContent }) => {
         return printContent(
@@ -1948,13 +1952,21 @@ export class BaseResolversVisitor<
     return block.string;
   }
 
-  UnionTypeDefinition(node: UnionTypeDefinitionNode, key: string | number, parent: any): string {
+  UnionTypeDefinition(
+    node: UnionTypeDefinitionNode,
+    key: string | number,
+    // `parent` is `any` like in `OldVisitorKindMap`, where oldVisit passes it untyped.
+    // Typing it needs oldVisit to pass a typed parent per node kind.
+    parent: any,
+  ): string {
     const declarationKind = 'type';
     const name = this.convertName(node, {
       suffix: this.config.resolverTypeSuffix,
     });
+    // `parent[key]` is the original node, before oldVisit replaced its children.
+    // Removing this cast needs `parent` to be typed (see above).
     const originalNode = parent[key] as UnionTypeDefinitionNode;
-    const possibleTypes = originalNode.types
+    const possibleTypes = (originalNode.types || [])
       .map(node => node.name.value)
       .map(f => `'${f}'`)
       .join(' | ');
@@ -1985,7 +1997,7 @@ export class BaseResolversVisitor<
       ).string;
   }
 
-  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string {
+  ScalarTypeDefinition(node: ScalarTypeDefinitionNode): string | null {
     const nameAsString = node.name.value;
     const baseName = this.getTypeToUse(nameAsString);
 
@@ -2015,7 +2027,13 @@ export class BaseResolversVisitor<
       .withBlock(indent(`name: '${node.name.value}'${this.getPunctuation('interface')}`)).string;
   }
 
-  DirectiveDefinition(node: DirectiveDefinitionNode, key: string | number, parent: any): string {
+  DirectiveDefinition(
+    node: DirectiveDefinitionNode,
+    key: string | number,
+    // `parent` is `any` like in `OldVisitorKindMap`, where oldVisit passes it untyped.
+    // Typing it needs oldVisit to pass a typed parent per node kind.
+    parent: any,
+  ): string | null {
     if (this._federation.skipDirective(node.name.value)) {
       return null;
     }
@@ -2023,6 +2041,8 @@ export class BaseResolversVisitor<
     const directiveName = this.convertName(node, {
       suffix: 'DirectiveResolver',
     });
+    // `parent[key]` is the original node, before oldVisit replaced its children.
+    // Removing this cast needs `parent` to be typed (see above).
     const sourceNode = parent[key] as DirectiveDefinitionNode;
     const hasArguments = sourceNode.arguments && sourceNode.arguments.length > 0;
 
@@ -2079,7 +2099,7 @@ export class BaseResolversVisitor<
     throw new Error(`buildEnumResolversExplicitMappedValues is not implemented!`);
   }
 
-  EnumTypeDefinition(node: EnumTypeDefinitionNode): string {
+  EnumTypeDefinition(node: EnumTypeDefinitionNode): string | null {
     const rawTypeName = node.name.value;
 
     // If we have enumValues set, and it's point to an external enum - we need to allow internal values resolvers
@@ -2097,18 +2117,15 @@ export class BaseResolversVisitor<
       typename: name,
       baseGeneratedTypename: name,
     };
-    const hasExplicitValues = this.config.enumValues[rawTypeName]?.mappedValues;
+    const mappedValues = this.config.enumValues[rawTypeName]?.mappedValues;
 
     return new DeclarationBlock(this._declarationBlockConfig)
       .export()
       .asKind('type')
       .withName(name)
       .withContent(
-        hasExplicitValues
-          ? this.buildEnumResolversExplicitMappedValues(
-              node,
-              this.config.enumValues[rawTypeName].mappedValues,
-            )
+        mappedValues
+          ? this.buildEnumResolversExplicitMappedValues(node, mappedValues)
           : this.buildEnumResolverContentBlock(node, this.getTypeToUse(rawTypeName)),
       ).string;
   }
@@ -2155,12 +2172,16 @@ export class BaseResolversVisitor<
 
     // An Interface in Federation may have the additional __resolveReference resolver, if resolvable.
     // So, we filter out the normal fields declared on the Interface and add the __resolveReference resolver.
+    // On leave, oldVisit has already replaced each field with the `FieldDefinitionResult` that
+    // `FieldDefinition` returned. Removing this cast needs a node type whose children are the
+    // visitors' return types.
     const fields = (node.fields as unknown as FieldDefinitionResult[]).map(({ printContent }) =>
       printContent(node, this.config.avoidOptionals.resolvers),
     );
     for (const field of fields) {
       if (field.meta.federation?.isResolveReference || this.config.addInterfaceFieldResolverTypes) {
-        blockFields.push(field.value);
+        // `join` prints a `null` item as an empty line, and so does this `''`
+        blockFields.push(field.value ?? '');
       }
     }
 
@@ -2241,7 +2262,7 @@ export class BaseResolversVisitor<
           }),
         };
       })
-      .filter(a => a);
+      .filter(field => field !== null);
   }
 }
 

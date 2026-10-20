@@ -824,7 +824,7 @@ describe('init', () => {
         [Tags.graphqlRequest]: targets.includes(Tags.graphqlRequest),
       })
         .filter(c => c.checked)
-        .reduce((all, choice) => all.concat(choice.value), []);
+        .reduce<Tags[]>((all, choice) => all.concat(choice.value), []);
 
       return {
         available: getAvailable(tags),
