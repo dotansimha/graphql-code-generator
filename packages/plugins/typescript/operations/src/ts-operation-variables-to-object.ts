@@ -6,6 +6,7 @@ import {
   OperationVariablesToObject,
   ParsedEnumValuesMap,
   printTypeScriptMaybeType,
+  type ConvertSchemaEnumToDeclarationBlockString,
   type NormalizedOperationAvoidOptionalsConfig,
 } from '@graphql-codegen/visitor-plugin-common';
 
@@ -15,7 +16,7 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
       avoidOptionals: NormalizedOperationAvoidOptionalsConfig;
       immutableTypes: boolean;
       inputMaybeValue: string;
-      enumWithStringValues: boolean;
+      enumType: ConvertSchemaEnumToDeclarationBlockString['outputType'];
     },
     _scalars: NormalizedScalarsMap,
     _convertName: ConvertNameFn,
@@ -99,7 +100,10 @@ export class TypeScriptOperationVariablesToObject extends OperationVariablesToOb
         `${this._config.immutableTypes ? 'ReadonlyArray' : 'Array'}<${innerType}>${listInputCoercionExtension}`,
       );
     }
-    if (this._config.enumWithStringValues && this._enumNames.includes(typeNode.name.value)) {
+    if (
+      this._config.enumType === 'native-with-string-values' &&
+      this._enumNames.includes(typeNode.name.value)
+    ) {
       return this.wrapMaybe(`${baseType} | \`\${${baseType}}\``);
     }
     return this.wrapMaybe(baseType);

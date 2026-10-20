@@ -251,7 +251,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           avoidOptionals: this.config.avoidOptionals,
           immutableTypes: this.config.immutableTypes,
           inputMaybeValue: this.config.inputMaybeValue,
-          enumWithStringValues: this.config.enumType === 'native-with-string-values',
+          enumType: this.config.enumType,
         },
         this.scalars,
         this.convertName.bind(this),
