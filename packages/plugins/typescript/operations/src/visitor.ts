@@ -251,6 +251,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           avoidOptionals: this.config.avoidOptionals,
           immutableTypes: this.config.immutableTypes,
           inputMaybeValue: this.config.inputMaybeValue,
+          enumWithStringValues: this.config.enumType === 'native-with-string-values',
         },
         this.scalars,
         this.convertName.bind(this),
@@ -375,6 +376,12 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
         }
 
         typePart = usedInputType.tsType; // If the schema is correct, when reversing typeNodes, the first node would be `NamedType`, which means we can safely set it as the base for typePart
+        if (
+          usedInputType.type === 'GraphQLEnumType' &&
+          this.config.enumType === 'native-with-string-values'
+        ) {
+          typePart = `${typePart} | \`\${${typePart}}\``;
+        }
         if (!typeNode.isNonNullable) {
           typePart = printTypeScriptMaybeType({
             type: typePart,
