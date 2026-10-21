@@ -1,5 +1,18 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.4.0
+
+### Minor Changes
+
+- [#11060](https://github.com/dotansimha/graphql-code-generator/pull/11060)
+  [`e2b3249`](https://github.com/dotansimha/graphql-code-generator/commit/e2b32491deba75e8aed34531b94814118a86d987)
+  Thanks [@santialbo](https://github.com/santialbo)! - Add the
+  `inlineReferencedFragmentsInFragmentDocuments` option. With `documentMode: graphQLTag`, each
+  fragment document then includes the fragments that it spreads, so you can use it on its own. The
+  default is `false`, and operation documents do not change.
+
+  Refs [#11040](https://github.com/dotansimha/graphql-code-generator/issues/11040)
+
 ## 7.3.0
 
 ### Minor Changes
