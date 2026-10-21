@@ -18,8 +18,8 @@
     y2="1.8225"
     gradientTransform="matrix(1 0 0 -1 -53.2974 66.4321)"
   >
-    <stop offset="0" style="stop-color:#387EB8" />
-    <stop offset="1" style="stop-color:#366994" />
+    <stop offset="0" style="stop-color: #387eb8" />
+    <stop offset="1" style="stop-color: #366994" />
   </linearGradient>
   <path
     fill="url(#python-a)"
@@ -38,8 +38,8 @@
     y2="-34.5308"
     gradientTransform="matrix(1 0 0 -1 -53.2974 66.4321)"
   >
-    <stop offset="0" style="stop-color:#FFE052" />
-    <stop offset="1" style="stop-color:#FFC331" />
+    <stop offset="0" style="stop-color: #ffe052" />
+    <stop offset="1" style="stop-color: #ffc331" />
   </linearGradient>
   <path
     fill="url(#python-b)"

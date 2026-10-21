@@ -8,8 +8,7 @@ description:
 This plugin generates Python types based on your `GraphQLSchema`:
 
 - object & interface types become [pydantic](https://docs.pydantic.dev) `BaseModel` classes
-  (snake_case attributes; keys that differ from the GraphQL name are pinned with
-  `Field(alias=...)`)
+  (snake_case attributes; keys that differ from the GraphQL name are pinned with `Field(alias=...)`)
 - input types become `TypedDict`
 - enums become `class X(str, Enum)`
 - scalars map to native Python types (`ID`/`String` → `str`, `Int` → `int`, `Float` → `float`,
@@ -38,6 +37,5 @@ class User(BaseModel):
     email: 'Optional[str]' = None
 ```
 
-It is the base-types counterpart to
-[`python-operations`](/plugins/python/python-operations), analogous to how `typescript` underpins
-`typescript-operations`.
+It is the base-types counterpart to [`python-operations`](/plugins/python/python-operations),
+analogous to how `typescript` underpins `typescript-operations`.

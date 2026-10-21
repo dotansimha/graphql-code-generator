@@ -10,9 +10,9 @@ sidebarTitle: operations
 
 For each `.graphql` operation document, `python-operations` generates:
 
-- a per-operation **result type** (nested `BaseModel` classes, snake_case fields, reserved-keyword
+- a per-operation **result type** (nested `BaseModel` classes, `snake_case` fields, reserved-keyword
   handling e.g. `from` → `from_`)
 - **variables** as a `TypedDict`
 
-Type references are generated to line up exactly with [`python`](/plugins/python/python), so run
-the two plugins together.
+Type references are generated to line up exactly with [`python`](/plugins/python/python), so run the
+two plugins together.
