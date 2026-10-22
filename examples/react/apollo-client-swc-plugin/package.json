@@ -1,0 +1,26 @@
+{
+  "name": "rust-example-apollo-client-swc-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "dev": "vite",
+    "test": "node scripts/test.js",
+    "test:end2end": "exit 0"
+  },
+  "dependencies": {
+    "@apollo/client": "3.14.1",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "workspace:*",
+    "@swc-contrib/plugin-graphql-codegen-client-preset": "0.31.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react-swc": "4.3.1",
+    "typescript": "6.0.3",
+    "vite": "8.0.16"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["vite.config.mts"]
+}

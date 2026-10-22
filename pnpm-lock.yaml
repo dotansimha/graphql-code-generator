@@ -418,6 +418,40 @@ importers:
         specifier: 8.0.16
         version: 8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)
 
+  examples/react/apollo-client-swc-plugin:
+    dependencies:
+      '@apollo/client':
+        specifier: 3.14.1
+        version: 3.14.1(@types/react@19.2.14)(graphql-ws@6.0.8(graphql@17.0.2)(ws@8.22.0))(graphql@17.0.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      react:
+        specifier: 19.2.6
+        version: 19.2.6
+      react-dom:
+        specifier: 19.2.6
+        version: 19.2.6(react@19.2.6)
+    devDependencies:
+      '@graphql-codegen/cli':
+        specifier: workspace:*
+        version: link:../../../packages/graphql-codegen-cli/dist
+      '@swc-contrib/plugin-graphql-codegen-client-preset':
+        specifier: 0.31.0
+        version: 0.31.0
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+      '@vitejs/plugin-react-swc':
+        specifier: 4.3.1
+        version: 4.3.1(vite@8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: 8.0.16
+        version: 8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)
+
   examples/react/http-executor:
     dependencies:
       '@graphql-tools/executor-http':
@@ -488,6 +522,9 @@ importers:
       '@graphql-codegen/schema-ast':
         specifier: workspace:*
         version: link:../../../packages/plugins/other/schema-ast/dist
+      '@swc-contrib/plugin-graphql-codegen-client-preset':
+        specifier: 0.31.0
+        version: 0.31.0
       '@types/node':
         specifier: 24.12.4
         version: 24.12.4
@@ -4632,6 +4669,10 @@ packages:
     resolution: {integrity: sha512-lVJX6qEgs/4DOcRTpo56tmKzVPtoWAaVbL4hfO7t7NVwl9AAXzQR6cihesW1BmNMPl+bK6dreu2sOKBP2Q9CIA==}
     peerDependencies:
       acorn: ^8.9.0
+
+  '@swc-contrib/plugin-graphql-codegen-client-preset@0.31.0':
+    resolution: {integrity: sha512-ZDxB1XyXyJlrRrjUoHsNQUt8K3VxuO9FKwlJ1hO1QfX3BLpYbAQNLknaqzapJezASX1jIhlbgz7FH0cltvzewA==}
+    engines: {node: '>=16'}
 
   '@swc/core-darwin-arm64@1.15.33':
     resolution: {integrity: sha512-N+L0uXhuO7FIfzqwgxmzv0zIpV0qEp8wPX3QQs2p4atjMoywup2JTeDlXPw+z9pWJGCae3JjM+tZ6myclI+2gA==}
@@ -12922,6 +12963,8 @@ snapshots:
   '@sveltejs/acorn-typescript@1.0.9(acorn@8.16.0)':
     dependencies:
       acorn: 8.16.0
+
+  '@swc-contrib/plugin-graphql-codegen-client-preset@0.31.0': {}
 
   '@swc/core-darwin-arm64@1.15.33':
     optional: true
