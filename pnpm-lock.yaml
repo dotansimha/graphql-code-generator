@@ -418,40 +418,6 @@ importers:
         specifier: 8.0.16
         version: 8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)
 
-  examples/react/apollo-client-swc-plugin:
-    dependencies:
-      '@apollo/client':
-        specifier: 3.14.1
-        version: 3.14.1(@types/react@19.2.14)(graphql-ws@6.0.8(graphql@17.0.2)(ws@8.22.0))(graphql@17.0.2)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
-      react:
-        specifier: 19.2.6
-        version: 19.2.6
-      react-dom:
-        specifier: 19.2.6
-        version: 19.2.6(react@19.2.6)
-    devDependencies:
-      '@graphql-codegen/cli':
-        specifier: workspace:*
-        version: link:../../../packages/graphql-codegen-cli/dist
-      '@graphql-codegen/client-preset-swc-plugin':
-        specifier: workspace:*
-        version: link:../../../packages/presets/swc-plugin
-      '@types/react':
-        specifier: 19.2.14
-        version: 19.2.14
-      '@types/react-dom':
-        specifier: 19.2.3
-        version: 19.2.3(@types/react@19.2.14)
-      '@vitejs/plugin-react-swc':
-        specifier: 4.3.1
-        version: 4.3.1(vite@8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0))
-      typescript:
-        specifier: 6.0.3
-        version: 6.0.3
-      vite:
-        specifier: 8.0.16
-        version: 8.0.16(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.0)(yaml@2.9.0)
-
   examples/react/http-executor:
     dependencies:
       '@graphql-tools/executor-http':
@@ -519,9 +485,6 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
-      '@graphql-codegen/client-preset-swc-plugin':
-        specifier: workspace:*
-        version: link:../../../packages/presets/swc-plugin
       '@graphql-codegen/schema-ast':
         specifier: workspace:*
         version: link:../../../packages/plugins/other/schema-ast/dist
@@ -1514,8 +1477,6 @@ importers:
         specifier: 1.0.2
         version: 1.0.2
     publishDirectory: dist
-
-  packages/presets/swc-plugin: {}
 
   packages/utils/graphql-codegen-testing:
     dependencies:
