@@ -243,7 +243,6 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Test
-        # FIXME: Do not test `watcher.run.spec.ts` here because it is currently not working for Node22+ in Ubuntu
         run: pnpm test --exclude="**/tests/watcher.run.spec.ts"
         env:
           CI: true
@@ -288,7 +287,6 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Test
-        # FIXME: Merge `watcher.run.spec.ts` test to the above when it works for Node22+ in Ubuntu
         run: pnpm test packages/graphql-codegen-cli/tests/watcher.run.spec.ts
         env:
           CI: true
