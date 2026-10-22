@@ -14,7 +14,7 @@
   "author": "Dotan Simha <dotansimha@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=22.18.0"
   },
   "bin": {
     "gql-gen": "dist/esm/bin.js",
@@ -66,7 +66,7 @@
   },
   "peerDependencies": {
     "@parcel/watcher": "^2.1.0",
-    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
+    "graphql": "^16.0.0 || ^17.0.0"
   },
   "peerDependenciesMeta": {
     "@parcel/watcher": {
@@ -80,16 +80,16 @@
     "@graphql-codegen/client-preset": "workspace:^",
     "@graphql-codegen/core": "workspace:^",
     "@graphql-codegen/plugin-helpers": "workspace:^",
-    "@graphql-tools/apollo-engine-loader": "^8.0.38",
-    "@graphql-tools/code-file-loader": "^8.1.41",
-    "@graphql-tools/git-loader": "^8.0.44",
-    "@graphql-tools/github-loader": "^9.1.11",
-    "@graphql-tools/graphql-file-loader": "^8.1.22",
-    "@graphql-tools/json-file-loader": "^8.0.36",
-    "@graphql-tools/load": "^8.1.19",
-    "@graphql-tools/merge": "^9.2.6",
-    "@graphql-tools/url-loader": "^9.1.12",
-    "@graphql-tools/utils": "^12.0.3",
+    "@graphql-tools/apollo-engine-loader": "^9.0.2",
+    "@graphql-tools/code-file-loader": "^9.0.3",
+    "@graphql-tools/git-loader": "^9.0.3",
+    "@graphql-tools/github-loader": "^10.0.3",
+    "@graphql-tools/graphql-file-loader": "^9.0.2",
+    "@graphql-tools/json-file-loader": "^9.0.2",
+    "@graphql-tools/load": "^9.0.2",
+    "@graphql-tools/merge": "^10.0.2",
+    "@graphql-tools/url-loader": "^10.0.2",
+    "@graphql-tools/utils": "^13.0.2",
     "@inquirer/prompts": "^8.3.2",
     "@whatwg-node/fetch": "^0.10.0",
     "chalk": "^5.6.0",
