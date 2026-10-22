@@ -15,7 +15,7 @@ import {
   normalizeOutputParam,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import { NoTypeDefinitionsFound, type UnnormalizedTypeDefPointer } from '@graphql-tools/load';
+import type { UnnormalizedTypeDefPointer } from '@graphql-tools/load';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { CodegenContext, ensureContext } from './config.js';
 import { getDocumentTransform } from './documentTransforms.js';
@@ -364,8 +364,12 @@ export async function executeCodegen(
                                 );
                                 return documents;
                               } catch (error) {
+                                // Matched by name: documents loaded through GraphQL Config come from
+                                // graphql-config's own copy of `@graphql-tools/load`, whose error class
+                                // is not the one this package imports.
                                 if (
-                                  error instanceof NoTypeDefinitionsFound &&
+                                  error instanceof Error &&
+                                  error.name === 'NoTypeDefinitionsFound' &&
                                   config.ignoreNoDocuments
                                 ) {
                                   return [];
@@ -396,8 +400,12 @@ export async function executeCodegen(
                                 );
                                 return documents;
                               } catch (error) {
+                                // Matched by name: documents loaded through GraphQL Config come from
+                                // graphql-config's own copy of `@graphql-tools/load`, whose error class
+                                // is not the one this package imports.
                                 if (
-                                  error instanceof NoTypeDefinitionsFound &&
+                                  error instanceof Error &&
+                                  error.name === 'NoTypeDefinitionsFound' &&
                                   config.ignoreNoDocuments
                                 ) {
                                   return [];
