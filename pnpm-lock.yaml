@@ -1245,9 +1245,6 @@ importers:
       '@graphql-tools/relay-operation-optimizer':
         specifier: ^8.0.2
         version: 8.0.4(graphql@17.0.2)
-      '@graphql-tools/schema':
-        specifier: ^11.0.2
-        version: 11.0.4(graphql@17.0.2)
       '@graphql-tools/utils':
         specifier: ^13.0.2
         version: 13.1.1(graphql@17.0.2)
