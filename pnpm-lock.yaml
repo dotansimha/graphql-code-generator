@@ -433,9 +433,9 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
-      '@graphql-codegen/client-preset-swc-plugin':
-        specifier: workspace:*
-        version: link:../../../packages/presets/swc-plugin
+      '@swc-contrib/plugin-graphql-codegen-client-preset':
+        specifier: 0.31.0
+        version: 0.31.0
       '@types/react':
         specifier: 19.2.14
         version: 19.2.14
@@ -519,12 +519,12 @@ importers:
       '@graphql-codegen/cli':
         specifier: workspace:*
         version: link:../../../packages/graphql-codegen-cli/dist
-      '@graphql-codegen/client-preset-swc-plugin':
-        specifier: workspace:*
-        version: link:../../../packages/presets/swc-plugin
       '@graphql-codegen/schema-ast':
         specifier: workspace:*
         version: link:../../../packages/plugins/other/schema-ast/dist
+      '@swc-contrib/plugin-graphql-codegen-client-preset':
+        specifier: 0.31.0
+        version: 0.31.0
       '@types/node':
         specifier: 24.12.4
         version: 24.12.4
@@ -1514,8 +1514,6 @@ importers:
         specifier: 1.0.2
         version: 1.0.2
     publishDirectory: dist
-
-  packages/presets/swc-plugin: {}
 
   packages/utils/graphql-codegen-testing:
     dependencies:
@@ -4671,6 +4669,10 @@ packages:
     resolution: {integrity: sha512-lVJX6qEgs/4DOcRTpo56tmKzVPtoWAaVbL4hfO7t7NVwl9AAXzQR6cihesW1BmNMPl+bK6dreu2sOKBP2Q9CIA==}
     peerDependencies:
       acorn: ^8.9.0
+
+  '@swc-contrib/plugin-graphql-codegen-client-preset@0.31.0':
+    resolution: {integrity: sha512-ZDxB1XyXyJlrRrjUoHsNQUt8K3VxuO9FKwlJ1hO1QfX3BLpYbAQNLknaqzapJezASX1jIhlbgz7FH0cltvzewA==}
+    engines: {node: '>=16'}
 
   '@swc/core-darwin-arm64@1.15.33':
     resolution: {integrity: sha512-N+L0uXhuO7FIfzqwgxmzv0zIpV0qEp8wPX3QQs2p4atjMoywup2JTeDlXPw+z9pWJGCae3JjM+tZ6myclI+2gA==}
@@ -12961,6 +12963,8 @@ snapshots:
   '@sveltejs/acorn-typescript@1.0.9(acorn@8.16.0)':
     dependencies:
       acorn: 8.16.0
+
+  '@swc-contrib/plugin-graphql-codegen-client-preset@0.31.0': {}
 
   '@swc/core-darwin-arm64@1.15.33':
     optional: true

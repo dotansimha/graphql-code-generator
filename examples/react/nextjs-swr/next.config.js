@@ -5,7 +5,7 @@ const nextConfig = {
   experimental: {
     swcPlugins: [
       [
-        '@graphql-codegen/client-preset-swc-plugin',
+        '@swc-contrib/plugin-graphql-codegen-client-preset',
         { artifactDirectory: './gql', gqlTagName: 'graphql' },
       ],
     ],

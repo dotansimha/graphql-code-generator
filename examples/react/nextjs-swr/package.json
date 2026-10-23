@@ -20,8 +20,8 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "workspace:*",
-    "@graphql-codegen/client-preset-swc-plugin": "workspace:*",
     "@graphql-codegen/schema-ast": "workspace:*",
+    "@swc-contrib/plugin-graphql-codegen-client-preset": "0.31.0",
     "@types/node": "24.12.4",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
