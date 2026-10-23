@@ -32,7 +32,13 @@ export interface ConvertSchemaEnumToDeclarationBlockString {
     };
   };
 
-  outputType: 'string-literal' | 'native-numeric' | 'const' | 'native-const' | 'native';
+  outputType:
+    | 'string-literal'
+    | 'native-numeric'
+    | 'const'
+    | 'native-const'
+    | 'native'
+    | 'native-with-string-values';
   declarationBlockConfig: DeclarationBlockConfig;
 }
 
@@ -154,6 +160,21 @@ export const convertSchemaEnumToDeclarationBlockString = ({
       ).string;
 
     return [enumAsConst, typeName].join('\n');
+  }
+
+  if (outputType === 'native-with-string-values') {
+    // The declaration is a plain native enum; the string values union is added where the enum is used
+    return convertSchemaEnumToDeclarationBlockString({
+      schema,
+      node,
+      enumName,
+      enumValues,
+      futureProofEnums,
+      ignoreEnumValuesFromSchema,
+      outputType: 'native',
+      declarationBlockConfig,
+      naming,
+    });
   }
 
   return new DeclarationBlock(declarationBlockConfig)
