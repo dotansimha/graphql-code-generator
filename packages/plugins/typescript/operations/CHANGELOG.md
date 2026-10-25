@@ -1,5 +1,21 @@
 # @graphql-codegen/typescript-operations
 
+## 6.2.0
+
+### Minor Changes
+
+- [#11062](https://github.com/dotansimha/graphql-code-generator/pull/11062)
+  [`48ebd5d`](https://github.com/dotansimha/graphql-code-generator/commit/48ebd5d96fcbc7b7b9b990f98bc571d4dc37f278)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add `enumType: 'native-with-string-values'`.
+  Enums are declared as native enums, and operation variables and input object fields accept either
+  the enum member or its string value (``E | `${E}` ``).
+
+### Patch Changes
+
+- Updated dependencies
+  [[`48ebd5d`](https://github.com/dotansimha/graphql-code-generator/commit/48ebd5d96fcbc7b7b9b990f98bc571d4dc37f278)]:
+  - @graphql-codegen/visitor-plugin-common@7.5.0
+
 ## 6.1.10
 
 ### Patch Changes
