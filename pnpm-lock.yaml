@@ -6815,8 +6815,8 @@ packages:
   flatted@3.4.2:
     resolution: {integrity: sha512-PjDse7RzhcPkIJwy5t7KPWQSZ9cAbzQXcafsetQoD7sOJRQlGikNbx7yZp2OotDnJyrDcbyRq3Ttb18iYOqkxA==}
 
-  follow-redirects@1.16.0:
-    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
+  follow-redirects@1.16.1:
+    resolution: {integrity: sha512-FNvFGzoMLWmE6Yj9spb/zjd7yiNCHiAW9/Tg9CXrQ8wuu32HtlJOwWO11OJafl5FfY3DxTdQ0vj42zU1kvv5jg==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -12784,9 +12784,9 @@ snapshots:
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
-      '@emnapi/core': 1.10.0
-      '@emnapi/runtime': 1.10.0
-      '@tybys/wasm-util': 0.10.2
+      '@emnapi/core': 1.11.1
+      '@emnapi/runtime': 1.11.1
+      '@tybys/wasm-util': 0.10.4
     optional: true
 
   '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
@@ -14160,7 +14160,7 @@ snapshots:
 
   axios@1.20.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
     dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3(supports-color@10.2.2))
+      follow-redirects: 1.16.1(debug@4.4.3(supports-color@10.2.2))
       form-data: 4.0.6
       https-proxy-agent: 5.0.1(supports-color@10.2.2)
       proxy-from-env: 2.1.0
@@ -14170,7 +14170,7 @@ snapshots:
 
   axios@1.20.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1):
     dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3(supports-color@8.1.1))
+      follow-redirects: 1.16.1(debug@4.4.3(supports-color@8.1.1))
       form-data: 4.0.6
       https-proxy-agent: 5.0.1(supports-color@8.1.1)
       proxy-from-env: 2.1.0
@@ -15742,11 +15742,11 @@ snapshots:
 
   flatted@3.4.2: {}
 
-  follow-redirects@1.16.0(debug@4.4.3(supports-color@10.2.2)):
+  follow-redirects@1.16.1(debug@4.4.3(supports-color@10.2.2)):
     optionalDependencies:
       debug: 4.4.3(supports-color@10.2.2)
 
-  follow-redirects@1.16.0(debug@4.4.3(supports-color@8.1.1)):
+  follow-redirects@1.16.1(debug@4.4.3(supports-color@8.1.1)):
     optionalDependencies:
       debug: 4.4.3(supports-color@8.1.1)
 
