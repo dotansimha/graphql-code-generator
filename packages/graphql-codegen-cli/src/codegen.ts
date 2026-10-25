@@ -10,7 +10,6 @@ import {
   CodegenPlugin,
   getCachedDocumentNodeFromSchema,
   normalizeConfig,
-  normalizeImportExtension,
   normalizeInstanceOrArray,
   normalizeOutputParam,
   Types,
@@ -459,23 +458,17 @@ export async function executeCodegen(
 
                           const rawMergedConfig = {
                             ...rootConfig,
-                            emitLegacyCommonJSImports: config.emitLegacyCommonJSImports,
                             importExtension: config.importExtension,
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
                           };
 
-                          const importExtension = normalizeImportExtension({
-                            emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports,
-                            importExtension: rawMergedConfig.importExtension,
-                          });
+                          const importExtension = rawMergedConfig.importExtension ?? '';
 
                           const mergedConfig = {
                             ...rawMergedConfig,
                             importExtension,
-                            emitLegacyCommonJSImports:
-                              rawMergedConfig.emitLegacyCommonJSImports ?? true,
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -527,8 +520,6 @@ export async function executeCodegen(
                             const output = await codegen({
                               ...outputArgs,
                               importExtension,
-                              emitLegacyCommonJSImports:
-                                rawMergedConfig.emitLegacyCommonJSImports ?? true,
                               cache,
                             });
                             result.push({

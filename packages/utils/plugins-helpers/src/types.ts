@@ -36,7 +36,6 @@ export namespace Types {
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
     documentTransforms?: ConfiguredDocumentTransform[];
-    emitLegacyCommonJSImports?: boolean;
     importExtension?: '' | `.${string}`;
     /**
      * @description How the CLI compares generated content against the output file
@@ -531,11 +530,6 @@ export namespace Types {
      * @description A flag to suppress non-zero exit code when there are no documents to generate.
      */
     ignoreNoDocuments?: boolean;
-    /**
-     * @deprecated Please use `importExtension` instead.
-     * @description A flag to disable adding `.js` extension to the output file. Default: `true`.
-     */
-    emitLegacyCommonJSImports?: boolean;
     /**
      * @description Append this extension to all imports.
      * Useful for ESM environments that require file extensions in import statements.

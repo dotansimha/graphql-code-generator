@@ -1,11 +1,7 @@
 import { parse, printSchema, type DocumentNode, type GraphQLSchema } from 'graphql';
 import * as addPlugin from '@graphql-codegen/add';
 import * as gqlTagPlugin from '@graphql-codegen/gql-tag-operations';
-import {
-  normalizeImportExtension,
-  type PluginFunction,
-  type Types,
-} from '@graphql-codegen/plugin-helpers';
+import { type PluginFunction, type Types } from '@graphql-codegen/plugin-helpers';
 import * as typedDocumentNodePlugin from '@graphql-codegen/typed-document-node';
 import * as typescriptOperationPlugin from '@graphql-codegen/typescript-operations';
 import { ClientSideBaseVisitor, DocumentMode } from '@graphql-codegen/visitor-plugin-common';
@@ -281,10 +277,7 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
 
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
-    const importExtension = normalizeImportExtension({
-      emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
-      importExtension: options.config.importExtension,
-    });
+    const importExtension = options.config.importExtension ?? '';
 
     if (fragmentMaskingConfig !== null) {
       const fragmentMaskingArtifactFileExtension = '.ts';
@@ -307,7 +300,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         config: {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
-          emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
           importExtension,
           isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },

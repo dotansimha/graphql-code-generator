@@ -1,6 +1,5 @@
 import autoBind from 'auto-bind';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import { FragmentImport, ImportDeclaration } from './imports.js';
 import { convertFactory } from './naming.js';
 import {
@@ -35,7 +34,6 @@ export interface ParsedConfig {
   useTypeImports: boolean;
   allowEnumStringTypes: boolean;
   inlineFragmentTypes: InlineFragmentTypeOptions;
-  emitLegacyCommonJSImports?: boolean;
   importExtension: '' | `.${string}`;
   printFieldsOnNewLines: boolean;
   includeExternalFragments: boolean;
@@ -362,13 +360,6 @@ export interface RawConfig {
    */
   inlineFragmentTypes?: InlineFragmentTypeOptions;
   /**
-   * @deprecated Please use `importExtension` instead.
-   * @default true
-   * @description Emit legacy common js imports.
-   * Default it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).
-   */
-  emitLegacyCommonJSImports?: boolean;
-  /**
    * @description Append this extension to all imports.
    * Useful for ESM environments that require file extensions in import statements.
    */
@@ -399,10 +390,7 @@ export class BaseVisitor<
   public readonly scalars: NormalizedScalarsMap;
 
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
-    const importExtension = normalizeImportExtension({
-      emitLegacyCommonJSImports: rawConfig.emitLegacyCommonJSImports,
-      importExtension: rawConfig.importExtension,
-    });
+    const importExtension = rawConfig.importExtension ?? '';
     this._parsedConfig = {
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',
@@ -414,13 +402,10 @@ export class BaseVisitor<
       useTypeImports: !!rawConfig.useTypeImports,
       allowEnumStringTypes: !!rawConfig.allowEnumStringTypes,
       inlineFragmentTypes: rawConfig.inlineFragmentTypes ?? 'inline',
-      emitLegacyCommonJSImports:
-        rawConfig.emitLegacyCommonJSImports === undefined
-          ? true
-          : !!rawConfig.emitLegacyCommonJSImports,
       importExtension,
       printFieldsOnNewLines: rawConfig.printFieldsOnNewLines ?? false,
       includeExternalFragments: rawConfig.includeExternalFragments ?? false,
+      // `as any` lets this object literal satisfy the generic `TPluginConfig`; removing it needs subclasses to pass their full parsed config here
       ...((additionalConfig || {}) as any),
     };
 
