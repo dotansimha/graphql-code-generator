@@ -2,7 +2,6 @@ import { platform } from 'os';
 import { dirname, join, sep } from 'path';
 import { GraphQLError } from 'graphql';
 import logSymbols from 'log-symbols';
-import { Types } from '@graphql-codegen/plugin-helpers';
 import '@graphql-codegen/testing';
 import { makeDirectorySync } from 'make-dir';
 import { createContext } from '../src/config.js';
@@ -53,7 +52,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it writes a new file
     expect(writeSpy).toHaveBeenCalled();
   });
@@ -80,7 +79,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it checks if file is there
     expect(readSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
@@ -107,7 +106,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it writes a new file
     expect(writeSpy).toHaveBeenCalled();
   });
@@ -133,7 +132,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it checks if file is there
     expect(readSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
@@ -163,7 +162,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
   });
@@ -192,7 +191,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it checks if file is there
     expect(readSpy).toHaveBeenCalledWith(filename);
     // makes sure it writes a new file
@@ -223,7 +222,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it checks if file is there
     expect(readSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
@@ -254,7 +253,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it checks if file is there
     expect(readSpy).toHaveBeenCalledWith(filename);
     // makes sure it writes a new file
@@ -287,7 +286,7 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
+    expect(output).toHaveLength(1);
     // makes sure it checks if file is there
     expect(readSpy).toHaveBeenCalledWith(filename);
     // makes sure it doesn't write a new file
@@ -310,7 +309,7 @@ describe('generate-and-save', () => {
   `,
       'utf8',
     );
-    const generateOnce: () => Promise<Types.FileOutput[]> = () =>
+    const generateOnce = () =>
       generate(
         {
           schema: SIMPLE_TEST_SCHEMA,
@@ -323,7 +322,8 @@ describe('generate-and-save', () => {
         },
         true,
       );
-    const [firstOutput] = await generateOnce();
+    // This `|| []` is only to satisfy type safety
+    const [firstOutput] = (await generateOnce()) || [];
     fs.writeFileSync(firstOutput.filename, firstOutput.content);
     await generateOnce();
   });
@@ -343,8 +343,9 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
-    expect(output[0].content).toMatch('Used apollo-server');
+    expect(output).toHaveLength(1);
+    // This `?.` is only to satisfy type safety
+    expect(output?.[0].content).toMatch('Used apollo-server');
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
   });
@@ -367,8 +368,9 @@ describe('generate-and-save', () => {
       true,
     );
 
-    expect(output.length).toBe(1);
-    expect(output[0].content).toMatch('new content');
+    expect(output).toHaveLength(1);
+    // This `?.` is only to satisfy type safety
+    expect(output?.[0].content).toMatch('new content');
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
   });
@@ -768,8 +770,9 @@ describe('generate-and-save', () => {
         false,
       );
 
-      expect(output.length).toBe(1);
-      expect(output[0].filename).toBe('src/b.ts');
+      expect(output).toHaveLength(1);
+      // This `?.` is only to satisfy type safety
+      expect(output?.[0].filename).toBe('src/b.ts');
       expect(mockLogger.warn.mock.calls[0][0]).toBeSimilarStringTo(
         `${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`,
       );
