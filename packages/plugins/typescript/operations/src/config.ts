@@ -324,7 +324,7 @@ export interface TypeScriptDocumentsPluginConfig extends RawDocumentsConfig {
   };
 
   /**
-   * @description Controls the enum output type. Options: `string-literal` | `native-numeric` | `const` | `native-const` | `native`;
+   * @description Controls the enum output type. Options: `string-literal` | `native-numeric` | `const` | `native-const` | `native` | `native-with-string-values`;
    * @default `string-literal`
    *
    * @exampleMarkdown
