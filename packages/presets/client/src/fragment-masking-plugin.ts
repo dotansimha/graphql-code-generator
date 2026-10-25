@@ -143,12 +143,11 @@ export const plugin: PluginFunction<{
     useTypeImports,
     augmentedModuleName,
     unmaskFunctionName,
-    importExtension,
+    importExtension = '',
     isStringDocumentMode = false,
   },
   _info,
 ) => {
-  const appendedImportExtension = importExtension ?? '';
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
   } { ResultOf, DocumentTypeDecoration${
@@ -157,7 +156,7 @@ export const plugin: PluginFunction<{
 
   const deferFragmentHelperImports = `${useTypeImports ? 'import type' : 'import'} { Incremental${
     isStringDocumentMode ? ', TypedDocumentString' : ''
-  } } from './graphql${appendedImportExtension}';\n`;
+  } } from './graphql${importExtension}';\n`;
 
   const fragmentDefinitionNodeImport = isStringDocumentMode
     ? ''

@@ -37,14 +37,13 @@ export const plugin: PluginFunction<{
     useTypeImports,
     augmentedModuleName,
     gqlTagName = 'gql',
-    importExtension,
+    importExtension = '',
     documentMode,
   },
   _info,
 ) => {
-  const appendedImportExtension = importExtension ?? '';
   if (documentMode === DocumentMode.string) {
-    const code = [`import * as types from './graphql${appendedImportExtension}';\n`, `\n`];
+    const code = [`import * as types from './graphql${importExtension}';\n`, `\n`];
 
     // We need the mapping from source as written to full document source to
     // handle fragments. An identity function would not suffice.
@@ -57,12 +56,7 @@ export const plugin: PluginFunction<{
     if (sourcesWithOperations.length > 0) {
       code.push(
         [
-          ...getGqlOverloadChunk(
-            sourcesWithOperations,
-            gqlTagName,
-            'augmented',
-            appendedImportExtension,
-          ),
+          ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', importExtension),
           `\n`,
         ].join(''),
       );
@@ -81,7 +75,7 @@ export const plugin: PluginFunction<{
 
   if (augmentedModuleName == null) {
     const code = [
-      `import * as types from './graphql${appendedImportExtension}';\n`,
+      `import * as types from './graphql${importExtension}';\n`,
       `${
         useTypeImports ? 'import type' : 'import'
       } { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';\n`,
@@ -114,12 +108,7 @@ export const plugin: PluginFunction<{
     if (sourcesWithOperations.length > 0) {
       code.push(
         [
-          ...getGqlOverloadChunk(
-            sourcesWithOperations,
-            gqlTagName,
-            'lookup',
-            appendedImportExtension,
-          ),
+          ...getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'lookup', importExtension),
           `\n`,
         ].join(''),
       );
@@ -144,12 +133,7 @@ export const plugin: PluginFunction<{
     [
       `\n`,
       ...(sourcesWithOperations.length > 0
-        ? getGqlOverloadChunk(
-            sourcesWithOperations,
-            gqlTagName,
-            'augmented',
-            appendedImportExtension,
-          )
+        ? getGqlOverloadChunk(sourcesWithOperations, gqlTagName, 'augmented', importExtension)
         : []),
       `export function ${gqlTagName}(source: string): unknown;\n`,
       `\n`,
