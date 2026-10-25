@@ -670,7 +670,7 @@ export class ClientSideBaseVisitor<
   private clearExtension(path: string): string {
     const extension = extname(path);
 
-    const importExtension = this.config.importExtension ?? '';
+    const importExtension = this.config.importExtension;
 
     if (extension === importExtension) {
       return path;
@@ -719,7 +719,7 @@ export class ClientSideBaseVisitor<
             this._documents.length === 1
           ) {
             let documentPath = `./${this.clearExtension(basename(this._documents[0].location || ''))}`;
-            documentPath += this.config.importExtension ?? '';
+            documentPath += this.config.importExtension;
 
             this._imports.add(`import * as Operations from '${documentPath}';`);
           } else {
@@ -749,7 +749,7 @@ export class ClientSideBaseVisitor<
       this.config.documentMode !== DocumentMode.graphQLTag;
 
     if (!excludeFragments) {
-      const importExtension = this.config.importExtension ?? '';
+      const importExtension = this.config.importExtension;
       const deduplicatedImports = Object.values(
         groupBy(this.config.fragmentImports, fi => fi.importSource.path),
       )
