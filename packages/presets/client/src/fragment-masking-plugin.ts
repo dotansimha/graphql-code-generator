@@ -134,7 +134,6 @@ export const plugin: PluginFunction<{
   useTypeImports?: boolean;
   augmentedModuleName?: string;
   unmaskFunctionName?: string;
-  emitLegacyCommonJSImports?: boolean;
   importExtension?: '' | `.${string}`;
   isStringDocumentMode?: boolean;
 }> = (
@@ -144,16 +143,12 @@ export const plugin: PluginFunction<{
     useTypeImports,
     augmentedModuleName,
     unmaskFunctionName,
-    emitLegacyCommonJSImports,
     importExtension,
     isStringDocumentMode = false,
   },
   _info,
 ) => {
-  const appendedImportExtension = normalizeImportExtension({
-    emitLegacyCommonJSImports,
-    importExtension,
-  });
+  const appendedImportExtension = normalizeImportExtension({ importExtension });
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
   } { ResultOf, DocumentTypeDecoration${

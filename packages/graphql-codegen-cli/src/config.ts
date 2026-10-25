@@ -45,10 +45,8 @@ export type YamlCliFlags = {
   verbose?: boolean;
   debug?: boolean;
   ignoreNoDocuments?: boolean;
-  emitLegacyCommonJSImports?: boolean;
   importExtension?: '' | `.${string}`;
   'ignore-no-documents'?: boolean;
-  'emit-legacy-common-js-imports'?: boolean;
   'import-extension'?: '' | `.${string}`;
 };
 
@@ -276,10 +274,6 @@ export function buildOptions() {
       type: 'boolean' as const,
       default: false,
     },
-    'emit-legacy-common-js-imports': {
-      describe: 'Emit legacy CommonJS imports (deprecated, use import-extension instead)',
-      type: 'boolean' as const,
-    },
     'import-extension': {
       describe:
         'Extension to append to imports (e.g., .js, .mjs, or empty string for no extension)',
@@ -350,11 +344,6 @@ export function updateContextWithCliFlags(context: CodegenContext, cliFlags: Yam
   if (cliFlags['ignore-no-documents'] !== undefined) {
     // for some reason parsed value is `'false'` string so this ensure it always is a boolean.
     config.ignoreNoDocuments = cliFlags['ignore-no-documents'] === true;
-  }
-
-  if (cliFlags['emit-legacy-common-js-imports'] !== undefined) {
-    // for some reason parsed value is `'false'` string so this ensure it always is a boolean.
-    config.emitLegacyCommonJSImports = cliFlags['emit-legacy-common-js-imports'] === true;
   }
 
   if (cliFlags['import-extension'] !== undefined) {

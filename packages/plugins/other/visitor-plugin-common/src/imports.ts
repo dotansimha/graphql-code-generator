@@ -9,7 +9,6 @@ export type ImportDeclaration<T = string> = {
   baseOutputDir: string;
   baseDir: string;
   typesImport: boolean;
-  emitLegacyCommonJSImports?: boolean;
   importExtension: '' | `.${string}`;
 };
 
@@ -66,7 +65,6 @@ export function generateImportStatement(statement: ImportDeclaration): string {
   const importExtension =
     importPath.startsWith('/') || importPath.startsWith('.')
       ? normalizeImportExtension({
-          emitLegacyCommonJSImports: statement.emitLegacyCommonJSImports,
           importExtension: statement.importExtension,
         })
       : '';

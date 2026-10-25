@@ -14,7 +14,7 @@ describe('getImports', () => {
       }
     `);
 
-    describe('when emitLegacyCommonJSImports is true', () => {
+    describe('when importExtension is not set', () => {
       it('does not append `.js` to Operations import path', () => {
         const fileName = 'fooBarQuery';
         const importPath = `src/queries/${fileName}`;
@@ -33,7 +33,6 @@ describe('getImports', () => {
           schema,
           [],
           {
-            emitLegacyCommonJSImports: true,
             importDocumentNodeExternallyFrom: 'near-operation-file',
             documentMode: DocumentMode.external,
           },
@@ -48,7 +47,7 @@ describe('getImports', () => {
       });
     });
 
-    describe('when emitLegacyCommonJSImports is false', () => {
+    describe('when importExtension is set to .js', () => {
       it('appends `.js` to Operations import path', () => {
         const fileName = 'fooBarQuery';
         const importPath = `src/queries/${fileName}`;
@@ -67,7 +66,7 @@ describe('getImports', () => {
           schema,
           [],
           {
-            emitLegacyCommonJSImports: false,
+            importExtension: '.js',
             importDocumentNodeExternallyFrom: 'near-operation-file',
             documentMode: DocumentMode.external,
           },
@@ -149,74 +148,6 @@ describe('getImports', () => {
         expect(imports[0]).toBe(`import * as Operations from './${fileName}';`);
       });
     });
-
-    describe('when both importExtension and emitLegacyCommonJSImports are set', () => {
-      it('uses importExtension over emitLegacyCommonJSImports', () => {
-        const fileName = 'fooBarQuery';
-        const importPath = `src/queries/${fileName}`;
-
-        const document = parse(
-          `query fooBarQuery {
-            a {
-              foo
-              bar
-            }
-          }
-        `,
-        );
-
-        const visitor = new ClientSideBaseVisitor(
-          schema,
-          [],
-          {
-            importExtension: '.mjs',
-            emitLegacyCommonJSImports: false,
-            importDocumentNodeExternallyFrom: 'near-operation-file',
-            documentMode: DocumentMode.external,
-          },
-          {},
-          [{ document, location: importPath }],
-        );
-
-        visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
-
-        const imports = visitor.getImports();
-        expect(imports[0]).toBe(`import * as Operations from './${fileName}.mjs';`);
-      });
-
-      it('uses importExtension set to empty string even when emitLegacyCommonJSImports is false', () => {
-        const fileName = 'fooBarQuery';
-        const importPath = `src/queries/${fileName}`;
-
-        const document = parse(
-          `query fooBarQuery {
-            a {
-              foo
-              bar
-            }
-          }
-        `,
-        );
-
-        const visitor = new ClientSideBaseVisitor(
-          schema,
-          [],
-          {
-            importExtension: '',
-            emitLegacyCommonJSImports: false,
-            importDocumentNodeExternallyFrom: 'near-operation-file',
-            documentMode: DocumentMode.external,
-          },
-          {},
-          [{ document, location: importPath }],
-        );
-
-        visitor.OperationDefinition(document.definitions[0] as OperationDefinitionNode);
-
-        const imports = visitor.getImports();
-        expect(imports[0]).toBe(`import * as Operations from './${fileName}';`);
-      });
-    });
   });
 
   describe('when documentMode "external", importDocumentNodeExternallyFrom is relative path', () => {
@@ -231,7 +162,7 @@ describe('getImports', () => {
       }
     `);
 
-    describe('when emitLegacyCommonJSImports is false', () => {
+    describe('when importExtension is set to .js', () => {
       it('preserves `.js` on Operations import path', () => {
         const fileName = 'fooBarQuery';
         const importPath = `./src/queries/${fileName}.js`;
@@ -250,7 +181,7 @@ describe('getImports', () => {
           schema,
           [],
           {
-            emitLegacyCommonJSImports: false,
+            importExtension: '.js',
             importDocumentNodeExternallyFrom: importPath,
             documentMode: DocumentMode.external,
           },
@@ -308,7 +239,6 @@ describe('getImports', () => {
           isExternal: false,
         })),
         {
-          emitLegacyCommonJSImports: true,
           importDocumentNodeExternallyFrom: 'near-operation-file',
           documentMode: DocumentMode.documentNodeImportFragments,
           fragmentImports: [
@@ -383,7 +313,6 @@ describe('getImports', () => {
           isExternal: false,
         })),
         {
-          emitLegacyCommonJSImports: true,
           importDocumentNodeExternallyFrom: 'near-operation-file',
           documentMode: DocumentMode.graphQLTag,
           fragmentImports: [

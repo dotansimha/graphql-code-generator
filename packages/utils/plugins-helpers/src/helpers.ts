@@ -274,19 +274,9 @@ export function isUsingTypes(
 }
 
 export function normalizeImportExtension({
-  emitLegacyCommonJSImports,
   importExtension,
 }: {
-  emitLegacyCommonJSImports: boolean | undefined;
   importExtension: '' | `.${string}` | undefined;
 }): '' | `.${string}` {
-  if (importExtension !== undefined) {
-    return importExtension;
-  }
-
-  if (emitLegacyCommonJSImports === undefined || emitLegacyCommonJSImports === true) {
-    return '';
-  }
-
-  return '.js';
+  return importExtension ?? '';
 }

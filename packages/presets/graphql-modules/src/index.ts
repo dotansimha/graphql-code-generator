@@ -73,7 +73,6 @@ export const preset: Types.OutputPreset<ModulesConfig> = {
     };
 
     const importExtension = normalizeImportExtension({
-      emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
       importExtension: options.config.importExtension,
     });
 

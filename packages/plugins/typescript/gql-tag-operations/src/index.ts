@@ -27,7 +27,6 @@ export const plugin: PluginFunction<{
   useTypeImports?: boolean;
   augmentedModuleName?: string;
   gqlTagName?: string;
-  emitLegacyCommonJSImports?: boolean;
   importExtension?: '' | `.${string}`;
   documentMode?: DocumentMode;
 }> = (
@@ -38,16 +37,12 @@ export const plugin: PluginFunction<{
     useTypeImports,
     augmentedModuleName,
     gqlTagName = 'gql',
-    emitLegacyCommonJSImports,
     importExtension,
     documentMode,
   },
   _info,
 ) => {
-  const appendedImportExtension = normalizeImportExtension({
-    emitLegacyCommonJSImports,
-    importExtension,
-  });
+  const appendedImportExtension = normalizeImportExtension({ importExtension });
   if (documentMode === DocumentMode.string) {
     const code = [`import * as types from './graphql${appendedImportExtension}';\n`, `\n`];
 

@@ -671,7 +671,6 @@ export class ClientSideBaseVisitor<
     const extension = extname(path);
 
     const importExtension = normalizeImportExtension({
-      emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
       importExtension: this.config.importExtension,
     });
 
@@ -723,7 +722,6 @@ export class ClientSideBaseVisitor<
           ) {
             let documentPath = `./${this.clearExtension(basename(this._documents[0].location || ''))}`;
             documentPath += normalizeImportExtension({
-              emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
               importExtension: this.config.importExtension,
             });
 
@@ -756,7 +754,6 @@ export class ClientSideBaseVisitor<
 
     if (!excludeFragments) {
       const importExtension = normalizeImportExtension({
-        emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
         importExtension: this.config.importExtension,
       });
       const deduplicatedImports = Object.values(
@@ -772,7 +769,6 @@ export class ClientSideBaseVisitor<
                 identifier => identifier.name,
               ),
             },
-            emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
             importExtension,
           }),
         )

@@ -282,7 +282,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
     let fragmentMaskingFileGenerateConfig: Types.GenerateOptions | null = null;
 
     const importExtension = normalizeImportExtension({
-      emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
       importExtension: options.config.importExtension,
     });
 
@@ -307,7 +306,6 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
         config: {
           useTypeImports: options.config.useTypeImports,
           unmaskFunctionName: fragmentMaskingConfig.unmaskFunctionName,
-          emitLegacyCommonJSImports: options.config.emitLegacyCommonJSImports,
           importExtension,
           isStringDocumentMode: options.config.documentMode === DocumentMode.string,
         },

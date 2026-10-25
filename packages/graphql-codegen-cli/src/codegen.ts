@@ -459,7 +459,6 @@ export async function executeCodegen(
 
                           const rawMergedConfig = {
                             ...rootConfig,
-                            emitLegacyCommonJSImports: config.emitLegacyCommonJSImports,
                             importExtension: config.importExtension,
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
@@ -467,15 +466,12 @@ export async function executeCodegen(
                           };
 
                           const importExtension = normalizeImportExtension({
-                            emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports,
                             importExtension: rawMergedConfig.importExtension,
                           });
 
                           const mergedConfig = {
                             ...rawMergedConfig,
                             importExtension,
-                            emitLegacyCommonJSImports:
-                              rawMergedConfig.emitLegacyCommonJSImports ?? true,
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -527,8 +523,6 @@ export async function executeCodegen(
                             const output = await codegen({
                               ...outputArgs,
                               importExtension,
-                              emitLegacyCommonJSImports:
-                                rawMergedConfig.emitLegacyCommonJSImports ?? true,
                               cache,
                             });
                             result.push({

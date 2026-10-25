@@ -480,9 +480,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           identifiers: [],
         },
         typesImport: true,
-        emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
         importExtension: normalizeImportExtension({
-          emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
           importExtension: this.config.importExtension,
         }),
       }),
