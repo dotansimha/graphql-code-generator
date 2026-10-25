@@ -20,7 +20,6 @@ import {
   type TypeDefinitionNode,
   type TypeNode,
 } from 'graphql';
-import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import {
   BaseDocumentsVisitor,
   buildTypeImport,
@@ -480,9 +479,7 @@ export class TypeScriptDocumentsVisitor extends BaseDocumentsVisitor<
           identifiers: [],
         },
         typesImport: true,
-        importExtension: normalizeImportExtension({
-          importExtension: this.config.importExtension,
-        }),
+        importExtension: this.config.importExtension ?? '',
       }),
     ];
   }

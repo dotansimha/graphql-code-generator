@@ -1,6 +1,5 @@
 import autoBind from 'auto-bind';
 import { ASTNode, FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import { FragmentImport, ImportDeclaration } from './imports.js';
 import { convertFactory } from './naming.js';
 import {
@@ -391,9 +390,7 @@ export class BaseVisitor<
   public readonly scalars: NormalizedScalarsMap;
 
   constructor(rawConfig: TRawConfig, additionalConfig: Partial<TPluginConfig>) {
-    const importExtension = normalizeImportExtension({
-      importExtension: rawConfig.importExtension,
-    });
+    const importExtension = rawConfig.importExtension ?? '';
     this._parsedConfig = {
       convert: convertFactory(rawConfig),
       typesPrefix: rawConfig.typesPrefix || '',

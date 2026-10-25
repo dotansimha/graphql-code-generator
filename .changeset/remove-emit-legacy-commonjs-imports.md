@@ -12,6 +12,8 @@ BREAKING CHANGE: Remove the deprecated `emitLegacyCommonJSImports` config option
 
 Use `importExtension` (or `--import-extension`) to set the extension appended to relative imports. When `importExtension` is not set, no extension is appended.
 
+`@graphql-codegen/plugin-helpers` no longer exports `normalizeImportExtension`. Use `importExtension ?? ''` instead.
+
 Migration:
 
 ```diff

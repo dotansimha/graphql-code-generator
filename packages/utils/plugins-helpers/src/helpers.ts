@@ -272,11 +272,3 @@ export function isUsingTypes(
 
   return foundFields > 0;
 }
-
-export function normalizeImportExtension({
-  importExtension,
-}: {
-  importExtension: '' | `.${string}` | undefined;
-}): '' | `.${string}` {
-  return importExtension ?? '';
-}

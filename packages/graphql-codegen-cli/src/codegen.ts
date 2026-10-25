@@ -10,7 +10,6 @@ import {
   CodegenPlugin,
   getCachedDocumentNodeFromSchema,
   normalizeConfig,
-  normalizeImportExtension,
   normalizeInstanceOrArray,
   normalizeOutputParam,
   Types,
@@ -465,9 +464,7 @@ export async function executeCodegen(
                               : outputFileTemplateConfig),
                           };
 
-                          const importExtension = normalizeImportExtension({
-                            importExtension: rawMergedConfig.importExtension,
-                          });
+                          const importExtension = rawMergedConfig.importExtension ?? '';
 
                           const mergedConfig = {
                             ...rawMergedConfig,

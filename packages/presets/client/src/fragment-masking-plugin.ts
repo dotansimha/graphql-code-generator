@@ -1,4 +1,4 @@
-import { normalizeImportExtension, type PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { type PluginFunction } from '@graphql-codegen/plugin-helpers';
 
 const fragmentTypeHelper = `
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
@@ -148,7 +148,7 @@ export const plugin: PluginFunction<{
   },
   _info,
 ) => {
-  const appendedImportExtension = normalizeImportExtension({ importExtension });
+  const appendedImportExtension = importExtension ?? '';
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
   } { ResultOf, DocumentTypeDecoration${

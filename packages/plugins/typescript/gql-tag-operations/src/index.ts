@@ -1,5 +1,5 @@
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { normalizeImportExtension, PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { PluginFunction } from '@graphql-codegen/plugin-helpers';
 import type { Types } from '@graphql-codegen/plugin-helpers';
 import { DocumentMode } from '@graphql-codegen/visitor-plugin-common';
 
@@ -42,7 +42,7 @@ export const plugin: PluginFunction<{
   },
   _info,
 ) => {
-  const appendedImportExtension = normalizeImportExtension({ importExtension });
+  const appendedImportExtension = importExtension ?? '';
   if (documentMode === DocumentMode.string) {
     const code = [`import * as types from './graphql${appendedImportExtension}';\n`, `\n`];
 
