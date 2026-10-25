@@ -322,6 +322,7 @@ describe('generate-and-save', () => {
         },
         true,
       );
+    // This `|| []` is only to satisfy type safety
     const [firstOutput] = (await generateOnce()) || [];
     fs.writeFileSync(firstOutput.filename, firstOutput.content);
     await generateOnce();
@@ -343,6 +344,7 @@ describe('generate-and-save', () => {
     );
 
     expect(output).toHaveLength(1);
+    // This `?.` is only to satisfy type safety
     expect(output?.[0].content).toMatch('Used apollo-server');
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
@@ -367,6 +369,7 @@ describe('generate-and-save', () => {
     );
 
     expect(output).toHaveLength(1);
+    // This `?.` is only to satisfy type safety
     expect(output?.[0].content).toMatch('new content');
     // makes sure it doesn't write a new file
     expect(writeSpy).toHaveBeenCalled();
@@ -768,6 +771,7 @@ describe('generate-and-save', () => {
       );
 
       expect(output).toHaveLength(1);
+      // This `?.` is only to satisfy type safety
       expect(output?.[0].filename).toBe('src/b.ts');
       expect(mockLogger.warn.mock.calls[0][0]).toBeSimilarStringTo(
         `${logSymbols.warning} One or more errors occurred, some files were generated. To prevent any output on errors, set config.allowPartialOutputs=false`,
