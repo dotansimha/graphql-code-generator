@@ -13,15 +13,15 @@
   },
   "dependencies": {
     "@graphql-tools/executor-http": "3.3.0",
-    "next": "15.5.27",
+    "next": "15.5.28",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "swr": "2.4.1"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "workspace:*",
-    "@graphql-codegen/client-preset-swc-plugin": "workspace:*",
     "@graphql-codegen/schema-ast": "workspace:*",
+    "@swc-contrib/plugin-graphql-codegen-client-preset": "0.31.0",
     "@types/node": "24.12.4",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",

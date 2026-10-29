@@ -149,6 +149,35 @@ export interface RawClientSideBasePluginConfig extends RawConfig {
    */
   optimizeDocumentNode?: boolean;
   /**
+   * @default false
+   * @description If you are using `documentMode: graphQLTag`, you can set this to `true` to make each fragment document include the fragments that it spreads.
+   * This is useful if you want to use a fragment document on its own, e.g. to read or write a fragment in a client cache.
+   * The fragment document can then contain more than one fragment definition.
+   *
+   * Note that the same fragment can then appear more than once in the source of a document.
+   * Use this option only if your `gql` tag (check `gqlImport`) keeps one definition for each fragment name, like `graphql-tag` does.
+   *
+   * @exampleMarkdown
+   * ```ts filename="codegen.ts"
+   *  import type { CodegenConfig } from '@graphql-codegen/cli';
+   *
+   *  const config: CodegenConfig = {
+   *    // ...
+   *    generates: {
+   *      'path/to/file': {
+   *        // plugins...
+   *        config: {
+   *          documentMode: 'graphQLTag',
+   *          inlineReferencedFragmentsInFragmentDocuments: true,
+   *        },
+   *      },
+   *    },
+   *  };
+   *  export default config;
+   * ```
+   */
+  inlineReferencedFragmentsInFragmentDocuments?: boolean;
+  /**
    * @default ""
    * @description This config is used internally by presets, but you can use it manually to tell codegen to prefix all base types that it's using.
    * This is useful if you wish to generate base types from `typescript-operations` plugin into a different file, and import it from there.
@@ -229,6 +258,7 @@ export interface ClientSideBasePluginConfig extends ParsedConfig {
   globalNamespace?: boolean;
   pureMagicComment?: boolean;
   optimizeDocumentNode: boolean;
+  inlineReferencedFragmentsInFragmentDocuments: boolean;
   experimentalFragmentVariables?: boolean;
   unstable_onExecutableDocumentNode?: Unstable_OnExecutableDocumentNode;
   unstable_omitDefinitions?: boolean;
@@ -265,6 +295,10 @@ export class ClientSideBaseVisitor<
       scalars: buildScalarsFromConfig(_schema, rawConfig),
       dedupeOperationSuffix: getConfigValue(rawConfig.dedupeOperationSuffix, false),
       optimizeDocumentNode: getConfigValue(rawConfig.optimizeDocumentNode, true),
+      inlineReferencedFragmentsInFragmentDocuments: getConfigValue(
+        rawConfig.inlineReferencedFragmentsInFragmentDocuments,
+        false,
+      ),
       omitOperationSuffix: getConfigValue(rawConfig.omitOperationSuffix, false),
       gqlImport: rawConfig.gqlImport || null,
       documentNodeImport: rawConfig.documentNodeImport || null,
@@ -349,7 +383,10 @@ export class ClientSideBaseVisitor<
       if (this.config.documentMode === DocumentMode.documentNodeImportFragments) {
         return '';
       }
-      if (nodeKind !== 'OperationDefinition') {
+      if (
+        nodeKind !== 'OperationDefinition' &&
+        !this.config.inlineReferencedFragmentsInFragmentDocuments
+      ) {
         return '';
       }
       return String(fragments.map(name => '${' + name + '}').join('\n'));

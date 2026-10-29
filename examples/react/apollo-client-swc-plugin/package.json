@@ -16,11 +16,11 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "workspace:*",
-    "@graphql-codegen/client-preset-swc-plugin": "workspace:*",
+    "@swc-contrib/plugin-graphql-codegen-client-preset": "0.31.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react-swc": "4.3.1",
     "typescript": "6.0.3",
-    "vite": "8.0.16"
+    "vite": "8.1.6"
   }
 }

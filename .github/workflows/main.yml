@@ -15,7 +15,6 @@ concurrency:
 
 env:
   NODE_OPTIONS: '--max_old_space_size=4096'
-  CARGO_TERM_COLOR: always
 
 jobs:
   lint:
@@ -145,39 +144,6 @@ jobs:
         run: |
           pnpm examples:test:end2end
 
-  # TODO: Remove all SWC test setup and references as that has been moved to https://github.com/swc-project/plugins/tree/main/contrib/graphql-codegen-client-preset
-  # dev-tests-swc:
-  #   name: Examples - SWC
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-  #     - name: Setup env
-  #       uses: the-guild-org/shared-config/setup@main
-  #     - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
-  #       with:
-  #         toolchain: 1.65.0
-  #         target: wasm32-wasi
-  #         override: true
-  #     - name: Build SWC plugin
-  #       working-directory: ./packages/presets/swc-plugin
-  #       run: |
-  #         npm run build-wasm
-  #     - name: Build
-  #       run: yarn build
-  #       env:
-  #         CI: true
-  #     - name: Generate and Diff Codegen Artifacts
-  #       run: |
-  #         EXAMPLE_TYPE=swc yarn examples:codegen
-  #         git diff --exit-code -- examples/
-  #     - name: Build Examples
-  #       run: |
-  #         EXAMPLE_TYPE=swc yarn examples:build
-  #     - name: End2End Test Examples
-  #       run: |
-  #         EXAMPLE_TYPE=swc yarn examples:test:end2end
-
   esm:
     name: Testing exports integrity
     runs-on: ubuntu-latest
@@ -243,73 +209,6 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Test
-        # FIXME: Do not test `watcher.run.spec.ts` here because it is currently not working for Node22+ in Ubuntu
-        run: pnpm test --exclude="**/tests/watcher.run.spec.ts"
+        run: pnpm test
         env:
           CI: true
-
-  test-watcher:
-    name:
-      Watcher Unit Test on Node ${{matrix.node_version}} (${{matrix.os}}) and GraphQL
-      v${{matrix.graphql_version}}
-    runs-on: ${{ matrix.os }}
-    needs:
-      - lint
-      - prettier-check
-      - esm
-    strategy:
-      matrix:
-        os: [ubuntu-latest] # remove windows to speed up the tests
-        node_version: [20]
-        graphql_version: [15, 16, 17]
-        include:
-          - node_version: 20
-            os: windows-latest
-            graphql_version: 16
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6
-      - name: Install pnpm
-        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        with:
-          standalone: true
-          cache: true
-      - name: Install Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: ${{matrix.node_version}}
-      - name: Install Dependencies to match graphql version
-        run: pnpm i
-      - name: Use GraphQL v${{matrix.graphql_version}}
-        run: node ./scripts/match-graphql.js ${{matrix.graphql_version}}
-      - name: Install Dependencies
-        run: pnpm i --no-frozen-lockfile # no frozen-lockfile because `graphql` version is changed
-
-      - name: Build
-        run: pnpm build
-      - name: Test
-        # FIXME: Merge `watcher.run.spec.ts` test to the above when it works for Node22+ in Ubuntu
-        run: pnpm test packages/graphql-codegen-cli/tests/watcher.run.spec.ts
-        env:
-          CI: true
-
-  # TODO: Remove all SWC test setup and references as that has been moved to https://github.com/swc-project/plugins/tree/main/contrib/graphql-codegen-client-preset
-  # test-rust-swc-plugin:
-  #   name: Build and Unit Test SWC Plugin
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-  #     - uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af # v1
-  #       with:
-  #         toolchain: 1.65.0
-  #         target: wasm32-wasi
-  #         override: true
-  #     - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-  #       with:
-  #         working-directory: ./packages/presets/swc-plugin
-  #         command: build
-  #         args: --target wasm32-wasi
-  #     - uses: marcopolo/cargo@a527bf4d534717ff4424a84446c5d710f8833139
-  #       with:
-  #         working-directory: ./packages/presets/swc-plugin
-  #         command: test

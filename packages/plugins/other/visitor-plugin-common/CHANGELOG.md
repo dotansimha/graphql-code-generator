@@ -1,5 +1,28 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 7.5.0
+
+### Minor Changes
+
+- [#11062](https://github.com/dotansimha/graphql-code-generator/pull/11062)
+  [`48ebd5d`](https://github.com/dotansimha/graphql-code-generator/commit/48ebd5d96fcbc7b7b9b990f98bc571d4dc37f278)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Add `enumType: 'native-with-string-values'`.
+  Enums are declared as native enums, and operation variables and input object fields accept either
+  the enum member or its string value (``E | `${E}` ``).
+
+## 7.4.0
+
+### Minor Changes
+
+- [#11060](https://github.com/dotansimha/graphql-code-generator/pull/11060)
+  [`e2b3249`](https://github.com/dotansimha/graphql-code-generator/commit/e2b32491deba75e8aed34531b94814118a86d987)
+  Thanks [@santialbo](https://github.com/santialbo)! - Add the
+  `inlineReferencedFragmentsInFragmentDocuments` option. With `documentMode: graphQLTag`, each
+  fragment document then includes the fragments that it spreads, so you can use it on its own. The
+  default is `false`, and operation documents do not change.
+
+  Refs [#11040](https://github.com/dotansimha/graphql-code-generator/issues/11040)
+
 ## 7.3.0
 
 ### Minor Changes

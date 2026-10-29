@@ -85,8 +85,6 @@ export default [
       '**/tests/test-files/**',
       '**/tests/test-documents/**',
       '**/react-app-env.d.ts',
-      'packages/presets/swc-plugin/tests/fixtures/simple-uppercase-operation-name.js',
-      'packages/presets/swc-plugin/tests/fixtures/simple-uppercase-operation-name.other-dir.js',
       '**/build/**',
       '**/dist/**',
       '**/*.json',
