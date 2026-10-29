@@ -2,10 +2,11 @@ import {
   ASTNode,
   DocumentNode,
   FieldNode,
-  GraphQLObjectType,
+  GraphQLNamedType,
   GraphQLOutputType,
   GraphQLSchema,
   InputValueDefinitionNode,
+  isInterfaceType,
   isListType,
   isNonNullType,
   isObjectType,
@@ -89,7 +90,7 @@ export function isUsingTypes(
   schema?: GraphQLSchema,
 ): boolean {
   let foundFields = 0;
-  const typesStack: GraphQLObjectType[] = [];
+  const typesStack: Array<GraphQLNamedType | undefined> = [];
 
   visit(document, {
     SelectionSet: {
@@ -124,15 +125,20 @@ export function isUsingTypes(
                   `Unable to find parent type! Please make sure you operation passes validation`,
                 );
               }
-              const field = lastType.getFields()[parent.name.value];
 
-              if (!field) {
-                throw new Error(
-                  `Unable to find field "${parent.name.value}" on type "${lastType}"!`,
-                );
+              if (isObjectType(lastType) || isInterfaceType(lastType)) {
+                const field = lastType.getFields()[parent.name.value];
+
+                if (!field) {
+                  throw new Error(
+                    `Unable to find field "${parent.name.value}" on type "${lastType}"!`,
+                  );
+                }
+
+                return getBaseType(field.type).name;
               }
 
-              return getBaseType(field.type).name;
+              return null;
             }
             if (parent.kind === Kind.OPERATION_DEFINITION) {
               if (parent.operation === 'query') {
@@ -164,18 +170,13 @@ export function isUsingTypes(
               if (parent.typeCondition) {
                 return parent.typeCondition.name.value;
               }
-              return typesStack[typesStack.length - 1].name;
+              return typesStack[typesStack.length - 1]?.name || null;
             }
 
             return null;
           })();
 
-          // `as any` is needed because `typesStack` is typed `GraphQLObjectType[]`, but `schema.getType()`
-          // returns `GraphQLNamedType | undefined`. Removing it is a small follow-up:
-          // type `typesStack` as `Array<GraphQLNamedType | undefined>`, then
-          // 1. in the `Kind.FIELD` branch, guard `lastType` with `isObjectType`/`isInterfaceType` before `getFields()`
-          // 2. in the `Kind.INLINE_FRAGMENT` branch, return `typesStack[typesStack.length - 1]?.name || null`
-          typesStack.push((nextTypeName ? schema.getType(nextTypeName) : undefined) as any);
+          typesStack.push(nextTypeName ? schema.getType(nextTypeName) : undefined);
 
           return node;
         }
@@ -219,7 +220,7 @@ export function isUsingTypes(
         if (schema) {
           const lastType = typesStack[typesStack.length - 1];
 
-          if (lastType && isObjectType(lastType)) {
+          if (lastType && (isObjectType(lastType) || isInterfaceType(lastType))) {
             const field = lastType.getFields()[node.name.value];
 
             if (!field) {
