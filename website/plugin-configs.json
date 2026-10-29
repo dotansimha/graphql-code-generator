@@ -211,6 +211,16 @@
       "file": "./node_modules/@graphql-codegen/hasura-allow-list/typings/config.d.ts",
       "identifier": "HasuraAllowListPluginConfig",
       "name": "hasura-allow-list"
+    },
+    {
+      "file": "./node_modules/@graphql-codegen/python/typings/config.d.ts",
+      "identifier": "PythonPluginConfig",
+      "name": "python"
+    },
+    {
+      "file": "./node_modules/@graphql-codegen/python-operations/typings/config.d.ts",
+      "identifier": "PythonOperationsPluginConfig",
+      "name": "python"
     }
   ]
 }
