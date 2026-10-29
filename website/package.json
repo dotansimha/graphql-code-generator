@@ -21,6 +21,8 @@
     "@graphql-codegen/kotlin": "4.0.1",
     "@graphql-codegen/named-operations-object": "4.0.1",
     "@graphql-codegen/near-operation-file-preset": "5.2.1",
+    "@graphql-codegen/python": "0.0.2",
+    "@graphql-codegen/python-operations": "0.0.2",
     "@graphql-codegen/typescript-apollo-angular": "5.0.1",
     "@graphql-codegen/typescript-apollo-client-helpers": "4.0.1",
     "@graphql-codegen/typescript-generic-sdk": "5.0.1",

@@ -1,6 +1,10 @@
 minimumReleaseAge: 1440 # in minutes. 1440 minutes === 1 day
 minimumReleaseAgeExclude:
   - '@graphql-tools/utils'
+  # FIXME: temporary inclusion of python libraries here to update docs
+  - '@graphql-codegen/python-common@0.0.2'
+  - '@graphql-codegen/python-operations@0.0.2'
+  - '@graphql-codegen/python@0.0.2'
 packages:
   - packages/*
   - packages/plugins/typescript/*
