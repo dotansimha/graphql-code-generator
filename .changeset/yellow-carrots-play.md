@@ -1,4 +1,5 @@
 ---
+'@graphql-codegen/cli': major
 '@graphql-codegen/plugin-helpers': major
 ---
 
