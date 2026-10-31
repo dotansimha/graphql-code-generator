@@ -5,7 +5,7 @@ import path from 'path';
 import { pathToFileURL } from 'url';
 import { buildASTSchema, DocumentNode, GraphQLError, GraphQLSchema, isSchema } from 'graphql';
 import { Listr, ListrTask } from 'listr2';
-import { codegen } from '@graphql-codegen/core';
+import { codegen, sortPrependValues } from '@graphql-codegen/core';
 import {
   CodegenPlugin,
   getCachedDocumentNodeFromSchema,
@@ -455,15 +455,18 @@ export async function executeCodegen(
                           const pluginLoader =
                             config.pluginLoader || makeDefaultLoader(context.cwd);
 
-                          const stageContents: string[] = [];
-                          // `meta` of each plugin of the previous stage, keyed by plugin name
-                          let previousStageMeta: Record<string, unknown> = {};
+                          // Merged output of the stages run so far, see `Types.StageOutput`
+                          const output: Types.StageOutput = { files: {} };
+                          // A single stage gets `pluginContext` as is, so plugins sharing state through it keep working.
+                          // All stages of an array share one copy with `output`.
+                          const stagePluginContext =
+                            stages.length === 1 ? pluginContext : { ...pluginContext, output };
                           // Schema and documents for the next stage, replaced by what a stage's plugins return
                           let stageSchemaAst = outputSchemaAst;
                           let stageSchema = outputSchema;
                           let stageDocuments = outputDocuments;
 
-                          for (const [stageIndex, stage] of stages.entries()) {
+                          for (const stage of stages) {
                             const normalizedPluginsArray = normalizeConfig(stage.plugins);
 
                             const pluginPackages = await Promise.all(
@@ -563,18 +566,11 @@ export async function executeCodegen(
                               continue;
                             }
 
-                            const stageMeta: Record<string, unknown> = {};
-                            // Plugin outputs of this stage that return `schema` or `documents`, keyed by plugin name
-                            const stageTransformOutputs: Record<string, Types.ComplexPluginOutput> =
+                            // Complex plugin outputs of this stage, keyed by plugin name
+                            const stageComplexOutputs: Record<string, Types.ComplexPluginOutput> =
                               {};
-                            // The first stage gets `pluginContext` as is, so plugins sharing state through it keep working.
-                            // Later stages get a copy with `previousStageMeta`, e.g. `{ 'my-plugin': { typeNames: ['User'] } }`.
-                            const stagePluginContext =
-                              stageIndex === 0
-                                ? pluginContext
-                                : { ...pluginContext, previousStageMeta };
 
-                            const stageContent = await context.profiler.run(
+                            await context.profiler.run(
                               () =>
                                 codegen({
                                   filename,
@@ -589,42 +585,56 @@ export async function executeCodegen(
                                   documentTransforms,
                                   importExtension,
                                   cache,
-                                  onPluginOutput: (pluginName, output) => {
-                                    if (!isComplexPluginOutput(output)) {
-                                      return;
+                                  onPluginOutput: (pluginName, pluginOutput) => {
+                                    if (isComplexPluginOutput(pluginOutput)) {
+                                      stageComplexOutputs[pluginName] = pluginOutput;
                                     }
-                                    if (output.meta) {
-                                      stageMeta[pluginName] = output.meta;
-                                    }
-                                    if (output.schema || output.documents) {
-                                      stageTransformOutputs[pluginName] = output;
-                                    }
+                                  },
+                                  onOutputFileParts: parts => {
+                                    const file = output.files[filename] ?? {
+                                      content: '',
+                                      prepend: [],
+                                      append: [],
+                                    };
+                                    output.files[filename] = {
+                                      content: [file.content, parts.content]
+                                        .filter(Boolean)
+                                        .join('\n'),
+                                      prepend: [...new Set([...file.prepend, ...parts.prepend])],
+                                      append: [...new Set([...file.append, ...parts.append])],
+                                    };
                                   },
                                 }),
                               `Codegen: ${filename}`,
                             );
 
-                            stageContents.push(stageContent);
-                            previousStageMeta = stageMeta;
-
                             // Plugins run in parallel, so walk them in listed order to let the last listed one win.
-                            // Stages that return neither keep handing on the current schema and documents.
+                            // Stages that return no `schema` or `documents` keep handing on the current ones.
                             for (const plugin of normalizedPluginsArray) {
-                              const transformOutput = stageTransformOutputs[Object.keys(plugin)[0]];
-                              if (transformOutput?.schema) {
-                                stageSchema = transformOutput.schema;
+                              const complexOutput = stageComplexOutputs[Object.keys(plugin)[0]];
+                              // `files` is filled from the plugins' content above, so a `meta.files` can't replace it
+                              Object.assign(output, complexOutput?.meta, { files: output.files });
+                              if (complexOutput?.schema) {
+                                stageSchema = complexOutput.schema;
                                 stageSchemaAst = buildASTSchema(stageSchema);
                               }
-                              if (transformOutput?.documents) {
-                                stageDocuments = transformOutput.documents;
+                              if (complexOutput?.documents) {
+                                stageDocuments = complexOutput.documents;
                               }
                             }
                           }
 
                           if (!preset) {
+                            const file = output.files[filename];
                             result.push({
                               filename,
-                              content: stageContents.join('\n'),
+                              content: [
+                                ...sortPrependValues([...file.prepend]),
+                                file.content,
+                                ...file.append,
+                              ]
+                                .filter(Boolean)
+                                .join('\n'),
                               hooks: outputConfig.hooks || {},
                               contentComparison: outputConfig.contentComparison,
                               // Carry the entry's `overwrite` onto the file so the CLI can honor it per file.

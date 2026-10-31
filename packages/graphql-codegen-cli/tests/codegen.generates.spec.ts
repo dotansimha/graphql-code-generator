@@ -52,46 +52,136 @@ describe('Array `generates` value', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  it('Should hand plugin meta from a stage to the next stage, keyed by plugin name', async () => {
+  describe('`pluginContext.output` shared by the stages', () => {
     const producer = './tests/custom-plugins/stage-meta-producer.js';
-    const { result, error } = await executeCodegen({
-      schema: SIMPLE_TEST_SCHEMA,
-      generates: {
-        'out.ts': [
-          { plugins: [producer] },
-          {
-            plugins: [
-              { './tests/custom-plugins/stage-meta-consumer.js': { fromPlugin: producer } },
-            ],
-          },
-        ],
-      },
+    const consumer = './tests/custom-plugins/stage-meta-consumer.js';
+    const readConsumerOutput = (content: string): unknown =>
+      JSON.parse(content.split('// CONSUMER: ')[1].split('\n')[0]);
+
+    it('Should give a later stage the files and merged meta of earlier stages', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [
+            {
+              plugins: [
+                {
+                  [producer]: {
+                    content: '// ONE',
+                    prepend: ['import a from "a";'],
+                    append: ['// END_ONE'],
+                    meta: { typeNames: ['User'], files: 'not files' },
+                  },
+                },
+              ],
+            },
+            { plugins: [consumer] },
+          ],
+        },
+      });
+
+      expect(error).toBeNull();
+      expect(readConsumerOutput(result[0].content)).toEqual({
+        files: {
+          'out.ts': { content: '// ONE', prepend: ['import a from "a";'], append: ['// END_ONE'] },
+        },
+        typeNames: ['User'],
+      });
     });
 
-    expect(error).toBeNull();
-    expect(result.length).toBe(1);
-    expect(result[0].content).toBe('// STAGE_ONE\n// STAGE_TWO: Boolean,MyType,Query,String');
-  });
+    it('Should give the first stage empty files', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [{ plugins: [consumer] }, { plugins: [{ add: { content: '// TWO' } }] }],
+        },
+      });
 
-  it('Should not hand meta to the first stage', async () => {
-    const { result } = await executeCodegen({
-      schema: SIMPLE_TEST_SCHEMA,
-      generates: {
-        'out.ts': [
-          {
+      expect(error).toBeNull();
+      expect(readConsumerOutput(result[0].content)).toEqual({ files: {} });
+    });
+
+    it('Should let the meta of a later stage win on a collision', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [
+            { plugins: [{ [producer]: { content: '// ONE', meta: { a: 1, b: 1 } } }] },
+            { plugins: [{ [producer]: { content: '// TWO', meta: { b: 2 } } }] },
+            { plugins: [consumer] },
+          ],
+        },
+      });
+
+      expect(error).toBeNull();
+      expect(readConsumerOutput(result[0].content)).toMatchObject({
+        files: { 'out.ts': { content: '// ONE\n// TWO' } },
+        a: 1,
+        b: 2,
+      });
+    });
+
+    it('Should write the prepend lines of all stages, then their content in order, then their append lines', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [
+            {
+              plugins: [
+                {
+                  [producer]: {
+                    content: '// ONE',
+                    prepend: ['// HEADER'],
+                    append: ['// END_ONE'],
+                  },
+                },
+              ],
+            },
+            {
+              plugins: [
+                {
+                  [producer]: {
+                    content: '// TWO',
+                    prepend: ['import b from "b";', '// HEADER'],
+                    append: ['// END_TWO'],
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      });
+
+      expect(error).toBeNull();
+      expect(result[0].content).toBe(
+        '// HEADER\nimport b from "b";\n// ONE\n// TWO\n// END_ONE\n// END_TWO',
+      );
+    });
+
+    it('Should write a single stage as before, and not give it `output`', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': {
             plugins: [
               {
-                './tests/custom-plugins/stage-meta-consumer.js': {
-                  fromPlugin: './tests/custom-plugins/stage-meta-producer.js',
+                [producer]: {
+                  content: '// ONE',
+                  prepend: ['import a from "a";', '// HEADER'],
+                  append: ['// END'],
                 },
               },
+              consumer,
             ],
           },
-        ],
-      },
-    });
+        },
+      });
 
-    expect(result[0].content).toBe('// STAGE_TWO: ');
+      expect(error).toBeNull();
+      expect(result[0].content).toBe(
+        '// HEADER\nimport a from "a";\n// ONE\n// CONSUMER: undefined\n// END',
+      );
+    });
   });
 
   describe('schema and documents returned by a stage', () => {
@@ -161,8 +251,9 @@ describe('Array `generates` value', () => {
       });
 
       expect(error).toBeNull();
+      // `add` puts its content in `prepend` by default, so it comes before the content of all stages
       expect(result[0].content).toBe(
-        '// PRODUCER: Added Added\n// MIDDLE\n// CONSUMER: types=Added,Boolean,ID,MyType,Query,String documents=Added.graphql',
+        '// MIDDLE\n// PRODUCER: Added Added\n// CONSUMER: types=Added,Boolean,ID,MyType,Query,String documents=Added.graphql',
       );
     });
 

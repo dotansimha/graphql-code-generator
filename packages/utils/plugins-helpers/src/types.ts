@@ -44,13 +44,42 @@ export namespace Types {
     contentComparison?: Types.ContentComparison;
     /**
      * @description Called with each plugin's raw output, right after the plugin runs.
-     * The CLI uses it to collect each plugin's `meta` when a `generates` entry is an array:
-     * elements run in order as stages appending to the same file, and every stage after the first
-     * gets the previous stage's `meta` as `pluginContext.previousStageMeta`, keyed by plugin name,
-     * e.g. `{ 'my-plugin': { typeNames: ['User'] } }`.
+     * The CLI uses it to merge each plugin's `meta` into {@link Types.StageOutput}
+     * when a `generates` entry is an array of stages.
      */
     onPluginOutput?: (pluginName: string, output: Types.PluginOutput) => void;
+    /**
+     * @description Called once all plugins ran, with the parts the returned content is joined from.
+     * The CLI uses it to fill `files` of {@link Types.StageOutput}.
+     */
+    onOutputFileParts?: (parts: Types.OutputFileParts) => void;
   }
+
+  /**
+   * @description The parts of one output file: `content` is the plugins' content in listed order,
+   * joined with `\n`; `prepend` and `append` are the plugins' `prepend`/`append` lines, deduped and unsorted.
+   */
+  export type OutputFileParts = {
+    content: string;
+    prepend: string[];
+    append: string[];
+  };
+
+  /**
+   * @description `pluginContext.output` in every stage of a `generates` entry that is an array.
+   * Elements of the array run in order as stages of the same output file, and all of them share this object.
+   * After each stage, the CLI merges into it:
+   * - `files[filename]`: the stage's content appended to the content of earlier stages,
+   *   and its `prepend`/`append` lines added, deduped
+   * - every other key: the `meta` the stage's plugins returned, shallow merged, so a later stage or
+   *   a later listed plugin wins on a collision. `files` is reserved: a `meta.files` is ignored.
+   *
+   * The file written is the sorted `prepend` lines, then `content`, then the `append` lines of the last stage's `files[filename]`.
+   */
+  export type StageOutput = {
+    files: { [filename: string]: Types.OutputFileParts };
+    [key: string]: unknown;
+  };
 
   export type FileOutput = {
     filename: string;

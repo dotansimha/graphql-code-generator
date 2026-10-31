@@ -242,6 +242,12 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
     }),
   );
 
+  options.onOutputFileParts?.({
+    content: output.filter(Boolean).join('\n'),
+    prepend: Array.from(prepend.values()),
+    append: Array.from(append.values()),
+  });
+
   return [
     ...sortPrependValues(Array.from(prepend.values())),
     ...output,

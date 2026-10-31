@@ -1,9 +1,8 @@
 module.exports = {
-  plugin: schema => {
-    const typeNames = Object.keys(schema.getTypeMap()).filter(name => !name.startsWith('__'));
-    return {
-      content: '// STAGE_ONE',
-      meta: { typeNames },
-    };
-  },
+  plugin: (_schema, _documents, config) => ({
+    content: config.content,
+    prepend: config.prepend,
+    append: config.append,
+    meta: config.meta,
+  }),
 };
