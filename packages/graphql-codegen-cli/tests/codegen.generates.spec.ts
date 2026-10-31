@@ -55,7 +55,7 @@ describe('Array `generates` value', () => {
   describe('`pluginContext.output` shared by the stages', () => {
     const producer = './tests/custom-plugins/stage-meta-producer.js';
     const consumer = './tests/custom-plugins/stage-meta-consumer.js';
-    const readConsumerOutput = (content: string): unknown =>
+    const readConsumerOutput = ({ content }: { content: string }): unknown =>
       JSON.parse(content.split('// CONSUMER: ')[1].split('\n')[0]);
 
     it('Should give a later stage the files and merged meta of earlier stages', async () => {
@@ -81,7 +81,7 @@ describe('Array `generates` value', () => {
       });
 
       expect(error).toBeNull();
-      expect(readConsumerOutput(result[0].content)).toEqual({
+      expect(readConsumerOutput({ content: result[0].content })).toEqual({
         files: {
           'out.ts': { content: '// ONE', prepend: ['import a from "a";'], append: ['// END_ONE'] },
         },
@@ -98,7 +98,7 @@ describe('Array `generates` value', () => {
       });
 
       expect(error).toBeNull();
-      expect(readConsumerOutput(result[0].content)).toEqual({ files: {} });
+      expect(readConsumerOutput({ content: result[0].content })).toEqual({ files: {} });
     });
 
     it('Should let the meta of a later stage win on a collision', async () => {
@@ -114,7 +114,7 @@ describe('Array `generates` value', () => {
       });
 
       expect(error).toBeNull();
-      expect(readConsumerOutput(result[0].content)).toMatchObject({
+      expect(readConsumerOutput({ content: result[0].content })).toMatchObject({
         files: { 'out.ts': { content: '// ONE\n// TWO' } },
         a: 1,
         b: 2,
@@ -158,7 +158,7 @@ describe('Array `generates` value', () => {
       );
     });
 
-    it('Should write a single stage as before, and not give it `output`', async () => {
+    it("Should write a single stage's file and not give it `output`", async () => {
       const { result, error } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,
         generates: {
