@@ -29,7 +29,7 @@ describe('Array `generates` value', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  it('Should use the first element and warn once when there are multiple elements', async () => {
+  it('Should run multiple elements as stages in order, appending to the same file, without warning', async () => {
     const { result } = await executeCodegen({
       schema: SIMPLE_TEST_SCHEMA,
       generates: {
@@ -45,14 +45,67 @@ describe('Array `generates` value', () => {
     });
 
     expect(result.length).toBe(2);
-    expect(result[0].content).toContain('FIRST_ELEMENT');
-    expect(result[0].content).not.toContain('SECOND_ELEMENT');
-    expect(result[1].content).toContain('THIRD_ELEMENT');
-    expect(result[1].content).not.toContain('FOURTH_ELEMENT');
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-    expect(warnSpy).toHaveBeenCalledWith(
-      'Multiple generates config detected. Only the first one is used.',
-    );
+    expect(result[0].filename).toBe('out.ts');
+    expect(result[0].content).toBe('// FIRST_ELEMENT\n// SECOND_ELEMENT');
+    expect(result[1].filename).toBe('out2.ts');
+    expect(result[1].content).toBe('// THIRD_ELEMENT\n// FOURTH_ELEMENT');
+    expect(warnSpy).not.toHaveBeenCalled();
+  });
+
+  it('Should hand plugin meta from a stage to the next stage, keyed by plugin name', async () => {
+    const producer = './tests/custom-plugins/stage-meta-producer.js';
+    const { result, error } = await executeCodegen({
+      schema: SIMPLE_TEST_SCHEMA,
+      generates: {
+        'out.ts': [
+          { plugins: [producer] },
+          {
+            plugins: [
+              { './tests/custom-plugins/stage-meta-consumer.js': { fromPlugin: producer } },
+            ],
+          },
+        ],
+      },
+    });
+
+    expect(error).toBeNull();
+    expect(result.length).toBe(1);
+    expect(result[0].content).toBe('// STAGE_ONE\n// STAGE_TWO: Boolean,MyType,Query,String');
+  });
+
+  it('Should not hand meta to the first stage', async () => {
+    const { result } = await executeCodegen({
+      schema: SIMPLE_TEST_SCHEMA,
+      generates: {
+        'out.ts': [
+          {
+            plugins: [
+              {
+                './tests/custom-plugins/stage-meta-consumer.js': {
+                  fromPlugin: './tests/custom-plugins/stage-meta-producer.js',
+                },
+              },
+            ],
+          },
+        ],
+      },
+    });
+
+    expect(result[0].content).toBe('// STAGE_TWO: ');
+  });
+
+  it('Should throw when an element uses a preset and there are multiple elements', async () => {
+    await expect(
+      executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out/': [
+            { preset: 'client', plugins: [] },
+            { plugins: [{ add: { content: '// SECOND_ELEMENT' } }] },
+          ],
+        },
+      }),
+    ).rejects.toThrow('Presets are not supported yet');
   });
 
   it('Should throw when the array is empty', async () => {

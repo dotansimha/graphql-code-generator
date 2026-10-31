@@ -9,6 +9,7 @@ import { codegen } from '@graphql-codegen/core';
 import {
   CodegenPlugin,
   getCachedDocumentNodeFromSchema,
+  isComplexPluginOutput,
   normalizeConfig,
   normalizeInstanceOrArray,
   normalizeOutputParam,
@@ -22,7 +23,6 @@ import { isESMModule } from './isESMModule.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
-import { getLogger } from './utils/logger.js';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -74,8 +74,6 @@ function createCache(): <T>(
 export async function executeCodegen(
   input: CodegenContext | Types.Config,
 ): Promise<{ result: Types.FileOutput[]; error: Error | null }> {
-  let warnedAboutConfigArray = false;
-
   const context = ensureContext(input);
   const config = context.getConfig();
   const pluginContext = context.getPluginContext();
@@ -85,7 +83,10 @@ export async function executeCodegen(
   let rootSchemas: Types.Schema[];
   let rootDocuments: Types.OperationDocument[];
   let rootExternalDocuments: Types.OperationDocument[];
-  const generates: { [filename: string]: Types.ConfiguredOutput } = {};
+  /**
+   * Each `generates` entry is a list of stages that run in order and append to the same file.
+   */
+  const generates: { [filename: string]: Types.ConfiguredOutput[] } = {};
 
   const cache = createCache();
 
@@ -172,27 +173,35 @@ export async function executeCodegen(
     }
 
     for (const filename of generateKeys) {
-      const normalizedOutputArray = normalizeOutputParam(config.generates[filename]);
-      if (normalizedOutputArray.length > 1 && !warnedAboutConfigArray) {
-        warnedAboutConfigArray = true;
-        getLogger().warn('Multiple generates config detected. Only the first one is used.');
-      }
+      const stages = normalizeOutputParam(config.generates[filename]);
 
-      generates[filename] = normalizedOutputArray[0];
-      const output = generates[filename];
-
-      if (!output || (!output.preset && (!output.plugins || output.plugins.length === 0))) {
+      if (
+        stages.length === 0 ||
+        stages.some(
+          stage => !stage || (!stage.preset && (!stage.plugins || stage.plugins.length === 0)),
+        )
+      ) {
         throwInvalidGenerates();
       }
+
+      if (stages.length > 1 && stages.some(stage => stage.preset)) {
+        throw new Error(
+          `Invalid Codegen Configuration! \n
+        "${filename}" has multiple elements and at least one uses "preset". Presets are not supported yet in a "generates" array with multiple elements.`,
+        );
+      }
+
+      generates[filename] = stages;
     }
 
     if (
       rootSchemas.length === 0 &&
       Object.keys(generates).some(
         filename =>
-          !generates[filename].schema ||
-          (Array.isArray(generates[filename].schema === 'object') &&
-            (generates[filename].schema as unknown as any[]).length === 0),
+          !generates[filename][0].schema ||
+          (Array.isArray(generates[filename][0].schema === 'object') &&
+            // Kept: removing this cast needs the `Array.isArray(... === 'object')` check above fixed first.
+            (generates[filename][0].schema as unknown as any[]).length === 0),
       )
     ) {
       throw new Error(
@@ -225,7 +234,9 @@ export async function executeCodegen(
         title: 'Generate outputs',
         task: (ctx, task) => {
           const generateTasks: ListrTask<Ctx>[] = Object.keys(generates).map(filename => {
-            const outputConfig = generates[filename];
+            const stages = generates[filename];
+            // Schema, documents, preset, hooks, contentComparison and overwrite come from the first stage.
+            const outputConfig = stages[0];
 
             const title = `Generate to ${filename}`;
 
@@ -234,7 +245,6 @@ export async function executeCodegen(
               async task(_, subTask) {
                 let outputSchemaAst: GraphQLSchema;
                 let outputSchema: DocumentNode;
-                const outputFileTemplateConfig = outputConfig.config || {};
                 const outputDocuments: Types.DocumentFile[] = [];
                 const outputSpecificSchemas = normalizeInstanceOrArray<Types.Schema>(
                   outputConfig.schema,
@@ -442,59 +452,67 @@ export async function executeCodegen(
                       task: wrapTask(
                         async () => {
                           debugLog(`[CLI] Generating output`);
-                          const normalizedPluginsArray = normalizeConfig(outputConfig.plugins);
-
                           const pluginLoader =
                             config.pluginLoader || makeDefaultLoader(context.cwd);
-                          const pluginPackages = await Promise.all(
-                            normalizedPluginsArray.map(plugin =>
-                              getPluginByName(Object.keys(plugin)[0], pluginLoader),
-                            ),
-                          );
 
-                          const pluginMap: {
-                            [name: string]: CodegenPlugin;
-                          } = Object.fromEntries(
-                            pluginPackages.map((pkg, i) => {
-                              const plugin = normalizedPluginsArray[i];
-                              const name = Object.keys(plugin)[0];
-                              return [name, pkg];
-                            }),
-                          );
+                          const stageContents: string[] = [];
+                          // `meta` of each plugin of the previous stage, keyed by plugin name
+                          let previousStageMeta: Record<string, unknown> = {};
 
-                          const rawMergedConfig = {
-                            ...rootConfig,
-                            importExtension: config.importExtension,
-                            ...(typeof outputFileTemplateConfig === 'string'
-                              ? { value: outputFileTemplateConfig }
-                              : outputFileTemplateConfig),
-                          };
+                          for (const [stageIndex, stage] of stages.entries()) {
+                            const normalizedPluginsArray = normalizeConfig(stage.plugins);
 
-                          const importExtension = rawMergedConfig.importExtension ?? '';
+                            const pluginPackages = await Promise.all(
+                              normalizedPluginsArray.map(plugin =>
+                                getPluginByName(Object.keys(plugin)[0], pluginLoader),
+                              ),
+                            );
 
-                          const mergedConfig = {
-                            ...rawMergedConfig,
-                            importExtension,
-                          };
+                            const pluginMap: {
+                              [name: string]: CodegenPlugin;
+                            } = Object.fromEntries(
+                              pluginPackages.map((pkg, i) => {
+                                const plugin = normalizedPluginsArray[i];
+                                const name = Object.keys(plugin)[0];
+                                return [name, pkg];
+                              }),
+                            );
 
-                          const documentTransforms = Array.isArray(outputConfig.documentTransforms)
-                            ? await Promise.all(
-                                outputConfig.documentTransforms.map(async (config, index) => {
-                                  return await getDocumentTransform(
-                                    config,
-                                    makeDefaultLoader(context.cwd),
-                                    `the element at index ${index} of the documentTransforms`,
-                                  );
-                                }),
-                              )
-                            : [];
+                            const stageFileTemplateConfig = stage.config || {};
+                            const rawMergedConfig = {
+                              ...rootConfig,
+                              importExtension: config.importExtension,
+                              ...(typeof stageFileTemplateConfig === 'string'
+                                ? { value: stageFileTemplateConfig }
+                                : stageFileTemplateConfig),
+                            };
 
-                          const outputs: Types.GenerateOptions[] = preset
-                            ? await context.profiler.run(
+                            const importExtension = rawMergedConfig.importExtension ?? '';
+
+                            const mergedConfig = {
+                              ...rawMergedConfig,
+                              importExtension,
+                            };
+
+                            const documentTransforms = Array.isArray(stage.documentTransforms)
+                              ? await Promise.all(
+                                  stage.documentTransforms.map(async (config, index) => {
+                                    return await getDocumentTransform(
+                                      config,
+                                      makeDefaultLoader(context.cwd),
+                                      `the element at index ${index} of the documentTransforms`,
+                                    );
+                                  }),
+                                )
+                              : [];
+
+                            // `normalize` only allows a preset when there is a single stage
+                            if (preset) {
+                              const outputs = await context.profiler.run(
                                 async () =>
                                   preset.buildGeneratesSection({
                                     baseOutputDir: filename,
-                                    presetConfig: outputConfig.presetConfig || {},
+                                    presetConfig: stage.presetConfig || {},
                                     plugins: normalizedPluginsArray,
                                     schema: outputSchema,
                                     schemaAst: outputSchemaAst,
@@ -506,9 +524,50 @@ export async function executeCodegen(
                                     documentTransforms,
                                   }),
                                 `Build Generates Section: ${filename}`,
-                              )
-                            : [
-                                {
+                              );
+
+                              const process = async (outputArgs: Types.GenerateOptions) => {
+                                const output = await codegen({
+                                  ...outputArgs,
+                                  importExtension,
+                                  cache,
+                                });
+                                result.push({
+                                  filename: outputArgs.filename,
+                                  content: output,
+                                  hooks: outputConfig.hooks || {},
+                                  // A preset sets `outputArgs` per output via `buildGeneratesSection`.
+                                  // Fall back to `outputConfig` so plugin outputs can opt in too.
+                                  contentComparison:
+                                    outputArgs.contentComparison ?? outputConfig.contentComparison,
+
+                                  // Carry the entry's `overwrite` onto the file so the CLI can honor it per file.
+                                  // Unlike `contentComparison`, this is intentionally not
+                                  // `outputArgs.overwrite ?? outputConfig.overwrite`: presets should not
+                                  // be able to set `overwrite` per file from buildGeneratesSection
+                                  // (a capability this doesn't need).
+                                  overwrite: outputConfig.overwrite,
+                                });
+                              };
+
+                              await context.profiler.run(
+                                () => Promise.all(outputs.map(process)),
+                                `Codegen: ${filename}`,
+                              );
+                              continue;
+                            }
+
+                            const stageMeta: Record<string, unknown> = {};
+                            // The first stage gets `pluginContext` as is, so plugins sharing state through it keep working.
+                            // Later stages get a copy with `previousStageMeta`, e.g. `{ 'my-plugin': { typeNames: ['User'] } }`.
+                            const stagePluginContext =
+                              stageIndex === 0
+                                ? pluginContext
+                                : { ...pluginContext, previousStageMeta };
+
+                            const stageContent = await context.profiler.run(
+                              () =>
+                                codegen({
                                   filename,
                                   plugins: normalizedPluginsArray,
                                   schema: outputSchema,
@@ -516,40 +575,34 @@ export async function executeCodegen(
                                   documents: outputDocuments,
                                   config: mergedConfig,
                                   pluginMap,
-                                  pluginContext,
+                                  pluginContext: stagePluginContext,
                                   profiler: context.profiler,
                                   documentTransforms,
-                                } satisfies Types.GenerateOptions,
-                              ];
+                                  importExtension,
+                                  cache,
+                                  onPluginOutput: (pluginName, output) => {
+                                    if (isComplexPluginOutput(output) && output.meta) {
+                                      stageMeta[pluginName] = output.meta;
+                                    }
+                                  },
+                                }),
+                              `Codegen: ${filename}`,
+                            );
 
-                          const process = async (outputArgs: Types.GenerateOptions) => {
-                            const output = await codegen({
-                              ...outputArgs,
-                              importExtension,
-                              cache,
-                            });
+                            stageContents.push(stageContent);
+                            previousStageMeta = stageMeta;
+                          }
+
+                          if (!preset) {
                             result.push({
-                              filename: outputArgs.filename,
-                              content: output,
+                              filename,
+                              content: stageContents.join('\n'),
                               hooks: outputConfig.hooks || {},
-                              // A preset sets `outputArgs` per output via `buildGeneratesSection`.
-                              // Fall back to `outputConfig` so plugin outputs can opt in too.
-                              contentComparison:
-                                outputArgs.contentComparison ?? outputConfig.contentComparison,
-
+                              contentComparison: outputConfig.contentComparison,
                               // Carry the entry's `overwrite` onto the file so the CLI can honor it per file.
-                              // Unlike `contentComparison`, this is intentionally not
-                              // `outputArgs.overwrite ?? outputConfig.overwrite`: presets should not
-                              // be able to set `overwrite` per file from buildGeneratesSection
-                              // (a capability this doesn't need).
                               overwrite: outputConfig.overwrite,
                             });
-                          };
-
-                          await context.profiler.run(
-                            () => Promise.all(outputs.map(process)),
-                            `Codegen: ${filename}`,
-                          );
+                          }
                         },
                         filename,
                         `Generate: ${filename}`,
