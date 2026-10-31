@@ -526,7 +526,9 @@ export async function executeCodegen(
                                 `Build Generates Section: ${filename}`,
                               );
 
-                              const process = async (outputArgs: Types.GenerateOptions) => {
+                              const process = async (
+                                outputArgs: Types.GenerateOptions,
+                              ): Promise<void> => {
                                 const output = await codegen({
                                   ...outputArgs,
                                   importExtension,
