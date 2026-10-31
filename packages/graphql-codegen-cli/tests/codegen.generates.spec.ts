@@ -34,15 +34,21 @@ describe('Array `generates` value', () => {
       schema: SIMPLE_TEST_SCHEMA,
       generates: {
         'out.ts': [
-          { plugins: ['typescript'] },
+          { plugins: [{ add: { content: '// FIRST_ELEMENT' } }] },
           { plugins: [{ add: { content: '// SECOND_ELEMENT' } }] },
+        ],
+        'out2.ts': [
+          { plugins: [{ add: { content: '// THIRD_ELEMENT' } }] },
+          { plugins: [{ add: { content: '// FOURTH_ELEMENT' } }] },
         ],
       },
     });
 
-    expect(result.length).toBe(1);
-    expect(result[0].content).toContain('export type MyType');
+    expect(result.length).toBe(2);
+    expect(result[0].content).toContain('FIRST_ELEMENT');
     expect(result[0].content).not.toContain('SECOND_ELEMENT');
+    expect(result[1].content).toContain('THIRD_ELEMENT');
+    expect(result[1].content).not.toContain('FOURTH_ELEMENT');
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy).toHaveBeenCalledWith(
       'Multiple generates config detected. Only the first one is used.',

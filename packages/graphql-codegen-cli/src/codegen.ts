@@ -74,6 +74,8 @@ function createCache(): <T>(
 export async function executeCodegen(
   input: CodegenContext | Types.Config,
 ): Promise<{ result: Types.FileOutput[]; error: Error | null }> {
+  let warnedAboutConfigArray = false;
+
   const context = ensureContext(input);
   const config = context.getConfig();
   const pluginContext = context.getPluginContext();
@@ -171,7 +173,8 @@ export async function executeCodegen(
 
     for (const filename of generateKeys) {
       const normalizedOutputArray = normalizeOutputParam(config.generates[filename]);
-      if (normalizedOutputArray.length > 1) {
+      if (normalizedOutputArray.length > 1 && !warnedAboutConfigArray) {
+        warnedAboutConfigArray = true;
         getLogger().warn('Multiple generates config detected. Only the first one is used.');
       }
 
