@@ -1,5 +1,19 @@
 # @graphql-codegen/time
 
+## 7.1.2
+
+### Patch Changes
+
+- [#11083](https://github.com/dotansimha/graphql-code-generator/pull/11083)
+  [`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`graphql@^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/0.8.0)
+    (from `^16.0.0 || ^17.0.0`, in `peerDependencies`)
+- Updated dependencies
+  [[`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb)]:
+  - @graphql-codegen/plugin-helpers@7.4.3
+
 ## 7.1.1
 
 ### Patch Changes

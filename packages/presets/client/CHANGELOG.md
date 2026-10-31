@@ -1,5 +1,37 @@
 # @graphql-codegen/client-preset
 
+## 6.2.4
+
+### Patch Changes
+
+- [#11083](https://github.com/dotansimha/graphql-code-generator/pull/11083)
+  [`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/documents@^1.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/documents/v/1.0.0)
+    (from `^2.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3)
+    (from `^13.0.2`, in `dependencies`)
+  - Updated dependency
+    [`graphql@^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/0.8.0)
+    (from `^16.0.0 || ^17.0.0`, in `peerDependencies`)
+- Updated dependencies
+  [[`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb),
+  [`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb),
+  [`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb),
+  [`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb),
+  [`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb),
+  [`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb),
+  [`cbefcf3`](https://github.com/dotansimha/graphql-code-generator/commit/cbefcf33b7fde93d3a44c337a4edb5f32ab38fdb)]:
+  - @graphql-codegen/add@7.1.2
+  - @graphql-codegen/gql-tag-operations@6.1.2
+  - @graphql-codegen/plugin-helpers@7.4.3
+  - @graphql-codegen/typed-document-node@7.2.1
+  - @graphql-codegen/typescript@6.1.3
+  - @graphql-codegen/typescript-operations@6.2.1
+  - @graphql-codegen/visitor-plugin-common@7.5.1
+
 ## 6.2.3
 
 ### Patch Changes
