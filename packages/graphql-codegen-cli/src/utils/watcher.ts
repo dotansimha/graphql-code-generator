@@ -50,13 +50,15 @@ export const createWatcher = (
   runningWatcher: Promise<void>;
 } => {
   debugLog(`[Watcher] Starting watcher...`);
+  let warnedAboutConfigArray = false;
   let config: Types.Config & { configFilePath?: string } = initialContext.getConfig();
 
   const globalPatternSet = makeGlobalPatternSet(initialContext);
   const localPatternSets = Object.keys(config.generates)
     .map(filename => {
       const normalizedOutputArray = normalizeOutputParam(config.generates[filename]);
-      if (normalizedOutputArray.length > 1) {
+      if (normalizedOutputArray.length > 1 && !warnedAboutConfigArray) {
+        warnedAboutConfigArray = true;
         getLogger().warn('Multiple generates config detected. Only the first one is used.');
       }
       return normalizedOutputArray[0];
@@ -126,7 +128,8 @@ export const createWatcher = (
     const ignored: string[] = ['**/.git/**'];
     for (const entry of Object.keys(config.generates).map(filename => {
       const normalizedOutputArray = normalizeOutputParam(config.generates[filename]);
-      if (normalizedOutputArray.length > 1) {
+      if (normalizedOutputArray.length > 1 && !warnedAboutConfigArray) {
+        warnedAboutConfigArray = true;
         getLogger().warn('Multiple generates config detected. Only the first one is used.');
       }
       return {
