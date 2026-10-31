@@ -142,21 +142,31 @@ export async function executeCodegen(
     /* Normalize "generators" field */
     const generateKeys = Object.keys(config.generates || {});
 
-    if (generateKeys.length === 0) {
+    function throwInvalidGenerates(): never {
       throw new Error(
         `Invalid Codegen Configuration! \n
         Please make sure that your codegen config file contains the "generates" field, with a specification for the plugins you need.
 
-        It should looks like that:
+        It should look like this:
 
-        schema:
-          - my-schema.graphql
-        generates:
-          my-file.ts:
-            - plugin1
-            - plugin2
-            - plugin3`,
+        \`\`\`ts
+        import type { CodegenConfig } from "@graphql-codegen/cli";
+
+        const config: CodegenConfig = {
+          schema: "my-schema.graphql",
+          generates: {
+            "my-file.ts": {
+              plugins: ["plugin1", "plugin2", "plugin3"],
+            },
+          },
+        };
+        export default config;
+        \`\`\``,
       );
+    }
+
+    if (generateKeys.length === 0) {
+      throwInvalidGenerates();
     }
 
     for (const filename of generateKeys) {
@@ -168,22 +178,8 @@ export async function executeCodegen(
       generates[filename] = normalizedOutputArray[0];
       const output = generates[filename];
 
-      if (!output.preset && (!output.plugins || output.plugins.length === 0)) {
-        throw new Error(
-          `Invalid Codegen Configuration! \n
-          Please make sure that your codegen config file has defined plugins list for output "${filename}".
-
-          It should looks like that:
-
-          schema:
-            - my-schema.graphql
-          generates:
-            my-file.ts:
-              - plugin1
-              - plugin2
-              - plugin3
-          `,
-        );
+      if (!output || (!output.preset && (!output.plugins || output.plugins.length === 0))) {
+        throwInvalidGenerates();
       }
     }
 
