@@ -632,10 +632,11 @@ export namespace Types {
     meta?: M;
     /**
      * When set, replaces the schema that later `generates` stages of the same output receive.
+     * Later stages receive this `schema`, and a `schemaAst` built from it.
      * Other plugins of the current stage are unaffected, since they run in parallel.
      * If several plugins of one stage set it, the one listed last in `plugins` wins.
      */
-    schemaAst?: GraphQLSchema;
+    schema?: DocumentNode;
     /**
      * When set, replaces the documents that later `generates` stages of the same output receive.
      * Other plugins of the current stage are unaffected, since they run in parallel.

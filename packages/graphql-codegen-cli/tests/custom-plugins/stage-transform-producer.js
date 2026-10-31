@@ -1,15 +1,17 @@
-const { extendSchema, parse } = require('graphql');
+const { extendSchema, parse, printSchema } = require('graphql');
 
 module.exports = {
   plugin: async (schema, documents, config) => {
     if (config.delay) {
       await new Promise(resolve => setTimeout(resolve, config.delay));
     }
+    const transformedSchema = config.addType
+      ? parse(printSchema(extendSchema(schema, parse(`type ${config.addType} { id: ID }`))))
+      : undefined;
     return {
       content: `// PRODUCER: ${config.addType || ''} ${config.addDocument || ''}`,
-      schemaAst: config.addType
-        ? extendSchema(schema, parse(`type ${config.addType} { id: ID }`))
-        : undefined,
+      // `returnSchemaAst` returns the transformed schema under `schemaAst`, which later stages ignore
+      [config.returnSchemaAst ? 'schemaAst' : 'schema']: transformedSchema,
       documents: config.addDocument
         ? [
             ...documents,

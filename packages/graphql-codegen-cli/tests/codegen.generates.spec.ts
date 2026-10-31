@@ -114,6 +114,23 @@ describe('Array `generates` value', () => {
       );
     });
 
+    it('Should not forward a schema returned as `schemaAst`', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [
+            { plugins: [{ [producer]: { addType: 'Added', returnSchemaAst: true } }] },
+            { plugins: [consumer] },
+          ],
+        },
+      });
+
+      expect(error).toBeNull();
+      expect(result[0].content).toBe(
+        `// PRODUCER: Added \n// CONSUMER: types=${LOADED_TYPES} documents=`,
+      );
+    });
+
     it('Should forward returned documents to the next stage', async () => {
       const { result, error } = await executeCodegen({
         schema: SIMPLE_TEST_SCHEMA,

@@ -564,7 +564,7 @@ export async function executeCodegen(
                             }
 
                             const stageMeta: Record<string, unknown> = {};
-                            // Plugin outputs of this stage that return `schemaAst` or `documents`, keyed by plugin name
+                            // Plugin outputs of this stage that return `schema` or `documents`, keyed by plugin name
                             const stageTransformOutputs: Record<string, Types.ComplexPluginOutput> =
                               {};
                             // The first stage gets `pluginContext` as is, so plugins sharing state through it keep working.
@@ -596,7 +596,7 @@ export async function executeCodegen(
                                     if (output.meta) {
                                       stageMeta[pluginName] = output.meta;
                                     }
-                                    if (output.schemaAst || output.documents) {
+                                    if (output.schema || output.documents) {
                                       stageTransformOutputs[pluginName] = output;
                                     }
                                   },
@@ -611,9 +611,9 @@ export async function executeCodegen(
                             // Stages that return neither keep handing on the current schema and documents.
                             for (const plugin of normalizedPluginsArray) {
                               const transformOutput = stageTransformOutputs[Object.keys(plugin)[0]];
-                              if (transformOutput?.schemaAst) {
-                                stageSchemaAst = transformOutput.schemaAst;
-                                stageSchema = getCachedDocumentNodeFromSchema(stageSchemaAst);
+                              if (transformOutput?.schema) {
+                                stageSchema = transformOutput.schema;
+                                stageSchemaAst = buildASTSchema(stageSchema);
                               }
                               if (transformOutput?.documents) {
                                 stageDocuments = transformOutput.documents;
