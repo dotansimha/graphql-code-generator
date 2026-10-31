@@ -14,11 +14,11 @@ generates: {
 }
 ```
 
-However, this never worked because this config is eventually passed into `normalizeOutputParam` which previously had this bug in the implementation implementation:
+However, this never worked because this config is eventually passed into `normalizeOutputParam` which previously had this bug in the implementation:
 
 ```ts
 export function normalizeOutputParam(config){
-  // 0. When config config is an array...
+  // 0. When config is an array...
   if (isOutputConfigArray(config)) { // 1. `isOutputConfigArray(config)` was `Array.isArray(config)` -> returns true
     return {
       documents: [],
@@ -33,4 +33,8 @@ export function normalizeOutputParam(config){
 }
 ```
 
-Now, an array is still accepted, but as `ConfiguredOutput[]` instead. For this major versino release, only the first array element is used.
+Now, an array is still accepted, but as `ConfiguredOutput[]` instead. For this major version release, only the first array element is used, and `@graphql-codegen/cli` logs a warning when there is more than one element.
+
+`normalizeOutputParam` now returns `ConfiguredOutput[]` instead of a single `ConfiguredOutput`.
+
+`@graphql-codegen/cli` also throws its "Invalid Codegen Configuration" error when a `generates` array is empty, and the error message now shows the `ConfiguredOutput` shape instead of the old plugin-list shape.
