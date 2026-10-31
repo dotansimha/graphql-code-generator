@@ -33,7 +33,7 @@ overrides:
   # hazard"), which breaks `pnpm build` with a TS2345 error. Forcing a single resolved
   # version keeps the whole workspace on one graphql install. Keep this in sync with the
   # root devDependency's graphql version, and with scripts/match-graphql.js, which applies
-  # the same kind of override for CI's graphql 16/17 test matrix.
+  # the same kind of override for CI's graphql 15/16/17 test matrix.
   graphql: 17.0.2
   '@rushstack/eslint-patch': 1.16.1
   '@typescript-eslint/eslint-plugin': 8.59.3
