@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/time",
-  "version": "7.1.1",
+  "version": "7.1.2",
   "type": "module",
   "description": "GraphQL Code Generator plugin for adding the current time for an output file",
   "repository": {
