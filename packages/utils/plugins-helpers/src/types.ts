@@ -42,6 +42,14 @@ export namespace Types {
      * to decide whether the write can be skipped. See {@link Types.ContentComparison}.
      */
     contentComparison?: Types.ContentComparison;
+    /**
+     * @description Called with each plugin's raw output, right after the plugin runs.
+     * The CLI uses it to collect each plugin's `meta` when a `generates` entry is an array:
+     * elements run in order as stages appending to the same file, and every stage after the first
+     * gets the previous stage's `meta` as `pluginContext.previousStageMeta`, keyed by plugin name,
+     * e.g. `{ 'my-plugin': { typeNames: ['User'] } }`.
+     */
+    onPluginOutput?: (pluginName: string, output: Types.PluginOutput) => void;
   }
 
   export type FileOutput = {
