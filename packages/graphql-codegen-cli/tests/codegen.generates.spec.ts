@@ -94,6 +94,107 @@ describe('Array `generates` value', () => {
     expect(result[0].content).toBe('// STAGE_TWO: ');
   });
 
+  describe('schema and documents returned by a stage', () => {
+    const producer = './tests/custom-plugins/stage-transform-producer.js';
+    const producerAlt = './tests/custom-plugins/stage-transform-producer-alt.js';
+    const consumer = './tests/custom-plugins/stage-transform-consumer.js';
+    const LOADED_TYPES = 'Boolean,MyType,Query,String';
+
+    it('Should forward a returned schema to the next stage', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [{ plugins: [{ [producer]: { addType: 'Added' } }] }, { plugins: [consumer] }],
+        },
+      });
+
+      expect(error).toBeNull();
+      expect(result[0].content).toBe(
+        `// PRODUCER: Added \n// CONSUMER: types=Added,Boolean,ID,MyType,Query,String documents=`,
+      );
+    });
+
+    it('Should forward returned documents to the next stage', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [
+            { plugins: [{ [producer]: { addDocument: 'Added' } }] },
+            { plugins: [consumer] },
+          ],
+        },
+      });
+
+      expect(error).toBeNull();
+      expect(result[0].content).toBe(
+        `// PRODUCER:  Added\n// CONSUMER: types=${LOADED_TYPES} documents=Added.graphql`,
+      );
+    });
+
+    it('Should pass the schema and documents through a stage that returns neither', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [
+            { plugins: [{ [producer]: { addType: 'Added', addDocument: 'Added' } }] },
+            { plugins: [{ add: { content: '// MIDDLE' } }] },
+            { plugins: [consumer] },
+          ],
+        },
+      });
+
+      expect(error).toBeNull();
+      expect(result[0].content).toBe(
+        '// PRODUCER: Added Added\n// MIDDLE\n// CONSUMER: types=Added,Boolean,ID,MyType,Query,String documents=Added.graphql',
+      );
+    });
+
+    it('Should give the first stage, and other plugins of the returning stage, the loaded schema and documents', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        documents: 'query Loaded { f }',
+        generates: {
+          'out.ts': [
+            { plugins: [consumer, { [producer]: { addType: 'Added', addDocument: 'Added' } }] },
+            { plugins: [consumer] },
+          ],
+        },
+      });
+
+      expect(error).toBeNull();
+      const [firstStageConsumer, , secondStageConsumer] = result[0].content.split('\n');
+      expect(firstStageConsumer).toMatch(
+        new RegExp(`^// CONSUMER: types=${LOADED_TYPES} documents=[^,]+$`),
+      );
+      expect(secondStageConsumer).toMatch(
+        /^\/\/ CONSUMER: types=Added,Boolean,ID,MyType,Query,String documents=[^,]+,Added\.graphql$/,
+      );
+    });
+
+    it('Should use what the plugin listed last returns when several plugins of a stage return it', async () => {
+      const { result, error } = await executeCodegen({
+        schema: SIMPLE_TEST_SCHEMA,
+        generates: {
+          'out.ts': [
+            {
+              plugins: [
+                // finishes last, but is listed first
+                { [producer]: { addType: 'First', addDocument: 'First', delay: 20 } },
+                { [producerAlt]: { addType: 'Last', addDocument: 'Last' } },
+              ],
+            },
+            { plugins: [consumer] },
+          ],
+        },
+      });
+
+      expect(error).toBeNull();
+      expect(result[0].content).toContain(
+        '// CONSUMER: types=Boolean,ID,Last,MyType,Query,String documents=Last.graphql',
+      );
+    });
+  });
+
   it('Should throw when an element uses a preset and there are multiple elements', async () => {
     await expect(
       executeCodegen({

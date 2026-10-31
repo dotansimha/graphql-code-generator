@@ -458,6 +458,10 @@ export async function executeCodegen(
                           const stageContents: string[] = [];
                           // `meta` of each plugin of the previous stage, keyed by plugin name
                           let previousStageMeta: Record<string, unknown> = {};
+                          // Schema and documents for the next stage, replaced by what a stage's plugins return
+                          let stageSchemaAst = outputSchemaAst;
+                          let stageSchema = outputSchema;
+                          let stageDocuments = outputDocuments;
 
                           for (const [stageIndex, stage] of stages.entries()) {
                             const normalizedPluginsArray = normalizeConfig(stage.plugins);
@@ -560,6 +564,9 @@ export async function executeCodegen(
                             }
 
                             const stageMeta: Record<string, unknown> = {};
+                            // Plugin outputs of this stage that return `schemaAst` or `documents`, keyed by plugin name
+                            const stageTransformOutputs: Record<string, Types.ComplexPluginOutput> =
+                              {};
                             // The first stage gets `pluginContext` as is, so plugins sharing state through it keep working.
                             // Later stages get a copy with `previousStageMeta`, e.g. `{ 'my-plugin': { typeNames: ['User'] } }`.
                             const stagePluginContext =
@@ -572,9 +579,9 @@ export async function executeCodegen(
                                 codegen({
                                   filename,
                                   plugins: normalizedPluginsArray,
-                                  schema: outputSchema,
-                                  schemaAst: outputSchemaAst,
-                                  documents: outputDocuments,
+                                  schema: stageSchema,
+                                  schemaAst: stageSchemaAst,
+                                  documents: stageDocuments,
                                   config: mergedConfig,
                                   pluginMap,
                                   pluginContext: stagePluginContext,
@@ -583,8 +590,14 @@ export async function executeCodegen(
                                   importExtension,
                                   cache,
                                   onPluginOutput: (pluginName, output) => {
-                                    if (isComplexPluginOutput(output) && output.meta) {
+                                    if (!isComplexPluginOutput(output)) {
+                                      return;
+                                    }
+                                    if (output.meta) {
                                       stageMeta[pluginName] = output.meta;
+                                    }
+                                    if (output.schemaAst || output.documents) {
+                                      stageTransformOutputs[pluginName] = output;
                                     }
                                   },
                                 }),
@@ -593,6 +606,19 @@ export async function executeCodegen(
 
                             stageContents.push(stageContent);
                             previousStageMeta = stageMeta;
+
+                            // Plugins run in parallel, so walk them in listed order to let the last listed one win.
+                            // Stages that return neither keep handing on the current schema and documents.
+                            for (const plugin of normalizedPluginsArray) {
+                              const transformOutput = stageTransformOutputs[Object.keys(plugin)[0]];
+                              if (transformOutput?.schemaAst) {
+                                stageSchemaAst = transformOutput.schemaAst;
+                                stageSchema = getCachedDocumentNodeFromSchema(stageSchemaAst);
+                              }
+                              if (transformOutput?.documents) {
+                                stageDocuments = transformOutput.documents;
+                              }
+                            }
                           }
 
                           if (!preset) {

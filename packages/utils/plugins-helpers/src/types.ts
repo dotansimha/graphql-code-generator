@@ -630,6 +630,18 @@ export namespace Types {
     prepend?: Array<string | null>;
     append?: Array<string | null>;
     meta?: M;
+    /**
+     * When set, replaces the schema that later `generates` stages of the same output receive.
+     * Other plugins of the current stage are unaffected, since they run in parallel.
+     * If several plugins of one stage set it, the one listed last in `plugins` wins.
+     */
+    schemaAst?: GraphQLSchema;
+    /**
+     * When set, replaces the documents that later `generates` stages of the same output receive.
+     * Other plugins of the current stage are unaffected, since they run in parallel.
+     * If several plugins of one stage set it, the one listed last in `plugins` wins.
+     */
+    documents?: Types.DocumentFile[];
   };
   export type PluginOutput = string | ComplexPluginOutput;
   export type HookFunction = (...args: any[]) => void | Promise<void>;
