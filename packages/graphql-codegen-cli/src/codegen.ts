@@ -22,6 +22,7 @@ import { isESMModule } from './isESMModule.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
+import { getLogger } from './utils/logger.js';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -159,7 +160,13 @@ export async function executeCodegen(
     }
 
     for (const filename of generateKeys) {
-      const output = (generates[filename] = normalizeOutputParam(config.generates[filename]));
+      const normalizedOutputArray = normalizeOutputParam(config.generates[filename]);
+      if (normalizedOutputArray.length > 1) {
+        getLogger().warn('Multiple generates config detected. Only the first one is used.');
+      }
+
+      generates[filename] = normalizedOutputArray[0];
+      const output = generates[filename];
 
       if (!output.preset && (!output.plugins || output.plugins.length === 0)) {
         throw new Error(

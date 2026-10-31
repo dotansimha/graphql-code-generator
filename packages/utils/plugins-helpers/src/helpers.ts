@@ -18,18 +18,13 @@ import { Types } from './types.js';
 import { getBaseType } from './utils.js';
 
 export function normalizeOutputParam(
-  config: Types.OutputConfig | Types.ConfiguredPlugin[] | Types.ConfiguredOutput,
-): Types.ConfiguredOutput {
-  // In case of direct array with a list of plugins
-  if (isOutputConfigArray(config)) {
-    return {
-      documents: [],
-      schema: [],
-      plugins: isConfiguredOutput(config) ? config.plugins : config,
-    };
-  }
-  if (isConfiguredOutput(config)) {
+  config: Types.ConfiguredOutput | Types.ConfiguredOutput[],
+): Types.ConfiguredOutput[] {
+  if (Array.isArray(config)) {
     return config;
+  }
+  if (typeof config === 'object') {
+    return [config];
   }
   throw new Error(`Invalid "generates" config!`);
 }

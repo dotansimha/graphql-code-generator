@@ -510,7 +510,7 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
     generates: {
-      [outputPath: string]: ConfiguredOutput | ConfiguredPlugin[];
+      [outputPath: string]: ConfiguredOutput | ConfiguredOutput[];
     };
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
