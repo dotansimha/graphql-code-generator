@@ -15,7 +15,7 @@ import {
   normalizeOutputParam,
   Types,
 } from '@graphql-codegen/plugin-helpers';
-import type { UnnormalizedTypeDefPointer } from '@graphql-tools/load';
+import { NoTypeDefinitionsFound, type UnnormalizedTypeDefPointer } from '@graphql-tools/load';
 import { mergeTypeDefs } from '@graphql-tools/merge';
 import { CodegenContext, ensureContext } from './config.js';
 import { getDocumentTransform } from './documentTransforms.js';
@@ -364,12 +364,8 @@ export async function executeCodegen(
                                 );
                                 return documents;
                               } catch (error) {
-                                // Matched by name: documents loaded through GraphQL Config come from
-                                // graphql-config's own copy of `@graphql-tools/load`, whose error class
-                                // is not the one this package imports.
                                 if (
-                                  error instanceof Error &&
-                                  error.name === 'NoTypeDefinitionsFound' &&
+                                  error instanceof NoTypeDefinitionsFound &&
                                   config.ignoreNoDocuments
                                 ) {
                                   return [];
@@ -400,12 +396,8 @@ export async function executeCodegen(
                                 );
                                 return documents;
                               } catch (error) {
-                                // Matched by name: documents loaded through GraphQL Config come from
-                                // graphql-config's own copy of `@graphql-tools/load`, whose error class
-                                // is not the one this package imports.
                                 if (
-                                  error instanceof Error &&
-                                  error.name === 'NoTypeDefinitionsFound' &&
+                                  error instanceof NoTypeDefinitionsFound &&
                                   config.ignoreNoDocuments
                                 ) {
                                   return [];
