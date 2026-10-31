@@ -4,7 +4,7 @@
 const config = {
   schema: 'https://graphql.org/graphql/',
   documents: ['src/**/*.ts'],
-  emitLegacyCommonJSImports: false,
+  importExtension: '.js',
   generates: {
     './src/gql/': {
       preset: 'client-preset',

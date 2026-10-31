@@ -17,27 +17,14 @@ import {
 import { Types } from './types.js';
 import { getBaseType } from './utils.js';
 
-export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
-  return Array.isArray(type);
-}
-
-export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
-  return typeof type === 'object';
-}
-
 export function normalizeOutputParam(
-  config: Types.OutputConfig | Types.ConfiguredPlugin[] | Types.ConfiguredOutput,
-): Types.ConfiguredOutput {
-  // In case of direct array with a list of plugins
-  if (isOutputConfigArray(config)) {
-    return {
-      documents: [],
-      schema: [],
-      plugins: isConfiguredOutput(config) ? config.plugins : config,
-    };
-  }
-  if (isConfiguredOutput(config)) {
+  config: Types.ConfiguredOutput | Types.ConfiguredOutput[],
+): Types.ConfiguredOutput[] {
+  if (Array.isArray(config)) {
     return config;
+  }
+  if (typeof config === 'object') {
+    return [config];
   }
   throw new Error(`Invalid "generates" config!`);
 }
@@ -271,22 +258,4 @@ export function isUsingTypes(
   });
 
   return foundFields > 0;
-}
-
-export function normalizeImportExtension({
-  emitLegacyCommonJSImports,
-  importExtension,
-}: {
-  emitLegacyCommonJSImports: boolean | undefined;
-  importExtension: '' | `.${string}` | undefined;
-}): '' | `.${string}` {
-  if (importExtension !== undefined) {
-    return importExtension;
-  }
-
-  if (emitLegacyCommonJSImports === undefined || emitLegacyCommonJSImports === true) {
-    return '';
-  }
-
-  return '.js';
 }

@@ -2,7 +2,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   hooks: { afterAllFileWrite: ['prettier --write'] },
-  emitLegacyCommonJSImports: false,
+  importExtension: '.js',
   generates: {
     './test-schema/resolvers-types.ts': {
       schema: './test-schema/schema-text.js',

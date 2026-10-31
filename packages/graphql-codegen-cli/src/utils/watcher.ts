@@ -54,7 +54,10 @@ export const createWatcher = (
 
   const globalPatternSet = makeGlobalPatternSet(initialContext);
   const localPatternSets = Object.keys(config.generates)
-    .map(filename => normalizeOutputParam(config.generates[filename]))
+    .map(filename => {
+      const normalizedOutputArray = normalizeOutputParam(config.generates[filename]);
+      return normalizedOutputArray[0];
+    })
     .map(conf => makeLocalPatternSet(conf));
   const allAffirmativePatterns = allAffirmativePatternsFromPatternSets([
     globalPatternSet,
@@ -118,10 +121,13 @@ export const createWatcher = (
     emitWatching(watchDirectory);
 
     const ignored: string[] = ['**/.git/**'];
-    for (const entry of Object.keys(config.generates).map(filename => ({
-      filename,
-      config: normalizeOutputParam(config.generates[filename]),
-    }))) {
+    for (const entry of Object.keys(config.generates).map(filename => {
+      const normalizedOutputArray = normalizeOutputParam(config.generates[filename]);
+      return {
+        filename,
+        config: normalizedOutputArray[0],
+      };
+    })) {
       // ParcelWatcher expects relative ignore patterns to be relative from watchDirectory,
       // but we expect filename from config to be relative from cwd, so we need to convert
       //

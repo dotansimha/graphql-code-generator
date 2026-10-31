@@ -1,6 +1,5 @@
 import { dirname, isAbsolute, join, relative, resolve } from 'path';
 import parse from 'parse-filepath';
-import { normalizeImportExtension } from '@graphql-codegen/plugin-helpers';
 import type { ParsedEnumValuesMap } from './types';
 
 export type ImportDeclaration<T = string> = {
@@ -9,7 +8,6 @@ export type ImportDeclaration<T = string> = {
   baseOutputDir: string;
   baseDir: string;
   typesImport: boolean;
-  emitLegacyCommonJSImports?: boolean;
   importExtension: '' | `.${string}`;
 };
 
@@ -65,10 +63,7 @@ export function generateImportStatement(statement: ImportDeclaration): string {
     : '*';
   const importExtension =
     importPath.startsWith('/') || importPath.startsWith('.')
-      ? normalizeImportExtension({
-          emitLegacyCommonJSImports: statement.emitLegacyCommonJSImports,
-          importExtension: statement.importExtension,
-        })
+      ? (statement.importExtension ?? '')
       : '';
   const importAlias = importSource.namespace ? ` as ${importSource.namespace}` : '';
   const importStatement = typesImport ? 'import type' : 'import';

@@ -188,11 +188,7 @@ describe('Integration', () => {
   });
 
   test('import paths for ESM should have correct extension', async () => {
-    const emitLegacyCommonJSImports = {
-      ...options,
-      emitLegacyCommonJSImports: false,
-    };
-    const { result } = await executeCodegen(emitLegacyCommonJSImports);
+    const { result } = await executeCodegen({ ...options, importExtension: '.js' });
     const esmImportStatement = `import * as Types from "../global-types.js";`;
 
     expect(result.length).toBe(5);
@@ -226,42 +222,6 @@ describe('Integration', () => {
     const importStatement = `import * as Types from "../global-types";`;
 
     expect(result.length).toBe(5);
-    expect(result[1].content).toMatch(importStatement);
-    expect(result[2].content).toMatch(importStatement);
-    expect(result[3].content).toMatch(importStatement);
-    expect(result[4].content).toMatch(importStatement);
-  });
-
-  test('importExtension should override emitLegacyCommonJSImports', async () => {
-    const withBothOptions = {
-      ...options,
-      importExtension: '.mjs' as const,
-      emitLegacyCommonJSImports: false,
-    };
-    const { result } = await executeCodegen(withBothOptions);
-    const importStatement = `import * as Types from "../global-types.mjs";`;
-
-    expect(result.length).toBe(5);
-    // Should use .mjs from importExtension, not .js from emitLegacyCommonJSImports
-    expect(result[1].content).toMatch(importStatement);
-    expect(result[2].content).toMatch(importStatement);
-    expect(result[3].content).toMatch(importStatement);
-    expect(result[4].content).toMatch(importStatement);
-  });
-
-  test('importExtension set to empty string should override emitLegacyCommonJSImports: false', async () => {
-    const withBothOptions = {
-      ...options,
-      importExtension: '' as const,
-      emitLegacyCommonJSImports: false,
-    };
-    const { result, error } = await executeCodegen(withBothOptions);
-    const importStatement = `import * as Types from "../global-types";`;
-
-    expect(error).toBeFalsy();
-
-    expect(result.length).toBe(5);
-    // Should use empty string from importExtension, not .js from emitLegacyCommonJSImports
     expect(result[1].content).toMatch(importStatement);
     expect(result[2].content).toMatch(importStatement);
     expect(result[3].content).toMatch(importStatement);
