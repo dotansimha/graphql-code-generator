@@ -729,6 +729,25 @@ describe('generate-and-save', () => {
 
       expect(outputErrorSpy).not.toHaveBeenCalled();
     });
+
+    test('No external documents found - GraphQL Config - should not fail if ignoreNoDocuments=true', async () => {
+      outputErrorSpy.mockImplementation(() => true);
+      vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
+      const config = await createContext({
+        config: './tests/test-files/graphql.config.no-external-doc-ignored.cjs',
+        project: '',
+        errorsOnly: true,
+        overwrite: true,
+        profile: true,
+        require: [],
+        silent: false,
+        watch: false,
+      });
+
+      await generate(config, false);
+
+      expect(outputErrorSpy).not.toHaveBeenCalled();
+    });
   });
 
   describe('config.allowPartialOutputs', () => {

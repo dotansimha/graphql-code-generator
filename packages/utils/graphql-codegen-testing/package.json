@@ -11,7 +11,7 @@
   "author": "Dotan Simha <dotansimha@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=22.18.0"
   },
   "main": "dist/cjs/index.js",
   "typings": "dist/typings/index.d.ts",
