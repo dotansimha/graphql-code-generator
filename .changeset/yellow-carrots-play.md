@@ -23,7 +23,7 @@ export function normalizeOutputParam(config){
     return {
       documents: [],
       schema: [],
-      plugins: isConfiguredOutput(config) ? config.plugins : config, // 2. ‼️ `isConfiguredOutput(config)` was `typeof config === 'object'` -> returns true. This is a bug because we are accessing `plugins` property of an array, which will ALWAYS be `undefined` -> runtime error
+      plugins: isConfiguredOutput(config) ? config.plugins : config, // 2. ‼️ `isConfiguredOutput(config)` was `typeof config === 'object'` -> returns true. This is a bug because we are accessing `plugins` property of an array, which will ALWAYS be `undefined` -> the output is always rejected as "Invalid Codegen Configuration"
     };
   }
   if (isConfiguredOutput(config)) {
@@ -37,4 +37,4 @@ Now, an array is still accepted, but as `ConfiguredOutput[]` instead. For this m
 
 `normalizeOutputParam` now returns `ConfiguredOutput[]` instead of a single `ConfiguredOutput`.
 
-`@graphql-codegen/cli` also throws its "Invalid Codegen Configuration" error when a `generates` array is empty, and the error message now shows the `ConfiguredOutput` shape instead of the old plugin-list shape.
+`@graphql-codegen/cli` also throws its "Invalid Codegen Configuration" error when a `generates` array is empty or its first element is not a config object. This error is now a single generic message, no longer naming the output file, and it shows a TypeScript `CodegenConfig` example with the `ConfiguredOutput` shape instead of the old YAML plugin-list example.
