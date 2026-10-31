@@ -5,7 +5,8 @@ module.exports = {
     codegen: {
       verbose: true,
       ignoreNoDocuments: true,
-      externalDocuments: ['../test-documents/empty.graphql'],
+      // This file does not exist on purpose: a pointer that matches no documents triggers the "no documents found" error, which `ignoreNoDocuments` should ignore
+      externalDocuments: ['../test-documents/does-not-exist.graphql'],
       generates: {
         './gql/': {
           preset: 'client',
