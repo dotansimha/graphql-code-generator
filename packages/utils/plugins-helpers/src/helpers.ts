@@ -17,14 +17,6 @@ import {
 import { Types } from './types.js';
 import { getBaseType } from './utils.js';
 
-export function isOutputConfigArray(type: any): type is Types.OutputConfig[] {
-  return Array.isArray(type);
-}
-
-export function isConfiguredOutput(type: any): type is Types.ConfiguredOutput {
-  return typeof type === 'object';
-}
-
 export function normalizeOutputParam(
   config: Types.OutputConfig | Types.ConfiguredPlugin[] | Types.ConfiguredOutput,
 ): Types.ConfiguredOutput {
