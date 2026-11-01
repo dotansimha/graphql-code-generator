@@ -1564,9 +1564,8 @@ describe('Codegen Executor', () => {
 
   it('should not run out of memory when generating very complex types (issue #7720)', async () => {
     const { result } = await executeCodegen({
-      // FIXME(bad-project-boundary): shouldn't reach out to another project for assets. Copy the files here.
-      schema: ['../../dev-test/general/gatsby/schema.graphql'],
-      documents: ['../../dev-test/general/gatsby/fragments.ts'],
+      schema: [join(__dirname, './test-files/gatsby/schema.graphql')],
+      documents: [join(__dirname, './test-files/gatsby/fragments.ts')],
       config: {
         extractAllFieldsToTypes: true,
         dedupeOperationSuffix: true,
