@@ -1,5 +1,5 @@
 import '@graphql-codegen/testing';
-import { buildSchema, parse, versionInfo } from 'graphql';
+import { buildSchema, parse } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { plugin, validate } from '../src/index.js';
@@ -141,30 +141,6 @@ describe('Schema AST', () => {
         }
       `);
     });
-
-    if (versionInfo.major < 16) {
-      it('Should print schema with as # when commentDescriptions=true', async () => {
-        const testSchema = buildSchema(/* GraphQL */ `
-          type Query {
-            """
-            test
-            """
-            fieldTest: String
-          }
-        `);
-        const content = await plugin(testSchema, [], {
-          commentDescriptions: true,
-          includeDirectives: false,
-        });
-
-        expect(content).toBeSimilarStringTo(`
-        type Query {
-          #  test
-          fieldTest: String
-        }
-      `);
-      });
-    }
 
     it('Should print schema with directives when "includeDirectives" is set', async () => {
       const content = await plugin(schema, [], { includeDirectives: true });
