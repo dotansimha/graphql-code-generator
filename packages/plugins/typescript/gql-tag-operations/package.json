@@ -42,7 +42,6 @@
   "dependencies": {
     "@graphql-codegen/plugin-helpers": "workspace:^",
     "@graphql-codegen/visitor-plugin-common": "workspace:^",
-    "@graphql-tools/utils": "^13.0.2",
     "auto-bind": "^5.0.0",
     "tslib": "^2.8.0"
   },

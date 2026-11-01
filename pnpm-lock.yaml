@@ -1210,9 +1210,6 @@ importers:
       '@graphql-codegen/plugin-helpers':
         specifier: workspace:^
         version: link:../../../utils/plugins-helpers/dist
-      '@graphql-tools/utils':
-        specifier: ^13.0.2
-        version: 13.2.0(graphql@17.0.2)
       graphql:
         specifier: 17.0.2
         version: 17.0.2
@@ -1302,9 +1299,6 @@ importers:
       '@graphql-codegen/visitor-plugin-common':
         specifier: workspace:^
         version: link:../../other/visitor-plugin-common/dist
-      '@graphql-tools/utils':
-        specifier: ^13.0.2
-        version: 13.2.0(graphql@17.0.2)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
@@ -1353,9 +1347,6 @@ importers:
       '@graphql-codegen/visitor-plugin-common':
         specifier: workspace:^
         version: link:../../other/visitor-plugin-common/dist
-      '@graphql-tools/utils':
-        specifier: ^13.0.2
-        version: 13.2.0(graphql@17.0.2)
       auto-bind:
         specifier: ^5.0.0
         version: 5.0.1
