@@ -40,14 +40,12 @@
     "graphql": "^16.0.0 || ^17.0.0"
   },
   "dependencies": {
+    "@graphql-tools/apollo-engine-loader": "^9.0.2",
     "@graphql-tools/utils": "^13.0.2",
     "change-case-all": "^2.1.0",
     "common-tags": "1.8.2",
     "import-from": "4.0.0",
     "tslib": "^2.8.0"
-  },
-  "devDependencies": {
-    "@graphql-tools/apollo-engine-loader": "9.0.2"
   },
   "publishConfig": {
     "directory": "dist",

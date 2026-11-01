@@ -1549,6 +1549,9 @@ importers:
 
   packages/utils/plugins-helpers:
     dependencies:
+      '@graphql-tools/apollo-engine-loader':
+        specifier: ^9.0.2
+        version: 9.0.2(graphql@17.0.2)
       '@graphql-tools/utils':
         specifier: ^13.0.2
         version: 13.2.0(graphql@17.0.2)
@@ -1567,10 +1570,6 @@ importers:
       tslib:
         specifier: ^2.8.0
         version: 2.8.1
-    devDependencies:
-      '@graphql-tools/apollo-engine-loader':
-        specifier: 9.0.2
-        version: 9.0.2(graphql@17.0.2)
     publishDirectory: dist
 
   website:
