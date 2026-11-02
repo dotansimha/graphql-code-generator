@@ -143,6 +143,7 @@ export const convertSchemaEnumToDeclarationBlockString = ({
                 options: {
                   typesPrefix: naming.options.typesPrefix,
                   typesSuffix: naming.options.typesSuffix,
+                  useTypesPrefix: false,
                 },
                 convert: () =>
                   naming.convert(enumOption, {
