@@ -744,12 +744,8 @@ export type PluginFunction<T = any, TOutput extends Types.PluginOutput = Types.P
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: T,
-  info?: {
-    outputFile?: string;
-    allPlugins?: Types.ConfiguredPlugin[];
-    pluginContext?: { [key: string]: any };
-    [key: string]: any;
-  },
+  // The index signature is kept so third-party plugins can read extra keys; dropping it would break their typings.
+  info?: Partial<PluginInfo> & { [key: string]: any },
 ) => Types.Promisable<TOutput>;
 
 export interface PluginInfo {
