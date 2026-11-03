@@ -14,7 +14,6 @@ import {
   PluginFunction,
   PluginValidateFn,
   removeFederation,
-  Types,
 } from '@graphql-codegen/plugin-helpers';
 
 /**
@@ -96,12 +95,11 @@ export const plugin: PluginFunction<SchemaASTConfig> = async (
     .join('\n');
 };
 
-export const validate: PluginValidateFn<any> = async (
-  _schema: GraphQLSchema,
-  _documents: Types.DocumentFile[],
-  _config: SchemaASTConfig,
-  outputFile: string,
-  allPlugins: Types.ConfiguredPlugin[],
+export const validate: PluginValidateFn<SchemaASTConfig> = async (
+  _schema,
+  _documents,
+  _config,
+  { outputFile, allPlugins },
 ) => {
   const singlePlugin = allPlugins.length === 1;
 

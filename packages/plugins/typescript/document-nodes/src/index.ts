@@ -199,11 +199,11 @@ export const plugin: PluginFunction<TypeScriptDocumentNodesRawPluginConfig> = (
   };
 };
 
-export const validate: PluginValidateFn<any> = async (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: any,
-  outputFile: string,
+export const validate: PluginValidateFn<TypeScriptDocumentNodesRawPluginConfig> = async (
+  schema,
+  documents,
+  config,
+  { outputFile },
 ) => {
   if (!outputFile.endsWith('.ts')) {
     throw new Error(`Plugin "typescript-document-nodes" requires extension to be ".ts"!`);
