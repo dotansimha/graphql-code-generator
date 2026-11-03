@@ -470,3 +470,46 @@ describe('includeExternalFragments', () => {
     expect(visitor.fragments).toContain('ExternalAFragment');
   });
 });
+
+describe('fragments declared locally and passed as external', () => {
+  const schema = buildSchema(/* GraphQL */ `
+    type Query {
+      user: User
+    }
+
+    type User {
+      id: ID!
+      name: String
+    }
+  `);
+
+  const toLoadedFragments = (source: string, isExternal: boolean) =>
+    parse(source)
+      .definitions.filter(d => d.kind === Kind.FRAGMENT_DEFINITION)
+      .map(fragmentDef => ({
+        node: fragmentDef,
+        name: fragmentDef.name.value,
+        onType: fragmentDef.typeCondition.name.value,
+        isExternal,
+      }));
+
+  const userFields = /* GraphQL */ `
+    fragment UserFields on User {
+      id
+      name
+    }
+  `;
+
+  // near-operation-file also reports fragments generated into the same file as external,
+  // so the same fragment reaches the visitor once as local and once as external.
+  it('should generate the FragmentDoc of the local definition', () => {
+    const visitor = new ClientSideBaseVisitor(
+      schema,
+      [...toLoadedFragments(userFields, false), ...toLoadedFragments(userFields, true)],
+      {},
+      {},
+    );
+
+    expect(visitor.fragments).toContain('export const UserFieldsFragmentDoc');
+  });
+});
