@@ -54,10 +54,10 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
 };
 
 export const validate: PluginValidateFn<RawClientSideBasePluginConfig> = async (
-  _schema: GraphQLSchema,
-  _documents: Types.DocumentFile[],
+  _schema,
+  _documents,
   _config,
-  outputFile: string,
+  { outputFile },
 ) => {
   if (extname(outputFile) !== '.ts' && extname(outputFile) !== '.tsx') {
     throw new Error(`Plugin "typed-document-node" requires extension to be ".ts" or ".tsx"!`);

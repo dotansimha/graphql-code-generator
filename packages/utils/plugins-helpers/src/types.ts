@@ -752,13 +752,18 @@ export type PluginFunction<T = any, TOutput extends Types.PluginOutput = Types.P
   },
 ) => Types.Promisable<TOutput>;
 
+export interface PluginInfo {
+  outputFile: string;
+  allPlugins: Types.ConfiguredPlugin[];
+  // Free-form bag shared between plugins; typing it needs a generic on PluginInfo or `unknown` plus narrowing in every consumer.
+  pluginContext: { [key: string]: any };
+}
+
 export type PluginValidateFn<T = any> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: T,
-  outputFile: string,
-  allPlugins: Types.ConfiguredPlugin[],
-  pluginContext?: { [key: string]: any },
+  info: PluginInfo,
 ) => Types.Promisable<void>;
 
 export type AddToSchemaResult = string | DocumentNode | undefined;
