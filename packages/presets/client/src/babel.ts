@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { buildSchema, parse } from 'graphql';
+import { buildSchema, parse, versionInfo } from 'graphql';
 import type { NodePath, PluginObj, PluginPass } from '@babel/core';
 import { declare } from '@babel/helper-plugin-utils';
 import template from '@babel/template';
@@ -38,7 +38,10 @@ export default declare<ClientBabelPresetOptions>((api, opts): PluginObj => {
         }
 
         const [content] = argument.quasis;
-        const ast = parse(content.value.raw, { experimentalFragmentArguments: true });
+        const ast = parse(
+          content.value.raw,
+          versionInfo.major >= 17 ? { experimentalFragmentArguments: true } : undefined,
+        );
 
         const [firstDefinition] = ast.definitions;
 
