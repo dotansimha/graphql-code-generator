@@ -1,0 +1,10 @@
+query GetUser {
+  user {
+    ...UserFields(size: 100)
+  }
+}
+
+fragment UserFields($size: Int!, $skipName: Boolean = false) on User {
+  avatar(size: $size)
+  name @skip(if: $skipName)
+}
