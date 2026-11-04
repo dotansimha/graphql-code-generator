@@ -44,7 +44,7 @@
     "tslib": "^2.8.0"
   },
   "devDependencies": {
-    "graphql-tag": "2.12.6"
+    "graphql-tag": "2.12.7"
   },
   "publishConfig": {
     "directory": "dist",
