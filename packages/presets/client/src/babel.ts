@@ -38,7 +38,7 @@ export default declare<ClientBabelPresetOptions>((api, opts): PluginObj => {
         }
 
         const [content] = argument.quasis;
-        const ast = parse(content.value.raw);
+        const ast = parse(content.value.raw, { experimentalFragmentArguments: true });
 
         const [firstDefinition] = ast.definitions;
 
