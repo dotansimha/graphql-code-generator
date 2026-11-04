@@ -20,7 +20,14 @@ import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import { FragmentImport, generateFragmentImportStatement, ImportDeclaration } from './imports.js';
 import { LoadedFragment, ParsedImport } from './types.js';
-import { buildScalarsFromConfig, flatten, getConfigValue, groupBy, unique } from './utils.js';
+import {
+  buildScalarsFromConfig,
+  flatten,
+  getConfigValue,
+  groupBy,
+  hasFragmentVariables,
+  unique,
+} from './utils.js';
 
 gqlTag.enableExperimentalFragmentVariables();
 
@@ -571,7 +578,7 @@ export class ClientSideBaseVisitor<
         useTypesPrefix: true,
         suffix: fragmentTypeSuffix,
       }),
-      this.config.experimentalFragmentVariables
+      this.config.experimentalFragmentVariables || hasFragmentVariables(fragmentDocument)
         ? this.convertName(fragmentDocument.name.value, {
             suffix: fragmentTypeSuffix + 'Variables',
           })

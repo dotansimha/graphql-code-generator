@@ -3,6 +3,7 @@ import {
   EnumValueDefinitionNode,
   FieldDefinitionNode,
   FieldNode,
+  FragmentDefinitionNode,
   FragmentSpreadNode,
   GraphQLInputObjectType,
   GraphQLNamedType,
@@ -525,6 +526,14 @@ export function getPossibleTypes(
   }
 
   return [];
+}
+
+/**
+ * Check if a fragment declares variables, i.e. it uses fragment arguments
+ * (`fragment A($size: Int!) on User`, graphql v17 `experimentalFragmentArguments`).
+ */
+export function hasFragmentVariables(node: FragmentDefinitionNode): boolean {
+  return (node.variableDefinitions?.length ?? 0) > 0;
 }
 
 /**
