@@ -1,5 +1,6 @@
 import * as path from 'path';
 import { buildSchema, parse, versionInfo } from 'graphql';
+import type { ParseOptions } from 'graphql';
 import type { NodePath, PluginObj, PluginPass } from '@babel/core';
 import { declare } from '@babel/helper-plugin-utils';
 import template from '@babel/template';
@@ -7,6 +8,12 @@ import type { Program } from '@babel/types';
 import { ClientSideBaseVisitor } from '@graphql-codegen/visitor-plugin-common';
 
 const noopSchema = buildSchema(`type Query { _: Int }`);
+
+// Fragment arguments need graphql v17. The `ParseOptions` type in graphql v15/v16
+// does not have `experimentalFragmentArguments`, so we cast the object.
+const parseOptions = (
+  versionInfo.major >= 17 ? { experimentalFragmentArguments: true } : {}
+) as ParseOptions;
 
 type ClientBabelPresetOptions = {
   artifactDirectory?: string;
@@ -38,10 +45,7 @@ export default declare<ClientBabelPresetOptions>((api, opts): PluginObj => {
         }
 
         const [content] = argument.quasis;
-        const ast = parse(
-          content.value.raw,
-          versionInfo.major >= 17 ? { experimentalFragmentArguments: true } : undefined,
-        );
+        const ast = parse(content.value.raw, parseOptions);
 
         const [firstDefinition] = ast.definitions;
 
