@@ -1,0 +1,77 @@
+---
+title: typescript-mock-builder
+description:
+  Generate typed, faker-powered mock factory functions for every schema type, fragment and
+  operation.
+sidebarTitle: mock-builder
+---
+
+The plugin emits a factory per object, input, interface and union type. Each factory calls
+[`@faker-js/faker`](https://fakerjs.dev) when it runs, so every call returns fresh data, and
+`overrides` is spread last so you can pin any field:
+
+```ts
+export function mockUser(overrides?: Partial<User>): User {
+  return {
+    __typename: 'User',
+    email: faker.internet.email(),
+    id: faker.string.uuid(),
+    name: faker.person.fullName(),
+    ...overrides
+  }
+}
+
+const admin = mockUser({ email: 'admin@example.com', role: Role.Admin })
+```
+
+The generated code imports `@faker-js/faker` (v9 or v10), so install it in your project too.
+
+## Usage
+
+```ts title="codegen.ts"
+import type { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'schema.graphql',
+  generates: {
+    'src/generated/types.ts': {
+      plugins: ['typescript']
+    },
+    'src/generated/mocks.ts': {
+      plugins: ['graphql-codegen-mock-builder'],
+      config: {
+        typesFile: './types',
+        scalars: {
+          DateTime: 'faker.date.recent().toISOString()'
+        }
+      }
+    }
+  }
+}
+
+export default config
+```
+
+Set `typesPrefix`, `typesSuffix`, `namingConvention` and `enumStyle: 'ts-enum'` to match your
+`typescript` plugin config, so the generated factories type-check against your existing types.
+
+## Operations mode
+
+With `mode: 'operations'`, the plugin emits a factory per fragment and operation instead, typed to
+the `typescript-operations` result type and built from the selection set. Add it to a
+`near-operation-file` block so each factory lands next to the type it returns:
+
+```ts title="codegen.ts"
+'./src': {
+  documents: ['**/*.graphql'],
+  preset: 'near-operation-file',
+  presetConfig: { baseTypesPath: 'types/graphqlTypes.ts', extension: '.ts' },
+  plugins: [
+    'typescript-operations',
+    { 'graphql-codegen-mock-builder': { mode: 'operations', baseTypesNamespace: 'Types' } }
+  ]
+}
+```
+
+See the [README](https://github.com/dazuku/graphql-codegen-mock-builder#readme) for all options, the
+field-name heuristics and how circular types are handled.
