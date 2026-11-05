@@ -23,7 +23,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }} # the Dependabot branch, not the PR merge commit
       - name: Install pnpm and Node
-        uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        uses: pnpm/setup@fa36a5ef7dcdefc3a7cb25655c122e00cf6e636e # v3.1.2
         with:
           install: false # a frozen install would fail on the stale lockfile
       - name: Update lockfile
