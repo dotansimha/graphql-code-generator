@@ -42,7 +42,44 @@ export namespace Types {
      * to decide whether the write can be skipped. See {@link Types.ContentComparison}.
      */
     contentComparison?: Types.ContentComparison;
+    /**
+     * @description Called with each plugin's raw output, right after the plugin runs.
+     * The CLI uses it to merge each plugin's `meta` into {@link Types.StageOutput}
+     * when a `generates` entry is an array of stages.
+     */
+    onPluginOutput?: (pluginName: string, output: Types.PluginOutput) => void;
+    /**
+     * @description Called once all plugins ran, with the parts the returned content is joined from.
+     * The CLI uses it to fill `files` of {@link Types.StageOutput}.
+     */
+    onOutputFileParts?: (parts: Types.OutputFileParts) => void;
   }
+
+  /**
+   * @description The parts of one output file: `content` is the plugins' content in listed order,
+   * joined with `\n`; `prepend` and `append` are the plugins' `prepend`/`append` lines, deduped and unsorted.
+   */
+  export type OutputFileParts = {
+    content: string;
+    prepend: string[];
+    append: string[];
+  };
+
+  /**
+   * @description `pluginContext.output` in every stage of a `generates` entry that is an array.
+   * Elements of the array run in order as stages of the same output file, and all of them share this object.
+   * After each stage, the CLI merges into it:
+   * - `files[filename]`: the stage's content appended to the content of earlier stages,
+   *   and its `prepend`/`append` lines added, deduped
+   * - every other key: the `meta` the stage's plugins returned, shallow merged, so a later stage or
+   *   a later listed plugin wins on a collision. `files` is reserved: a `meta.files` is ignored.
+   *
+   * The file written is the sorted `prepend` lines, then `content`, then the `append` lines of the last stage's `files[filename]`.
+   */
+  export type StageOutput = {
+    files: { [filename: string]: Types.OutputFileParts };
+    [key: string]: unknown;
+  };
 
   export type FileOutput = {
     filename: string;
@@ -622,6 +659,19 @@ export namespace Types {
     prepend?: Array<string | null>;
     append?: Array<string | null>;
     meta?: M;
+    /**
+     * When set, replaces the schema that later `generates` stages of the same output receive.
+     * Later stages receive this `schema`, and a `schemaAst` built from it.
+     * Other plugins of the current stage are unaffected, since they run in parallel.
+     * If several plugins of one stage set it, the one listed last in `plugins` wins.
+     */
+    schema?: DocumentNode;
+    /**
+     * When set, replaces the documents that later `generates` stages of the same output receive.
+     * Other plugins of the current stage are unaffected, since they run in parallel.
+     * If several plugins of one stage set it, the one listed last in `plugins` wins.
+     */
+    documents?: Types.DocumentFile[];
   };
   export type PluginOutput = string | ComplexPluginOutput;
   export type HookFunction = (...args: any[]) => void | Promise<void>;

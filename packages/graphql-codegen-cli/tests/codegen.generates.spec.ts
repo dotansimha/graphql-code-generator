@@ -29,32 +29,6 @@ describe('Array `generates` value', () => {
     expect(warnSpy).not.toHaveBeenCalled();
   });
 
-  it('Should use the first element and warn once when there are multiple elements', async () => {
-    const { result } = await executeCodegen({
-      schema: SIMPLE_TEST_SCHEMA,
-      generates: {
-        'out.ts': [
-          { plugins: [{ add: { content: '// FIRST_ELEMENT' } }] },
-          { plugins: [{ add: { content: '// SECOND_ELEMENT' } }] },
-        ],
-        'out2.ts': [
-          { plugins: [{ add: { content: '// THIRD_ELEMENT' } }] },
-          { plugins: [{ add: { content: '// FOURTH_ELEMENT' } }] },
-        ],
-      },
-    });
-
-    expect(result.length).toBe(2);
-    expect(result[0].content).toContain('FIRST_ELEMENT');
-    expect(result[0].content).not.toContain('SECOND_ELEMENT');
-    expect(result[1].content).toContain('THIRD_ELEMENT');
-    expect(result[1].content).not.toContain('FOURTH_ELEMENT');
-    expect(warnSpy).toHaveBeenCalledTimes(1);
-    expect(warnSpy).toHaveBeenCalledWith(
-      'Multiple generates config detected. Only the first one is used.',
-    );
-  });
-
   it('Should throw when the array is empty', async () => {
     await expect(
       executeCodegen({
@@ -65,7 +39,6 @@ describe('Array `generates` value', () => {
       }),
     ).rejects.toThrow('Invalid Codegen Configuration!');
   });
-
   it('Should throw when an element is not a config object (old plugin list shape)', async () => {
     await expect(
       executeCodegen({

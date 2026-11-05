@@ -214,6 +214,8 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
         `Plugin ${name}`,
       );
 
+      options.onPluginOutput?.(name, result);
+
       if (typeof result === 'string') {
         return result || '';
       }
@@ -239,6 +241,12 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
       return '';
     }),
   );
+
+  options.onOutputFileParts?.({
+    content: output.filter(Boolean).join('\n'),
+    prepend: Array.from(prepend.values()),
+    append: Array.from(append.values()),
+  });
 
   return [
     ...sortPrependValues(Array.from(prepend.values())),
