@@ -1,0 +1,204 @@
+---
+description:
+  Migrating the Codegen CLI and official plugins from v7 to v8. What has changed? How to migrate?
+title: Migrating to CLI and plugins v8.0
+sidebarTitle: CLI and plugins v7.0 -> v8.0
+---
+
+<style global jsx>
+  {`
+    [data-highlighted-line-id='lineremoved'] {
+      background: #7f1d1d4d;
+    }
+  `}
+</style>
+
+## What's new?
+
+The Codegen CLI and official plugins v8.0 update the minimum supported runtime and `@graphql-tools`
+dependencies, and remove deprecated options and APIs.
+
+1. Runtime and dependency changes
+2. Configuration changes
+3. API and type changes
+
+For the most important changes, read the [Breaking changes](#breaking-changes) section.
+
+## Installation
+
+Install the latest versions of the official packages in your dependencies:
+
+```sh npm2yarn
+npm i -D @graphql-codegen/cli@latest @graphql-codegen/typescript@latest @graphql-codegen/typescript-operations@latest @graphql-codegen/client-preset@latest
+```
+
+<Callout type="warning">
+  GraphQL Codegen packages share a lot of code internally, so if you have explicitly installed other
+  official packages (such as `@graphql-codegen/visitor-plugin-common` or
+  `@graphql-codegen/plugin-helpers`) in the same repo, be sure to update them at the same time to
+  avoid unexpected issues.
+</Callout>
+
+## Migration
+
+### Upgrade Node.js and `graphql`
+
+Make sure your environment uses Node.js `22.18.0` or newer, and `graphql` `16` or `17`.
+
+```json title="package.json"
+{
+  "engines": { "node": ">=22.18.0" },
+  "dependencies": { "graphql": "^16.0.0 || ^17.0.0" }
+}
+```
+
+### Replace `emitLegacyCommonJSImports` with `importExtension`
+
+```typescript title="codegen.ts" {4}#lineremoved {5}
+const config: CodegenConfig = {
+  // ...
+  config: {
+    emitLegacyCommonJSImports: false,
+    importExtension: '.js'
+  }
+}
+```
+
+If you did not set `emitLegacyCommonJSImports: false`, you don't need to change anything. No
+extension is appended by default.
+
+### Use a single object per `generates` output
+
+```typescript title="codegen.ts" {4}#lineremoved {5}
+const config: CodegenConfig = {
+  // ...
+  generates: {
+    'src/types.ts': [{ plugins: ['typescript'] }, { plugins: ['typescript-operations'] }],
+    'src/types.ts': { plugins: ['typescript', 'typescript-operations'] }
+  }
+}
+```
+
+### Update custom plugins that export `validate`
+
+If you maintain a custom plugin that exports `validate`, read `outputFile`, `allPlugins` and
+`pluginContext` from the fourth argument:
+
+```typescript title="my-plugin.ts" {1}#lineremoved {2}
+export const validate: PluginValidateFn = async (schema, documents, config, outputFile, allPlugins, pluginContext) => {
+export const validate: PluginValidateFn = async (schema, documents, config, { outputFile, allPlugins, pluginContext }) => {
+  // ...
+}
+```
+
+## Breaking changes
+
+### 1. Node.js below 22.18.0 is no longer supported
+
+The new `@graphql-tools/*` majors require Node.js `>=22.18.0`. The `engines.node` field of the CLI
+and all official packages is updated accordingly.
+
+### 2. `graphql` below 16 is no longer supported
+
+The supported peer range is now `^16.0.0 || ^17.0.0`. If you are using `graphql` 14 or 15, upgrade
+it first. Custom plugins should update their `peerDependencies` to the same range.
+
+### 3. `@graphql-tools/*` packages are updated to their latest majors
+
+All `@graphql-tools/*` dependencies are updated together and now require `@graphql-tools/utils@^13`.
+`graphql-config` is also updated to v6.
+
+If you have custom loaders, plugins or `graphql-config` extensions, make sure they are compatible
+with `@graphql-tools/utils@13` and `graphql-config@6`.
+
+<Callout>
+  `code-file-loader@9` extracts documents marked with `#graphql` by default, so you may see new
+  documents picked up. To keep the previous behaviour, set `pluckConfig: { gqlHashComment: '' }`.
+</Callout>
+
+### 4. `emitLegacyCommonJSImports` is removed
+
+The `emitLegacyCommonJSImports` config option and the `--emit-legacy-common-js-imports` CLI flag are
+removed from the CLI, `plugin-helpers`, `visitor-plugin-common`, `gql-tag-operations`,
+`typescript-operations`, `client-preset` and `graphql-modules-preset`.
+
+`importExtension` is now the only way to set the extension of relative imports.
+
+| Previous config                     | New config                |
+| ----------------------------------- | ------------------------- |
+| `{}`                                | `{}`                      |
+| `{emitLegacyCommonJSImports:true}`  | `{}`                      |
+| `{emitLegacyCommonJSImports:false}` | `{importExtension:'.js'}` |
+
+### 5. `config.generates` takes `ConfiguredOutput[]` instead of `ConfiguredPlugin[]`
+
+Previously, `generates` was typed as `ConfiguredOutput | ConfiguredPlugin[]`, but the array form
+never worked at runtime.
+
+Now, `generates` values are typed as `ConfiguredOutput | ConfiguredOutput[]`.
+
+- Only the first element of an array is used. If there is more than one, the CLI logs
+  `Multiple generates config detected. Only the first one is used.` once per run.
+- An empty array, or an array whose first element is not a config object, throws an
+  `Invalid Codegen Configuration` error. The error no longer names the output file.
+
+### 6. `plugin-helpers` exports are changed
+
+- `normalizeOutputParam` now returns `ConfiguredOutput[]` (a single object becomes a one-element
+  array).
+- `isOutputConfigArray` and `isConfiguredOutput` are removed. Use `Array.isArray(config)` and
+  `typeof config === 'object'` instead.
+
+### 7. Plugin `validate` receives an `info` object
+
+Previously, `validate` received `outputFile`, `allPlugins` and `pluginContext` as extra positional
+arguments, which did not match the signature of `plugin`.
+
+Now, `validate` receives the same `info` object as `plugin` as its fourth argument:
+
+```typescript
+validate(schema, documents, config, { outputFile, allPlugins, pluginContext })
+```
+
+- There is no compatibility shim. Custom plugins that read these values positionally must
+  destructure them from the fourth argument.
+- `pluginContext` was optional in the old `validate` signature. It is now always provided.
+- `@graphql-codegen/plugin-helpers` exports a new `PluginInfo` type, and `PluginValidateFn` takes it
+  as its fourth parameter.
+- `PluginFunction`'s `info` is typed as `Partial<PluginInfo> & { [key: string]: any }`, so `plugin`
+  and `validate` share one definition. The index signature is kept, so extra keys can still be read.
+
+### 8. `generate()` return type is `FileOutput[] | void`
+
+Previously, `generate()` was typed as `Promise<FileOutput[] | any>`, which collapsed to `any`.
+
+Now, it is typed as `Promise<FileOutput[] | void>`. In watch mode, it resolves with no value once
+the watcher exits. If you use the result as an array, narrow it first:
+
+```typescript {2}#lineremoved {3-5}
+const result = await generate(config, false)
+result[0].filename
+if (Array.isArray(result)) {
+  result[0].filename
+}
+```
+
+### 9. `schema-ast` `commentDescriptions` option is removed
+
+The `commentDescriptions` option of the `schema-ast` plugin has had no effect since `graphql` 16,
+and `graphql` 17's `printSchema` takes no options. Output is unchanged, so you can delete the
+option.
+
+Only code typed against the exported `SchemaASTConfig` type will fail to compile. A `codegen.ts`
+that still sets it keeps type-checking, as plugin `config` is `{ [key: string]: any }`.
+
+<Callout>
+  This does not affect the schema loader's own `commentDescriptions` option, which converts `#`
+  comments to descriptions at parse time.
+</Callout>
+
+### 10. `@graphql-codegen/plugin-helpers` depends on `@graphql-tools/apollo-engine-loader`
+
+`plugin-helpers` imports a type from `@graphql-tools/apollo-engine-loader`, which was only a
+`devDependency`. It is now a `dependency`, so published typings no longer silently resolve to `any`.
+Most installs see no change, as the CLI already depends on it.
