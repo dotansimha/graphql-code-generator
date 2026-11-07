@@ -269,11 +269,11 @@ describe('TypeScript Operations Plugin - Enum', () => {
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export const AA_UserRole_ZZ = {
-        AA_ABC_ZZ: 'A_B_C',
-        AA_XYZ_ZZ: 'X_Y_Z',
-        AA_Test_ZZ: '_TEST',
-        AA_MyValue_ZZ: 'My_Value',
-        AA_123_ZZ: '_123'
+        ABC_ZZ: 'A_B_C',
+        XYZ_ZZ: 'X_Y_Z',
+        Test_ZZ: '_TEST',
+        MyValue_ZZ: 'My_Value',
+        '123_ZZ': '_123'
       } as const;
 
       export type AA_UserRole_ZZ = typeof AA_UserRole_ZZ[keyof typeof AA_UserRole_ZZ];

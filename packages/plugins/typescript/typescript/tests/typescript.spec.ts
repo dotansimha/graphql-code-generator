@@ -295,6 +295,63 @@ describe('TypeScript', () => {
       export type MyEnum = typeof MyEnum[keyof typeof MyEnum];`);
     });
 
+    it('Should not apply typesPrefix to enum as const keys', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+          C
+        }
+      `);
+      const result = (await plugin(
+        schema,
+        [],
+        { enumsAsConst: true, typesPrefix: 'Prefix' },
+        { outputFile: '' },
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toBeSimilarStringTo(`
+      export const PrefixMyEnum = {
+        A: 'A',
+        B: 'B',
+        C: 'C'
+      } as const;
+      export type PrefixMyEnum = typeof PrefixMyEnum[keyof typeof PrefixMyEnum];`);
+      validateTs(result);
+    });
+
+    it('Should handle enum as const keys like native enum keys with typesPrefix and typesSuffix', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        enum MyEnum {
+          A
+          B
+        }
+      `);
+      const config = { typesPrefix: 'Prefix', typesSuffix: 'Suffix' };
+      const nativeResult = (await plugin(schema, [], config, {
+        outputFile: '',
+      })) as Types.ComplexPluginOutput;
+      const constResult = (await plugin(
+        schema,
+        [],
+        { ...config, enumsAsConst: true },
+        { outputFile: '' },
+      )) as Types.ComplexPluginOutput;
+
+      expect(nativeResult.content).toBeSimilarStringTo(`
+      export enum PrefixMyEnumSuffix {
+        ASuffix = 'A',
+        BSuffix = 'B'
+      }`);
+      expect(constResult.content).toBeSimilarStringTo(`
+      export const PrefixMyEnumSuffix = {
+        ASuffix: 'A',
+        BSuffix: 'B'
+      } as const;
+      export type PrefixMyEnumSuffix = typeof PrefixMyEnumSuffix[keyof typeof PrefixMyEnumSuffix];`);
+      validateTs(constResult);
+    });
+
     it('Should work with enum and enum values (enumsAsTypes)', async () => {
       const schema = buildSchema(/* GraphQL */ `
         "custom enum"
