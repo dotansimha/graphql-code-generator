@@ -149,6 +149,8 @@ Now, `generates` values are typed as `ConfiguredOutput | ConfiguredOutput[]`.
   array).
 - `isOutputConfigArray` and `isConfiguredOutput` are removed. Use `Array.isArray(config)` and
   `typeof config === 'object'` instead.
+- `normalizeImportExtension` is removed, along with `emitLegacyCommonJSImports`. Use
+  `importExtension ?? ''` instead.
 
 ### 7. Plugin `validate` receives an `info` object
 
