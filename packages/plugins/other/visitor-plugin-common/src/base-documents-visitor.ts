@@ -27,6 +27,7 @@ import {
   DeclarationBlock,
   DeclarationBlockConfig,
   getConfigValue,
+  hasFragmentVariables,
 } from './utils.js';
 import { OperationVariablesToObject } from './variables-to-object.js';
 
@@ -494,7 +495,7 @@ export class BaseDocumentsVisitor<
         fragmentSuffix,
         this._declarationBlockConfig,
       ),
-      this.config.experimentalFragmentVariables
+      this.config.experimentalFragmentVariables || hasFragmentVariables(node)
         ? new DeclarationBlock({
             ...this._declarationBlockConfig,
             blockTransformer: t => this.applyVariablesWrapper(t),
