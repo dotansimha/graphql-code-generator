@@ -1,5 +1,91 @@
 # @graphql-codegen/schema-ast
 
+## 7.0.0
+
+### Major Changes
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: GraphQL 14 and 15 are no
+  longer supported. The `graphql` peer dependency is now `^16.0.0 || ^17.0.0`, so upgrade `graphql`
+  to version 16 or 17 before updating to this version.
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Node.js versions below
+  22.18.0 are no longer supported. Upgrade to Node.js 22.18.0 or later before updating to this
+  version.
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: A plugin's `validate`
+  function now receives an info object as its fourth argument, matching the `plugin` function:
+  `validate(schema, documents, config, { outputFile, allPlugins, pluginContext })`. Custom plugins
+  that export `validate` and read `outputFile`, `allPlugins` or `pluginContext` as positional
+  arguments must destructure them from the fourth argument instead.
+
+  Refs [#11071](https://github.com/dotansimha/graphql-code-generator/issues/11071)
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Remove the
+  `commentDescriptions` option from `SchemaASTConfig`. It has had no effect since graphql 16, which
+  no longer prints descriptions as comments. Delete it from your `schema-ast` config; the generated
+  output does not change.
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: `@graphql-tools/*`
+  dependencies are updated to their latest majors, which require Node.js 22.18.0 or later and
+  GraphQL 16 or 17. If you import `@graphql-tools/*` packages in your own code, update them to the
+  same majors to avoid duplicate installs. `@graphql-tools/code-file-loader@9` now extracts
+  `#graphql`-marked template literals by default, so code files that contain such templates can
+  produce newly found documents; check your generated output after upgrading. To keep the previous
+  behavior, set `pluckConfig: { gqlHashComment: '' }`.
+
+### Patch Changes
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/utils@^13.0.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/13.0.2)
+    (from `^12.0.3`, in `dependencies`)
+  - Updated dependency
+    [`graphql@^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/16.0.0) (from
+    `^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0`,
+    in `peerDependencies`)
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Removed dependency
+    [`@graphql-tools/utils@^12.0.3` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/12.0.3)
+    (from `dependencies`)
+  - Updated dependency
+    [`graphql@^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/16.0.0) (from
+    `^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0`,
+    in `peerDependencies`)
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - Remove unused `@graphql-tools/utils`
+  dependency
+
+- Updated dependencies
+  [[`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)]:
+  - @graphql-codegen/plugin-helpers@8.0.0
+
 ## 6.1.1
 
 ### Patch Changes
