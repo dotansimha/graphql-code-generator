@@ -36,7 +36,6 @@ export namespace Types {
     profiler?: Profiler;
     cache?<T>(namespace: string, key: string, factory: () => Promise<T>): Promise<T>;
     documentTransforms?: ConfiguredDocumentTransform[];
-    emitLegacyCommonJSImports?: boolean;
     importExtension?: '' | `.${string}`;
     /**
      * @description How the CLI compares generated content against the output file
@@ -511,7 +510,7 @@ export namespace Types {
      * For more details: https://graphql-code-generator.com/docs/config-reference/codegen-config
      */
     generates: {
-      [outputPath: string]: ConfiguredOutput | ConfiguredPlugin[];
+      [outputPath: string]: ConfiguredOutput | ConfiguredOutput[];
     };
     /**
      * @description A flag to overwrite files if they already exist when generating code (`true` by default).
@@ -531,11 +530,6 @@ export namespace Types {
      * @description A flag to suppress non-zero exit code when there are no documents to generate.
      */
     ignoreNoDocuments?: boolean;
-    /**
-     * @deprecated Please use `importExtension` instead.
-     * @description A flag to disable adding `.js` extension to the output file. Default: `true`.
-     */
-    emitLegacyCommonJSImports?: boolean;
     /**
      * @description Append this extension to all imports.
      * Useful for ESM environments that require file extensions in import statements.
@@ -750,21 +744,22 @@ export type PluginFunction<T = any, TOutput extends Types.PluginOutput = Types.P
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: T,
-  info?: {
-    outputFile?: string;
-    allPlugins?: Types.ConfiguredPlugin[];
-    pluginContext?: { [key: string]: any };
-    [key: string]: any;
-  },
+  // Index signature lets third-party plugins read keys outside `PluginInfo`.
+  info?: Partial<PluginInfo> & { [key: string]: any },
 ) => Types.Promisable<TOutput>;
+
+export interface PluginInfo {
+  outputFile: string;
+  allPlugins: Types.ConfiguredPlugin[];
+  // Free-form bag shared between plugins; typing it needs a generic on PluginInfo or `unknown` plus narrowing in every consumer.
+  pluginContext: { [key: string]: any };
+}
 
 export type PluginValidateFn<T = any> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
   config: T,
-  outputFile: string,
-  allPlugins: Types.ConfiguredPlugin[],
-  pluginContext?: { [key: string]: any },
+  info: PluginInfo,
 ) => Types.Promisable<void>;
 
 export type AddToSchemaResult = string | DocumentNode | undefined;

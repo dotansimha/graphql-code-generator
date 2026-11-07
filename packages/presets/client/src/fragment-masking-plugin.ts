@@ -1,4 +1,4 @@
-import { normalizeImportExtension, type PluginFunction } from '@graphql-codegen/plugin-helpers';
+import { type PluginFunction } from '@graphql-codegen/plugin-helpers';
 
 const fragmentTypeHelper = `
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<
@@ -134,7 +134,6 @@ export const plugin: PluginFunction<{
   useTypeImports?: boolean;
   augmentedModuleName?: string;
   unmaskFunctionName?: string;
-  emitLegacyCommonJSImports?: boolean;
   importExtension?: '' | `.${string}`;
   isStringDocumentMode?: boolean;
 }> = (
@@ -144,16 +143,11 @@ export const plugin: PluginFunction<{
     useTypeImports,
     augmentedModuleName,
     unmaskFunctionName,
-    emitLegacyCommonJSImports,
-    importExtension,
+    importExtension = '',
     isStringDocumentMode = false,
   },
   _info,
 ) => {
-  const appendedImportExtension = normalizeImportExtension({
-    emitLegacyCommonJSImports,
-    importExtension,
-  });
   const documentNodeImport = `${
     useTypeImports ? 'import type' : 'import'
   } { ResultOf, DocumentTypeDecoration${
@@ -162,7 +156,7 @@ export const plugin: PluginFunction<{
 
   const deferFragmentHelperImports = `${useTypeImports ? 'import type' : 'import'} { Incremental${
     isStringDocumentMode ? ', TypedDocumentString' : ''
-  } } from './graphql${appendedImportExtension}';\n`;
+  } } from './graphql${importExtension}';\n`;
 
   const fragmentDefinitionNodeImport = isStringDocumentMode
     ? ''

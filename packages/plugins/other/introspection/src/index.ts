@@ -4,7 +4,6 @@ import {
   PluginFunction,
   PluginValidateFn,
   removeFederation,
-  Types,
 } from '@graphql-codegen/plugin-helpers';
 import { getConfigValue } from '@graphql-codegen/visitor-plugin-common';
 
@@ -88,11 +87,11 @@ export const plugin: PluginFunction<IntrospectionPluginConfig> = async (
     : JSON.stringify(introspection, null, 2);
 };
 
-export const validate: PluginValidateFn<any> = async (
-  schema: GraphQLSchema,
-  documents: Types.DocumentFile[],
-  config: any,
-  outputFile: string,
+export const validate: PluginValidateFn<IntrospectionPluginConfig> = async (
+  schema,
+  documents,
+  config,
+  { outputFile },
 ) => {
   if (extname(outputFile) !== '.json') {
     throw new Error(`Plugin "introspection" requires extension to be ".json"!`);

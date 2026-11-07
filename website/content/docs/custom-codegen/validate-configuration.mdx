@@ -26,7 +26,7 @@ module.exports = {
 
     return Object.keys(typesMap).join('\n')
   },
-  validate(schema, documents, config, outputFile, allPlugins) {}
+  validate(schema, documents, config, { outputFile, allPlugins, pluginContext }) {}
 }
 ```
 
@@ -40,6 +40,10 @@ module.exports = {
   dependencies between plugins.
 </Callout>
 
+<Callout>
+  `pluginContext` is the same context object the `plugin` function receives in `info`.
+</Callout>
+
 You can now check the schema, documents, configuration, output file and sibling plugins, and in case
 something does not fits your requirements, throw an `Error`:
 
@@ -50,10 +54,21 @@ module.exports = {
 
     return Object.keys(typesMap).join('\n')
   },
-  validate(schema, documents, config, outputFile, allPlugins) {
+  validate(schema, documents, config, { outputFile, allPlugins, pluginContext }) {
     if (!config.mustHave) {
       throw new Error(`You must specify "mustHave" in my plugin configuration!`)
     }
   }
 }
+```
+
+## Migrating from the positional `validate` signature
+
+`validate` receives the same `info` object as `plugin`, as its fourth argument. If your plugin reads
+`outputFile`, `allPlugins` or `pluginContext` as the 4th, 5th and 6th arguments, destructure them
+from the 4th argument instead:
+
+```diff
+- validate(schema, documents, config, outputFile, allPlugins, pluginContext) {}
++ validate(schema, documents, config, { outputFile, allPlugins, pluginContext }) {}
 ```
