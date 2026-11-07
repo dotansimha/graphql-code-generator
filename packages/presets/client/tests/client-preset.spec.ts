@@ -934,6 +934,58 @@ export * from "./gql.js";`);
       const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
       expect(graphqlFile).toBeDefined();
     });
+
+    it('does not add imports to graphql.ts with the default documentMode', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+            }
+          `,
+        ],
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };"
+      `);
+    });
+
+    it('imports DocumentTypeDecoration in graphql.ts when documentMode is "string"', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+            }
+          `,
+        ],
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile?.content).toContain(
+        'implements DocumentTypeDecoration<TResult, TVariables>',
+      );
+      expect(graphqlFile?.content).toContain(
+        `import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';`,
+      );
+    });
   });
 
   describe('importExtension configuration', () => {
