@@ -44,7 +44,8 @@ export const plugin: PluginFunction<TypeScriptTypedDocumentNodesConfig> = (
   }
 
   return {
-    prepend: allAst.definitions.length === 0 ? [] : visitor.getImports(),
+    // `typedDocumentString.template` needs its import even when there are no documents
+    prepend: allAst.definitions.length === 0 && content.length === 0 ? [] : visitor.getImports(),
     content: [
       ...content,
       visitor.fragments,
