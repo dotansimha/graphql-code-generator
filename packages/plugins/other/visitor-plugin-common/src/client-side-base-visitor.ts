@@ -15,7 +15,7 @@ import {
   SelectionNode,
 } from 'graphql';
 import gqlTag from 'graphql-tag';
-import { normalizeImportExtension, oldVisit, Types } from '@graphql-codegen/plugin-helpers';
+import { oldVisit, Types } from '@graphql-codegen/plugin-helpers';
 import { optimizeDocumentNode } from '@graphql-tools/optimize';
 import { BaseVisitor, ParsedConfig, RawConfig } from './base-visitor.js';
 import { FragmentImport, generateFragmentImportStatement, ImportDeclaration } from './imports.js';
@@ -677,10 +677,7 @@ export class ClientSideBaseVisitor<
   private clearExtension(path: string): string {
     const extension = extname(path);
 
-    const importExtension = normalizeImportExtension({
-      emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
-      importExtension: this.config.importExtension,
-    });
+    const importExtension = this.config.importExtension;
 
     if (extension === importExtension) {
       return path;
@@ -729,10 +726,7 @@ export class ClientSideBaseVisitor<
             this._documents.length === 1
           ) {
             let documentPath = `./${this.clearExtension(basename(this._documents[0].location || ''))}`;
-            documentPath += normalizeImportExtension({
-              emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
-              importExtension: this.config.importExtension,
-            });
+            documentPath += this.config.importExtension;
 
             this._imports.add(`import * as Operations from '${documentPath}';`);
           } else {
@@ -762,10 +756,7 @@ export class ClientSideBaseVisitor<
       this.config.documentMode !== DocumentMode.graphQLTag;
 
     if (!excludeFragments) {
-      const importExtension = normalizeImportExtension({
-        emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
-        importExtension: this.config.importExtension,
-      });
+      const importExtension = this.config.importExtension;
       const deduplicatedImports = Object.values(
         groupBy(this.config.fragmentImports, fi => fi.importSource.path),
       )
@@ -779,7 +770,6 @@ export class ClientSideBaseVisitor<
                 identifier => identifier.name,
               ),
             },
-            emitLegacyCommonJSImports: this.config.emitLegacyCommonJSImports,
             importExtension,
           }),
         )

@@ -10,7 +10,6 @@ import {
   CodegenPlugin,
   getCachedDocumentNodeFromSchema,
   normalizeConfig,
-  normalizeImportExtension,
   normalizeInstanceOrArray,
   normalizeOutputParam,
   Types,
@@ -23,6 +22,7 @@ import { isESMModule } from './isESMModule.js';
 import { getPluginByName } from './plugins.js';
 import { getPresetByName } from './presets.js';
 import { debugLog, printLogs } from './utils/debugging.js';
+import { getLogger } from './utils/logger.js';
 
 const makeDefaultLoader = (from: string) => {
   if (fs.statSync(from).isDirectory()) {
@@ -74,6 +74,8 @@ function createCache(): <T>(
 export async function executeCodegen(
   input: CodegenContext | Types.Config,
 ): Promise<{ result: Types.FileOutput[]; error: Error | null }> {
+  let warnedAboutConfigArray = false;
+
   const context = ensureContext(input);
   const config = context.getConfig();
   const pluginContext = context.getPluginContext();
@@ -142,42 +144,45 @@ export async function executeCodegen(
     /* Normalize "generators" field */
     const generateKeys = Object.keys(config.generates || {});
 
-    if (generateKeys.length === 0) {
+    function throwInvalidGenerates(): never {
       throw new Error(
         `Invalid Codegen Configuration! \n
         Please make sure that your codegen config file contains the "generates" field, with a specification for the plugins you need.
 
-        It should looks like that:
+        It should look like this:
 
-        schema:
-          - my-schema.graphql
-        generates:
-          my-file.ts:
-            - plugin1
-            - plugin2
-            - plugin3`,
+        \`\`\`ts
+        import type { CodegenConfig } from "@graphql-codegen/cli";
+
+        const config: CodegenConfig = {
+          schema: "my-schema.graphql",
+          generates: {
+            "my-file.ts": {
+              plugins: ["plugin1", "plugin2", "plugin3"],
+            },
+          },
+        };
+        export default config;
+        \`\`\``,
       );
     }
 
+    if (generateKeys.length === 0) {
+      throwInvalidGenerates();
+    }
+
     for (const filename of generateKeys) {
-      const output = (generates[filename] = normalizeOutputParam(config.generates[filename]));
+      const normalizedOutputArray = normalizeOutputParam(config.generates[filename]);
+      if (normalizedOutputArray.length > 1 && !warnedAboutConfigArray) {
+        warnedAboutConfigArray = true;
+        getLogger().warn('Multiple generates config detected. Only the first one is used.');
+      }
 
-      if (!output.preset && (!output.plugins || output.plugins.length === 0)) {
-        throw new Error(
-          `Invalid Codegen Configuration! \n
-          Please make sure that your codegen config file has defined plugins list for output "${filename}".
+      generates[filename] = normalizedOutputArray[0];
+      const output = generates[filename];
 
-          It should looks like that:
-
-          schema:
-            - my-schema.graphql
-          generates:
-            my-file.ts:
-              - plugin1
-              - plugin2
-              - plugin3
-          `,
-        );
+      if (!output || (!output.preset && (!output.plugins || output.plugins.length === 0))) {
+        throwInvalidGenerates();
       }
     }
 
@@ -459,23 +464,17 @@ export async function executeCodegen(
 
                           const rawMergedConfig = {
                             ...rootConfig,
-                            emitLegacyCommonJSImports: config.emitLegacyCommonJSImports,
                             importExtension: config.importExtension,
                             ...(typeof outputFileTemplateConfig === 'string'
                               ? { value: outputFileTemplateConfig }
                               : outputFileTemplateConfig),
                           };
 
-                          const importExtension = normalizeImportExtension({
-                            emitLegacyCommonJSImports: rawMergedConfig.emitLegacyCommonJSImports,
-                            importExtension: rawMergedConfig.importExtension,
-                          });
+                          const importExtension = rawMergedConfig.importExtension ?? '';
 
                           const mergedConfig = {
                             ...rawMergedConfig,
                             importExtension,
-                            emitLegacyCommonJSImports:
-                              rawMergedConfig.emitLegacyCommonJSImports ?? true,
                           };
 
                           const documentTransforms = Array.isArray(outputConfig.documentTransforms)
@@ -527,8 +526,6 @@ export async function executeCodegen(
                             const output = await codegen({
                               ...outputArgs,
                               importExtension,
-                              emitLegacyCommonJSImports:
-                                rawMergedConfig.emitLegacyCommonJSImports ?? true,
                               cache,
                             });
                             result.push({

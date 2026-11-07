@@ -10,6 +10,35 @@ describe('TypedDocumentNode', () => {
     expect(result.prepend?.length).toBe(0);
   });
 
+  it.each(Object.values(DocumentMode).filter(mode => mode !== DocumentMode.string))(
+    'Should not output imports when there are no operations and documentMode=%s',
+    async documentMode => {
+      const result = (await plugin(null as any, [], { documentMode })) as Types.ComplexPluginOutput;
+      expect(result.content).toBe('');
+      expect(result.prepend?.length).toBe(0);
+    },
+  );
+
+  it('Should output imports when there are no operations and documentMode=string', async () => {
+    const result = (await plugin(null as any, [], {
+      documentMode: DocumentMode.string,
+    })) as Types.ComplexPluginOutput;
+    expect(result.content).toContain('implements DocumentTypeDecoration<TResult, TVariables>');
+    expect(result.prepend).toEqual([
+      `import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';`,
+    ]);
+  });
+
+  it('Should respect useTypeImports when there are no operations and documentMode=string', async () => {
+    const result = (await plugin(null as any, [], {
+      documentMode: DocumentMode.string,
+      useTypeImports: true,
+    })) as Types.ComplexPluginOutput;
+    expect(result.prepend).toEqual([
+      `import type { DocumentTypeDecoration } from '@graphql-typed-document-node/core';`,
+    ]);
+  });
+
   it('dedupes fragments automatically when documentMode=graphQLTag', async () => {
     const schema = buildSchema(/* GraphQL */ `
       type Query {

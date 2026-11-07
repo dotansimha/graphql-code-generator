@@ -62,10 +62,6 @@
           "description": "A flag to suppress non-zero exit code when there are no documents to generate.",
           "type": "boolean"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "A flag to disable adding `.js` extension to the output file. Default: `true`.",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -268,10 +264,6 @@
         },
         "legacyMode": {
           "description": "If false, it will work with `@tanstack/react-query`, default value is true.\nDefault value: \"true\"",
-          "type": "boolean"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
           "type": "boolean"
         },
         "importExtension": {
@@ -508,10 +500,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -732,10 +720,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -933,10 +917,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -1025,10 +1005,6 @@
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
@@ -1183,10 +1159,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -1214,10 +1186,6 @@
         },
         "includeIntrospectionTypes": {
           "description": "Include introspection types to Schema output.\nDefault value: \"false\"",
-          "type": "boolean"
-        },
-        "commentDescriptions": {
-          "description": "Set to true in order to print description as comments (using `#` instead of `\"\"\"`)\nDefault value: \"false\"",
           "type": "boolean"
         },
         "sort": {
@@ -1394,10 +1362,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -1571,10 +1535,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -1658,10 +1618,6 @@
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
@@ -1857,10 +1813,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -2039,10 +1991,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -2189,10 +2137,6 @@
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
@@ -2385,10 +2329,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -2530,10 +2470,6 @@
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
@@ -2696,10 +2632,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -2833,10 +2765,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -2965,10 +2893,6 @@
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
@@ -3111,10 +3035,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -3204,10 +3124,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -3289,10 +3205,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -3372,10 +3284,6 @@
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
@@ -3504,10 +3412,6 @@
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
@@ -3667,10 +3571,6 @@
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
         },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
-        },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",
           "anyOf": [
@@ -3817,10 +3717,6 @@
         "inlineFragmentTypes": {
           "description": "Whether fragment types should be inlined into other operations.\n\"inline\" is the default behavior and will perform deep inlining fragment types within operation type definitions.\n\"combine\" is the previous behavior that uses fragment type references without inlining the types (and might cause issues with deeply nested fragment that uses list types).\n\"mask\" transforms the types for use with fragment masking. Useful when masked types are needed when not using the \"client\" preset e.g. such as combining it with Apollo Client's data masking feature.\nDefault value: \"inline\"",
           "type": "string"
-        },
-        "emitLegacyCommonJSImports": {
-          "description": "Emit legacy common js imports.\nDefault it will be `true` this way it ensure that generated code works with [non-compliant bundlers](https://github.com/dotansimha/graphql-code-generator/issues/8065).\nDefault value: \"true\"",
-          "type": "boolean"
         },
         "importExtension": {
           "description": "Append this extension to all imports.\nUseful for ESM environments that require file extensions in import statements.",

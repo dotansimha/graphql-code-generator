@@ -4,7 +4,6 @@ import {
   PluginFunction,
   PluginValidateFn,
   removeFederation,
-  Types,
 } from '@graphql-codegen/plugin-helpers';
 
 interface IntrospectionResultData {
@@ -253,11 +252,11 @@ export default result;
   throw new Error(`Extension ${ext} is not supported`);
 };
 
-export const validate: PluginValidateFn<any> = async (
-  _schema: GraphQLSchema,
-  _documents: Types.DocumentFile[],
-  config: FragmentMatcherConfig,
-  outputFile: string,
+export const validate: PluginValidateFn<FragmentMatcherConfig> = async (
+  _schema,
+  _documents,
+  config,
+  { outputFile },
 ) => {
   const ext = extname(outputFile).toLowerCase();
   const all = Object.values(extensions).reduce((acc, exts) => [...acc, ...exts], []);

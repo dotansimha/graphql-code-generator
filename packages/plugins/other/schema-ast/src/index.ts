@@ -14,7 +14,6 @@ import {
   PluginFunction,
   PluginValidateFn,
   removeFederation,
-  Types,
 } from '@graphql-codegen/plugin-helpers';
 
 /**
@@ -68,29 +67,6 @@ export interface SchemaASTConfig {
    */
   includeIntrospectionTypes?: boolean;
   /**
-   * @description Set to true in order to print description as comments (using `#` instead of `"""`)
-   * @default false
-   *
-   * @exampleMarkdown
-   * ```tsx {9} filename="codegen.ts"
-   *  import type { CodegenConfig } from '@graphql-codegen/cli';
-   *
-   *  const config: CodegenConfig = {
-   *    schema: './src/schema.graphql',
-   *    generates: {
-   *      'path/to/file.graphql': {
-   *        plugins: ['schema-ast'],
-   *        config: {
-   *          commentDescriptions: true
-   *        },
-   *      },
-   *    },
-   *  };
-   *  export default config;
-   * ```
-   */
-  commentDescriptions?: boolean;
-  /**
    * @description Set to false to disable sorting
    * @default true
    */
@@ -101,13 +77,7 @@ export interface SchemaASTConfig {
 export const plugin: PluginFunction<SchemaASTConfig> = async (
   schema: GraphQLSchema,
   _documents,
-  {
-    commentDescriptions = false,
-    includeDirectives = false,
-    includeIntrospectionTypes = false,
-    sort = false,
-    federation,
-  },
+  { includeDirectives = false, includeIntrospectionTypes = false, sort = false, federation },
 ): Promise<string> => {
   const transformedSchemaAndAst = transformSchemaAST(schema, {
     sort,
@@ -119,20 +89,17 @@ export const plugin: PluginFunction<SchemaASTConfig> = async (
     includeIntrospectionTypes ? printIntrospectionSchema(transformedSchemaAndAst.schema) : null,
     includeDirectives
       ? print(transformedSchemaAndAst.ast)
-      : (printSchema as any)(transformedSchemaAndAst.schema, {
-          commentDescriptions,
-        }),
+      : printSchema(transformedSchemaAndAst.schema),
   ]
     .filter(Boolean)
     .join('\n');
 };
 
-export const validate: PluginValidateFn<any> = async (
-  _schema: GraphQLSchema,
-  _documents: Types.DocumentFile[],
-  _config: SchemaASTConfig,
-  outputFile: string,
-  allPlugins: Types.ConfiguredPlugin[],
+export const validate: PluginValidateFn<SchemaASTConfig> = async (
+  _schema,
+  _documents,
+  _config,
+  { outputFile, allPlugins },
 ) => {
   const singlePlugin = allPlugins.length === 1;
 

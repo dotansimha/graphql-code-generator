@@ -2,6 +2,7 @@ import { buildASTSchema, DocumentNode, GraphQLSchema } from 'graphql';
 import {
   CodegenPlugin,
   createNoopProfiler,
+  PluginInfo,
   Profiler,
   Types,
 } from '@graphql-codegen/plugin-helpers';
@@ -43,29 +44,24 @@ export async function executePlugin(
   const outputSchema: GraphQLSchema =
     options.schemaAst || buildASTSchema(options.schema, options.config as any);
   const documents = options.documents || [];
-  const pluginContext = options.pluginContext || {};
   const profiler = options.profiler ?? createNoopProfiler();
+  const info: PluginInfo = {
+    outputFile: options.outputFilename,
+    allPlugins: options.allPlugins,
+    pluginContext: options.pluginContext || {},
+  };
 
   const validate = plugin.validate;
   if (validate && typeof validate === 'function') {
     try {
-      // FIXME: Sync validate signature with plugin signature
       await profiler.run(
-        async () =>
-          validate(
-            outputSchema,
-            documents,
-            options.config,
-            options.outputFilename,
-            options.allPlugins,
-            pluginContext,
-          ),
+        async () => validate(outputSchema, documents, options.config, info),
         `Plugin ${options.name} validate`,
       );
-    } catch (e: any) {
+    } catch (e) {
       throw new Error(
         `Plugin "${options.name}" validation failed: \n
-            ${e.message}
+            ${e instanceof Error ? e.message : String(e)}
           `,
       );
     }
@@ -78,11 +74,7 @@ export async function executePlugin(
           outputSchema,
           documents,
           typeof options.config === 'object' ? { ...options.config } : options.config,
-          {
-            outputFile: options.outputFilename,
-            allPlugins: options.allPlugins,
-            pluginContext,
-          },
+          info,
         ),
       ),
     `Plugin ${options.name} execution`,
