@@ -55,15 +55,17 @@ const config: CodegenConfig = {
       schema: './test-schema/schema-object.js',
       plugins: ['typescript'],
     },
-    './githunt/graphql-declared-modules.d.ts': {
-      schema: './githunt/schema.json',
-      documents: [
-        './githunt/**/*.graphql',
-        './dev-test/general-outer-dir/githunt/**/*.graphql',
-        '!**/nothing-should-use-this-query.graphql',
-      ],
-      plugins: ['typescript-graphql-files-modules'],
-    },
+    // FIXME: Re-enable once @graphql-codegen/typescript-graphql-files-modules supports the new `validate` info object signature (#11071).
+    // The published 4.0.1 expects `outputFile` as a string, so validation fails with "outputFile.endsWith is not a function".
+    // './githunt/graphql-declared-modules.d.ts': {
+    //   schema: './githunt/schema.json',
+    //   documents: [
+    //     './githunt/**/*.graphql',
+    //     './dev-test/general-outer-dir/githunt/**/*.graphql',
+    //     '!**/nothing-should-use-this-query.graphql',
+    //   ],
+    //   plugins: ['typescript-graphql-files-modules'],
+    // },
     './githunt/typed-document-nodes.ts': {
       schema: './githunt/schema.json',
       documents: './githunt/**/*.graphql',
