@@ -50,16 +50,10 @@ Make sure your environment uses Node.js v22.18.0 or newer, and `graphql` v16 or 
  import type { CodegenConfig } from '@graphql-codegen/cli'
 
  const config: CodegenConfig = {
-   schema: 'schema.graphql',
-   documents: ['src/**/*.graphql'],
-   generates: {
-     'src/types.ts': {
-       plugins: ['typescript', 'typescript-operations'],
-       config: {
--        emitLegacyCommonJSImports: false
-+        importExtension: '.js'
-       }
-     }
+   // ...
+   config: {
+-    emitLegacyCommonJSImports: false
++    importExtension: '.js'
    }
  }
 
@@ -75,11 +69,10 @@ extension is appended by default.
  import type { CodegenConfig } from '@graphql-codegen/cli'
 
  const config: CodegenConfig = {
-   schema: 'schema.graphql',
-   documents: ['src/**/*.graphql'],
+   // ...
    generates: {
--    'src/types.ts': ['typescript', 'typescript-operations']
-+    'src/types.ts': { plugins: ['typescript', 'typescript-operations'] }
+-    'src/types.ts': ['typescript-operations']
++    'src/types.ts': { plugins: ['typescript-operations'] }
    }
  }
 
