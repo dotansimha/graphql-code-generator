@@ -1,5 +1,66 @@
 # @graphql-codegen/introspection
 
+## 7.0.0
+
+### Major Changes
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: GraphQL 14 and 15 are no
+  longer supported. The `graphql` peer dependency is now `^16.0.0 || ^17.0.0`, so upgrade `graphql`
+  to version 16 or 17 before updating to this version.
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Node.js versions below
+  22.18.0 are no longer supported. Upgrade to Node.js 22.18.0 or later before updating to this
+  version.
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: A plugin's `validate`
+  function now receives an info object as its fourth argument, matching the `plugin` function:
+  `validate(schema, documents, config, { outputFile, allPlugins, pluginContext })`. Custom plugins
+  that export `validate` and read `outputFile`, `allPlugins` or `pluginContext` as positional
+  arguments must destructure them from the fourth argument instead.
+
+  Refs [#11071](https://github.com/dotansimha/graphql-code-generator/issues/11071)
+
+### Patch Changes
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`graphql@^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/16.0.0) (from
+    `^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0`,
+    in `peerDependencies`)
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`graphql@^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/16.0.0) (from
+    `^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0`,
+    in `peerDependencies`)
+- Updated dependencies
+  [[`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`409ffbf`](https://github.com/dotansimha/graphql-code-generator/commit/409ffbfda5c56d6f46f0e0a4045c547714df2264),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)]:
+  - @graphql-codegen/plugin-helpers@8.0.0
+  - @graphql-codegen/visitor-plugin-common@8.0.0
+
 ## 6.1.0
 
 ### Minor Changes
