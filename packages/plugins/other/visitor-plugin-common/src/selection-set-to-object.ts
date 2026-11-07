@@ -208,7 +208,7 @@ export class SelectionSetToObject<
           isInterfaceType(typeOnSchema) &&
           parentType.getInterfaces().includes(typeOnSchema)
         ) {
-          this._appendToTypeMap(types, parentType.name, fields);
+          this._appendToTypeMap(types, parentType.name, fieldsWithFragmentDirectives);
           this._appendToTypeMap(types, parentType.name, spreadsUsage[parentType.name]);
           this._collectInlineFragments(typeOnSchema, inlines, types);
         }
@@ -221,18 +221,19 @@ export class SelectionSetToObject<
           ? this._schema.getType(node.typeCondition.name.value)
           : parentType;
         const { fields, inlines, spreads } = separateSelectionSet(node.selectionSet.selections);
+        const { fieldsWithFragmentDirectives } = enrichFieldWithDirectives({ node, fields });
         const spreadsUsage = this.buildFragmentSpreadsUsage(spreads);
 
         if (
           isObjectType(schemaType) &&
           possibleTypes.find(possibleType => possibleType.name === schemaType.name)
         ) {
-          this._appendToTypeMap(types, schemaType.name, fields);
+          this._appendToTypeMap(types, schemaType.name, fieldsWithFragmentDirectives);
           this._appendToTypeMap(types, schemaType.name, spreadsUsage[schemaType.name]);
           this._collectInlineFragments(schemaType, inlines, types);
         } else if (isInterfaceType(schemaType) && schemaType.name === parentType.name) {
           for (const possibleType of possibleTypes) {
-            this._appendToTypeMap(types, possibleType.name, fields);
+            this._appendToTypeMap(types, possibleType.name, fieldsWithFragmentDirectives);
             this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
             this._collectInlineFragments(schemaType, inlines, types);
           }
@@ -251,7 +252,7 @@ export class SelectionSetToObject<
               fragmentSpreadType &&
               isTypeSubTypeOf(this._schema, possibleType, fragmentSpreadType)
             ) {
-              this._appendToTypeMap(types, possibleType.name, fields);
+              this._appendToTypeMap(types, possibleType.name, fieldsWithFragmentDirectives);
               this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
             }
           }
@@ -284,14 +285,14 @@ export class SelectionSetToObject<
                 possibleInterfaceType => possibleInterfaceType.name === possibleType.name,
               )
             ) {
-              this._appendToTypeMap(types, possibleType.name, fields);
+              this._appendToTypeMap(types, possibleType.name, fieldsWithFragmentDirectives);
               this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
               this._collectInlineFragments(schemaType, inlines, types);
             }
           }
         } else {
           for (const possibleType of possibleTypes) {
-            this._appendToTypeMap(types, possibleType.name, fields);
+            this._appendToTypeMap(types, possibleType.name, fieldsWithFragmentDirectives);
             this._appendToTypeMap(types, possibleType.name, spreadsUsage[possibleType.name]);
           }
         }
@@ -821,6 +822,8 @@ export class SelectionSetToObject<
       }
     >();
     let requireTypename = false;
+    // `__typename` selected only under `@skip`/`@include` may be absent from the response
+    let conditionalTypename = false;
 
     // usages via fragment typescript type
     const fragmentsSpreadUsages: string[] = [];
@@ -865,7 +868,14 @@ export class SelectionSetToObject<
           } else if (selectionNode.alias) {
             primitiveAliasFields.set(selectionNode.alias.value, selectionNode);
           } else if (selectionNode.name.value === '__typename') {
-            requireTypename = true;
+            if (
+              hasConditionalDirectives(selectionNode.directives) ||
+              hasConditionalDirectives(selectionNode.fragmentDirectives)
+            ) {
+              conditionalTypename = true;
+            } else {
+              requireTypename = true;
+            }
           } else {
             primitiveFields.set(selectionNode.name.value, selectionNode);
           }
@@ -992,6 +1002,7 @@ export class SelectionSetToObject<
       this._config.nonOptionalTypename,
       requireTypename,
       this._config.skipTypeNameForRoot,
+      conditionalTypename,
     );
 
     // Only add the typename field if we're not merging fragment
@@ -1084,6 +1095,7 @@ export class SelectionSetToObject<
     nonOptionalTypename: boolean,
     queriedForTypename: boolean,
     skipTypeNameForRoot: boolean,
+    conditionallyQueriedForTypename = false,
   ): { name: string; type: string } | null {
     const typenameField = {
       name: this._processor.config.formatNamedField({ name: '__typename' }),
@@ -1092,6 +1104,18 @@ export class SelectionSetToObject<
 
     if (queriedForTypename) {
       return typenameField;
+    }
+
+    if (conditionallyQueriedForTypename) {
+      return nonOptionalTypename
+        ? typenameField
+        : {
+            ...typenameField,
+            name: this._processor.config.formatNamedField({
+              name: '__typename',
+              isOptional: true,
+            }),
+          };
     }
 
     const rootTypes = getRootTypes(this._schema);

@@ -1392,3 +1392,225 @@ describe('TypeScript Operations Plugin - @include and @skip with @defer', () => 
     `);
   });
 });
+
+describe('TypeScript Operations Plugin - @include and @skip on __typename and interfaces', () => {
+  const schema = buildSchema(/* GraphQL */ `
+    interface Node {
+      id: ID!
+    }
+
+    type User implements Node {
+      id: ID!
+      name: String
+    }
+
+    type Post implements Node {
+      id: ID!
+      title: String
+    }
+
+    union SearchResult = User | Post
+
+    type Query {
+      me: User
+      node: Node
+      search: SearchResult
+    }
+  `);
+
+  it('#11110 - makes __typename optional when it has @skip or @include', async () => {
+    const document = parse(/* GraphQL */ `
+      query Me($skip: Boolean!, $include: Boolean!) {
+        me {
+          __typename @skip(if: $skip)
+          name @skip(if: $skip)
+        }
+        included: me {
+          __typename @include(if: $include)
+        }
+        both: me {
+          __typename
+          __typename @skip(if: $skip)
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type MeQueryVariables = Exact<{
+        skip: boolean;
+        include: boolean;
+      }>;
+
+
+      export type MeQuery = { me: { __typename?: 'User', name?: string | null } | null, included: { __typename?: 'User' } | null, both: { __typename: 'User' } | null };
+      "
+    `);
+  });
+
+  it('#11110 - makes __typename optional when it is inside a conditional inline fragment', async () => {
+    const document = parse(/* GraphQL */ `
+      query Me($skip: Boolean!) {
+        me {
+          id
+          ... @skip(if: $skip) {
+            __typename
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type MeQueryVariables = Exact<{
+        skip: boolean;
+      }>;
+
+
+      export type MeQuery = { me: { id: string } & { __typename?: 'User' } | null };
+      "
+    `);
+  });
+
+  it('#11110 - keeps __typename required with nonOptionalTypename', async () => {
+    const document = parse(/* GraphQL */ `
+      query Me($skip: Boolean!) {
+        me {
+          __typename @skip(if: $skip)
+        }
+      }
+    `);
+
+    const { content } = await plugin(
+      schema,
+      [{ location: '', document }],
+      { nonOptionalTypename: true },
+      { outputFile: '' },
+    );
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type MeQueryVariables = Exact<{
+        skip: boolean;
+      }>;
+
+
+      export type MeQuery = { __typename: 'Query', me: { __typename: 'User' } | null };
+      "
+    `);
+  });
+
+  it('#11110 - keeps the fields of a conditional inline fragment on an interface field', async () => {
+    const document = parse(/* GraphQL */ `
+      query Node($include: Boolean!, $skip: Boolean!) {
+        node {
+          id
+          ... on User @include(if: $include) {
+            name
+          }
+          ... on Post @skip(if: $skip) {
+            title
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type NodeQueryVariables = Exact<{
+        include: boolean;
+        skip: boolean;
+      }>;
+
+
+      export type NodeQuery = { node:
+          | { id: string } & { name?: string | null }
+          | { id: string } & { title?: string | null }
+         | null };
+      "
+    `);
+  });
+
+  it('#11110 - keeps the fields of a conditional inline fragment typed with the interface itself', async () => {
+    const document = parse(/* GraphQL */ `
+      query Node($include: Boolean!) {
+        node {
+          ... on Node @include(if: $include) {
+            id
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type NodeQueryVariables = Exact<{
+        include: boolean;
+      }>;
+
+
+      export type NodeQuery = { node:
+          | { id?: string }
+          | { id?: string }
+          | Record<PropertyKey, never>
+         | null };
+      "
+    `);
+  });
+
+  it('#11110 - keeps the fields of a conditional interface fragment on a union field', async () => {
+    const document = parse(/* GraphQL */ `
+      query Search($include: Boolean!) {
+        search {
+          ... on Node @include(if: $include) {
+            id
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type SearchQueryVariables = Exact<{
+        include: boolean;
+      }>;
+
+
+      export type SearchQuery = { search:
+          | { id?: string }
+          | { id?: string }
+          | Record<PropertyKey, never>
+         | null };
+      "
+    `);
+  });
+
+  it('#11110 - keeps the fields of a conditional interface fragment on an object field', async () => {
+    const document = parse(/* GraphQL */ `
+      query Me($include: Boolean!) {
+        me {
+          name
+          ... on Node @include(if: $include) {
+            id
+          }
+        }
+      }
+    `);
+
+    const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
+
+    expect(content).toMatchInlineSnapshot(`
+      "export type MeQueryVariables = Exact<{
+        include: boolean;
+      }>;
+
+
+      export type MeQuery = { me: { name: string | null } & { id?: string } | null };
+      "
+    `);
+  });
+});
