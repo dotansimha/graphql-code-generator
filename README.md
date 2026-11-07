@@ -1,5 +1,3 @@
-TODO dummy
-
 <div>
     <img src="./logo.svg" width="150px" alt="GraphQL Code Generator logo"/>
     <a href="https://the-guild.dev">
