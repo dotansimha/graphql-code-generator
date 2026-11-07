@@ -1,9 +1,11 @@
 import {
+  DefinitionNode,
   getNamedType,
   GraphQLNamedType,
   GraphQLSchema,
   isIntrospectionType,
   isObjectType,
+  Kind,
   parse,
   printIntrospectionSchema,
   TypeInfo,
@@ -21,6 +23,48 @@ export * from './introspection-visitor.js';
 export * from './typescript-variables-to-object.js';
 export * from './visitor.js';
 
+function sortByInheritance(definitions: ReadonlyArray<DefinitionNode>): DefinitionNode[] {
+  const defMap = new Map<string, DefinitionNode>();
+  for (const def of definitions) {
+    if ('name' in def && def.name?.value) {
+      defMap.set(def.name.value, def);
+    }
+  }
+
+  const visited = new Set<DefinitionNode>();
+  const visiting = new Set<DefinitionNode>();
+  const sorted: DefinitionNode[] = [];
+
+  function visitNode(def: DefinitionNode): void {
+    if (visited.has(def)) return;
+    if (visiting.has(def)) return;
+
+    visiting.add(def);
+
+    if (
+      (def.kind === Kind.OBJECT_TYPE_DEFINITION || def.kind === Kind.INTERFACE_TYPE_DEFINITION) &&
+      def.interfaces
+    ) {
+      for (const iface of def.interfaces) {
+        const dep = defMap.get(iface.name.value);
+        if (dep) {
+          visitNode(dep);
+        }
+      }
+    }
+
+    visiting.delete(def);
+    visited.add(def);
+    sorted.push(def);
+  }
+
+  for (const def of definitions) {
+    visitNode(def);
+  }
+
+  return sorted;
+}
+
 export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginOutput> = (
   schema: GraphQLSchema,
   documents: Types.DocumentFile[],
@@ -30,7 +74,12 @@ export const plugin: PluginFunction<TypeScriptPluginConfig, Types.ComplexPluginO
 
   const visitor = new TsVisitor(_schema, config);
 
-  const visitorResult = oldVisit(ast, { leave: visitor });
+  const sortedAst = {
+    ...ast,
+    definitions: sortByInheritance(ast.definitions),
+  };
+
+  const visitorResult = oldVisit(sortedAst, { leave: visitor });
   const introspectionDefinitions = includeIntrospectionTypesDefinitions(_schema, documents, config);
   const scalars = visitor.scalarsDefinition;
   const directiveArgumentAndInputFieldMappings =

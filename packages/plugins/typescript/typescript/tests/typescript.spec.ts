@@ -1643,6 +1643,32 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('#9232 - Should emit base class/interface before derived class when declarationKind: class is used', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type AClass implements BClass {
+          id: ID
+        }
+
+        interface BClass {
+          id: ID
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [],
+        {
+          declarationKind: 'class',
+        },
+        { outputFile: '' },
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content.indexOf('export class BClass')).toBeLessThan(
+        result.content.indexOf('export class AClass'),
+      );
+      validateTs(result);
+    });
+
     it('Should use interface for type when declarationKind for types is set', async () => {
       const schema = buildSchema(/* GraphQL */ `
         input MyInput {
