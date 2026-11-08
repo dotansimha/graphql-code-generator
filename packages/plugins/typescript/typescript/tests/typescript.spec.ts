@@ -1086,6 +1086,27 @@ describe('TypeScript', () => {
       validateTs(result);
     });
 
+    it('#9590 - resolver argument @deprecated directive support', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type Query {
+          user(id: ID!, oldUserId: ID @deprecated(reason: "this field should be deprecated")): User
+        }
+
+        type User {
+          id: ID!
+        }
+      `);
+
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`
+      export type QueryUserArgs = {
+        id: Scalars['ID']['input'];
+        /** @deprecated this field should be deprecated */
+        oldUserId?: InputMaybe<Scalars['ID']['input']>;
+      };`);
+      validateTs(result);
+    });
+
     it('#1462 - Union of scalars and argument of directive', async () => {
       const schema = buildSchema(/* GraphQL */ `
         union Any = String | Int | Float | ID
