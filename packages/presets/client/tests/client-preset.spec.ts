@@ -892,7 +892,7 @@ export * from "./gql.js";`);
             preset,
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
 
       expect(result).toHaveLength(4);
@@ -933,6 +933,58 @@ export * from "./gql.js";`);
       // graphql.ts
       const graphqlFile = result.find(file => file.filename === 'out1/gql.ts');
       expect(graphqlFile).toBeDefined();
+    });
+
+    it('does not add imports to graphql.ts with the default documentMode', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+            }
+          `,
+        ],
+        generates: {
+          'out1/': {
+            preset,
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile?.content).toMatchInlineSnapshot(`
+        "/* eslint-disable */
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };"
+      `);
+    });
+
+    it('imports DocumentTypeDecoration in graphql.ts when documentMode is "string"', async () => {
+      const { result } = await executeCodegen({
+        schema: [
+          /* GraphQL */ `
+            type Query {
+              a: String
+            }
+          `,
+        ],
+        generates: {
+          'out1/': {
+            preset,
+            config: {
+              documentMode: 'string',
+            },
+          },
+        },
+      });
+
+      const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
+      expect(graphqlFile?.content).toContain(
+        'implements DocumentTypeDecoration<TResult, TVariables>',
+      );
+      expect(graphqlFile?.content).toContain(
+        `import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';`,
+      );
     });
   });
 
@@ -989,70 +1041,6 @@ export * from "./gql.mjs";`);
 
       expect(result).toHaveLength(4);
       const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      expect(indexFile?.content).toEqual(`/* eslint-disable */
-export * from "./fragment-masking";
-export * from "./gql";`);
-
-      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile?.content).toContain(`import * as types from './graphql';`);
-    });
-
-    it('uses importExtension over emitLegacyCommonJSImports when both are set', async () => {
-      const { result } = await executeCodegen({
-        schema: [
-          /* GraphQL */ `
-            type Query {
-              a: String
-              b: String
-              c: String
-            }
-          `,
-        ],
-        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
-        generates: {
-          'out1/': {
-            preset,
-          },
-        },
-        importExtension: '.mjs',
-        emitLegacyCommonJSImports: false,
-      });
-
-      expect(result).toHaveLength(4);
-      const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      // Should use .mjs from importExtension, not .js from emitLegacyCommonJSImports: false
-      expect(indexFile?.content).toEqual(`/* eslint-disable */
-export * from "./fragment-masking.mjs";
-export * from "./gql.mjs";`);
-
-      const gqlFile = result.find(file => file.filename === 'out1/gql.ts');
-      expect(gqlFile?.content).toContain(`import * as types from './graphql.mjs';`);
-    });
-
-    it('uses importExtension set to empty string even when emitLegacyCommonJSImports is false', async () => {
-      const { result } = await executeCodegen({
-        schema: [
-          /* GraphQL */ `
-            type Query {
-              a: String
-              b: String
-              c: String
-            }
-          `,
-        ],
-        documents: path.join(__dirname, 'fixtures/simple-uppercase-operation-name.ts'),
-        generates: {
-          'out1/': {
-            preset,
-          },
-        },
-        importExtension: '',
-        emitLegacyCommonJSImports: false,
-      });
-
-      expect(result).toHaveLength(4);
-      const indexFile = result.find(file => file.filename === 'out1/index.ts');
-      // Should use empty string from importExtension, not .js from emitLegacyCommonJSImports: false
       expect(indexFile?.content).toEqual(`/* eslint-disable */
 export * from "./fragment-masking";
 export * from "./gql";`);
@@ -1131,7 +1119,7 @@ export * from "./gql.cjs";`);
           },
         },
       },
-      emitLegacyCommonJSImports: false,
+      importExtension: '.js',
     });
     const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
     expect(graphqlFile?.content).toMatchInlineSnapshot(`
@@ -1178,7 +1166,7 @@ export * from "./gql.cjs";`);
             },
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
 
       expect(result).toHaveLength(5);
@@ -1242,7 +1230,7 @@ export * from "./gql.cjs";`);
             },
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
 
       expect(result).toHaveLength(5);
@@ -1306,7 +1294,7 @@ export * from "./gql.cjs";`);
             },
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
 
       expect(result).toHaveLength(5);
@@ -1388,7 +1376,7 @@ export * from "./gql.cjs";`);
             },
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
       const graphqlFile = result.find(file => file.filename === 'out1/graphql.ts');
       expect(graphqlFile?.content).toMatchInlineSnapshot(`
@@ -1436,7 +1424,7 @@ export * from "./gql.cjs";`);
             },
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
 
       expect(result).toHaveLength(5);
@@ -1504,7 +1492,7 @@ export * from "./gql.cjs";`);
             },
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
 
       expect(result).toHaveLength(5);
@@ -1573,7 +1561,7 @@ export * from "./gql.cjs";`);
             },
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
 
       expect(result).toHaveLength(5);
@@ -1642,7 +1630,7 @@ export * from "./gql.cjs";`);
             },
           },
         },
-        emitLegacyCommonJSImports: false,
+        importExtension: '.js',
       });
 
       expect(result).toHaveLength(5);

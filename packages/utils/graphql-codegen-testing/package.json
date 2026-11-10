@@ -1,6 +1,6 @@
 {
   "name": "@graphql-codegen/testing",
-  "version": "5.0.6",
+  "version": "6.0.0",
   "type": "module",
   "description": "GraphQL Codegen Testing Utils",
   "repository": "git@github.com:dotansimha/graphql-code-generator.git",
@@ -11,7 +11,7 @@
   "author": "Dotan Simha <dotansimha@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=16"
+    "node": ">=22.18.0"
   },
   "main": "dist/cjs/index.js",
   "typings": "dist/typings/index.d.ts",

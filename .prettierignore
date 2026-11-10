@@ -1,4 +1,5 @@
 packages/graphql-codegen-cli/tests/test-documents/invalid-schema.graphql
+packages/presets/client/tests/fixtures/fragment-arguments.graphql
 packages/presets/gql-tag-operations/tests/fixtures/crlf-operation.ts
 dist/
 build/

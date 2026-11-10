@@ -1,5 +1,5 @@
 import '@graphql-codegen/testing';
-import { buildSchema, parse, versionInfo } from 'graphql';
+import { buildSchema, parse } from 'graphql';
 import { codegen } from '@graphql-codegen/core';
 import { Types } from '@graphql-codegen/plugin-helpers';
 import { plugin, validate } from '../src/index.js';
@@ -23,10 +23,20 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(schema, [], null, fileName, plugins);
+        await validate(
+          schema,
+          [],
+          {},
+          {
+            outputFile: fileName,
+            allPlugins: plugins,
+            pluginContext: {},
+          },
+        );
 
         throw new Error(SHOULD_THROW_ERROR);
       } catch (e: any) {
+        // `e` is `any` to read `e.message` directly; typing it needs an `instanceof Error` guard before each assertion.
         expect(e.message).not.toBe(SHOULD_THROW_ERROR);
         expect(e.message).toBe(
           'Plugin "schema-ast" requires extension to be ".graphql" or ".gql" or ".graphqls"!',
@@ -46,7 +56,16 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(schema, [], null, fileName, plugins);
+        await validate(
+          schema,
+          [],
+          {},
+          {
+            outputFile: fileName,
+            allPlugins: plugins,
+            pluginContext: {},
+          },
+        );
       } catch {
         expect(true).toBeFalsy();
       }
@@ -61,7 +80,16 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(schema, [], null, fileName, plugins);
+        await validate(
+          schema,
+          [],
+          {},
+          {
+            outputFile: fileName,
+            allPlugins: plugins,
+            pluginContext: {},
+          },
+        );
       } catch {
         expect(true).toBeFalsy();
       }
@@ -76,7 +104,16 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(schema, [], null, fileName, plugins);
+        await validate(
+          schema,
+          [],
+          {},
+          {
+            outputFile: fileName,
+            allPlugins: plugins,
+            pluginContext: {},
+          },
+        );
       } catch {
         expect(true).toBeFalsy();
       }
@@ -91,7 +128,16 @@ describe('Schema AST', () => {
       ];
 
       try {
-        await validate(schema, [], null, fileName, plugins);
+        await validate(
+          schema,
+          [],
+          {},
+          {
+            outputFile: fileName,
+            allPlugins: plugins,
+            pluginContext: {},
+          },
+        );
       } catch {
         expect(true).toBeFalsy();
       }
@@ -141,30 +187,6 @@ describe('Schema AST', () => {
         }
       `);
     });
-
-    if (versionInfo.major < 16) {
-      it('Should print schema with as # when commentDescriptions=true', async () => {
-        const testSchema = buildSchema(/* GraphQL */ `
-          type Query {
-            """
-            test
-            """
-            fieldTest: String
-          }
-        `);
-        const content = await plugin(testSchema, [], {
-          commentDescriptions: true,
-          includeDirectives: false,
-        });
-
-        expect(content).toBeSimilarStringTo(`
-        type Query {
-          #  test
-          fieldTest: String
-        }
-      `);
-      });
-    }
 
     it('Should print schema with directives when "includeDirectives" is set', async () => {
       const content = await plugin(schema, [], { includeDirectives: true });
