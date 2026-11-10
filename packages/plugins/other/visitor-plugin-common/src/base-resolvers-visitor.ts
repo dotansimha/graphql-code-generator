@@ -970,9 +970,17 @@ export class BaseResolversVisitor<
         const isExternalFile = !!this.config.enumValues[typeName].sourceFile;
         prev[typeName] = isExternalFile
           ? this.config.enumValues[typeName].typeIdentifierConverted
-          : // `sourceIdentifier` is `null` when `enumValues` maps this enum with an object, and
-            // `String()` prints it as the `null` type, e.g. `MyEnum: null`
-            String(this.config.enumValues[typeName].sourceIdentifier);
+          : // `sourceIdentifier` is `null` when `enumValues` maps this enum with an object. The
+            // typescript plugin still generates the enum then, so use the name it gives it.
+            (this.config.enumValues[typeName].sourceIdentifier ??
+            this.convertName(
+              typeName,
+              {
+                useTypesPrefix: this.config.enumPrefix,
+                useTypesSuffix: this.config.enumSuffix,
+              },
+              true,
+            ));
       } else if (defaultMapperType && !hasPlaceholder(defaultMapperType)) {
         prev[typeName] = applyWrapper(defaultMapperType);
       } else if (isScalar) {
