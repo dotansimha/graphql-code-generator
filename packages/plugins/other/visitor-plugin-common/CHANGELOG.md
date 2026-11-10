@@ -1,5 +1,116 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 8.0.0
+
+### Major Changes
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: GraphQL 14 and 15 are no
+  longer supported. The `graphql` peer dependency is now `^16.0.0 || ^17.0.0`, so upgrade `graphql`
+  to version 16 or 17 before updating to this version.
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Node.js versions below
+  22.18.0 are no longer supported. Upgrade to Node.js 22.18.0 or later before updating to this
+  version.
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: Remove the deprecated
+  `emitLegacyCommonJSImports` config option and the `--emit-legacy-common-js-imports` CLI flag
+
+  Use `importExtension` (or `--import-extension`) to set the extension appended to relative imports.
+  When `importExtension` is not set, no extension is appended.
+
+  `@graphql-codegen/plugin-helpers` no longer exports `normalizeImportExtension`. Use
+  `importExtension ?? ''` instead.
+
+  Migration:
+
+  ```diff
+   const config: CodegenConfig = {
+  -  emitLegacyCommonJSImports: false,
+  +  importExtension: '.js',
+   };
+  ```
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - BREAKING CHANGE: `@graphql-tools/*`
+  dependencies are updated to their latest majors, which require Node.js 22.18.0 or later and
+  GraphQL 16 or 17. If you import `@graphql-tools/*` packages in your own code, update them to the
+  same majors to avoid duplicate installs. `@graphql-tools/code-file-loader@9` now extracts
+  `#graphql`-marked template literals by default, so code files that contain such templates can
+  produce newly found documents; check your generated output after upgrading. To keep the previous
+  behavior, set `pluckConfig: { gqlHashComment: '' }`.
+
+### Minor Changes
+
+- [#11103](https://github.com/dotansimha/graphql-code-generator/pull/11103)
+  [`409ffbf`](https://github.com/dotansimha/graphql-code-generator/commit/409ffbfda5c56d6f46f0e0a4045c547714df2264)
+  Thanks [@jerelmiller](https://github.com/jerelmiller)! - Add support for graphql v17 fragment
+  arguments (`experimentalFragmentArguments`).
+
+  To use fragment arguments, set the parser option in the root `config`:
+
+  ```ts
+  const config: CodegenConfig = {
+    config: { experimentalFragmentArguments: true }
+    // ...
+  }
+  ```
+
+### Patch Changes
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/optimize@^3.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/optimize/v/3.0.0)
+    (from `^2.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/relay-operation-optimizer@^8.0.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/relay-operation-optimizer/v/8.0.2)
+    (from `^7.1.12`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^13.0.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/13.0.2)
+    (from `^12.0.3`, in `dependencies`)
+  - Updated dependency
+    [`graphql@^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/16.0.0) (from
+    `^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0`,
+    in `peerDependencies`)
+
+- [#11075](https://github.com/dotansimha/graphql-code-generator/pull/11075)
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)
+  Thanks [@eddeee888](https://github.com/eddeee888)! - dependencies updates:
+  - Updated dependency
+    [`@graphql-tools/optimize@^3.0.0` ↗︎](https://www.npmjs.com/package/@graphql-tools/optimize/v/3.0.0)
+    (from `^2.0.0`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/relay-operation-optimizer@^8.0.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/relay-operation-optimizer/v/8.0.2)
+    (from `^7.1.12`, in `dependencies`)
+  - Updated dependency
+    [`@graphql-tools/utils@^13.0.2` ↗︎](https://www.npmjs.com/package/@graphql-tools/utils/v/13.0.2)
+    (from `^12.0.3`, in `dependencies`)
+  - Updated dependency
+    [`graphql@^16.0.0 || ^17.0.0` ↗︎](https://www.npmjs.com/package/graphql/v/16.0.0) (from
+    `^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0`,
+    in `peerDependencies`)
+- Updated dependencies
+  [[`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d),
+  [`fa49a37`](https://github.com/dotansimha/graphql-code-generator/commit/fa49a3725bf269abf07616b5df1336cf86a4838d)]:
+  - @graphql-codegen/plugin-helpers@8.0.0
+
 ## 7.5.0
 
 ### Minor Changes

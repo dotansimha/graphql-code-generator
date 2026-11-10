@@ -12,17 +12,14 @@ import { createWatcher } from './utils/watcher.js';
 
 const hash = (content: string): string => createHash('sha1').update(content).digest('base64');
 
+/**
+ * Generates code from the config. Resolves with the generated files.
+ * In watch mode, the promise doesn't resolve until the watcher exits, and it resolves with no value.
+ */
 export async function generate(
   input: CodegenContext | (Types.Config & { cwd?: string }),
   saveToFile = true,
-): Promise<
-  | Types.FileOutput[]
-  /**
-   * When this function runs in watch mode, it'd return an empty promise that doesn't resolve until the watcher exits
-   * FIXME: this effectively makes the result `any`, which loses type-hints
-   */
-  | any
-> {
+): Promise<Types.FileOutput[] | void> {
   const context = ensureContext(input);
   const config = context.getConfig();
   await context.profiler.run(

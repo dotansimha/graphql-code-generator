@@ -5,6 +5,7 @@
     "from-0-13",
     "from-4-0",
     "operations-and-client-preset-from-5-0",
+    "from-7-0",
     "apollo-tooling"
   ],
   "title": "Migration Guides"
