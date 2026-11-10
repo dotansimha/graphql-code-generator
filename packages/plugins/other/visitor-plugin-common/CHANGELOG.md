@@ -1,5 +1,14 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 8.0.1
+
+### Patch Changes
+
+- [#11099](https://github.com/dotansimha/graphql-code-generator/pull/11099)
+  [`6138e3f`](https://github.com/dotansimha/graphql-code-generator/commit/6138e3f18b9f8d25032e96ea943823c2ee6dc2c5)
+  Thanks [@ewerton336](https://github.com/ewerton336)! - Fix `typesPrefix` being applied to enum
+  keys when generating enums as `const` (`enumsAsConst: true` or `enumType: 'const'`)
+
 ## 8.0.0
 
 ### Major Changes
