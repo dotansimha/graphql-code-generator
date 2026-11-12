@@ -1,5 +1,14 @@
 # @graphql-codegen/visitor-plugin-common
 
+## 8.0.2
+
+### Patch Changes
+
+- [#11116](https://github.com/dotansimha/graphql-code-generator/pull/11116)
+  [`68c5f20`](https://github.com/dotansimha/graphql-code-generator/commit/68c5f2027893408377d6cd7509b3a5f6431a9990)
+  Thanks [@mohsinaliwork686-rgb](https://github.com/mohsinaliwork686-rgb)! - Use the generated enum,
+  instead of `null`, in `ResolversTypes` for an enum that `enumValues` maps with an object
+
 ## 8.0.1
 
 ### Patch Changes
