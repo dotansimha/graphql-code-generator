@@ -45,6 +45,7 @@ export interface RawConfig {
    *
    * If scalars are found in the schema that are not defined in `scalars`
    * an error will be thrown during codegen.
+   * An error will also be thrown if `scalars` maps a scalar that does not exist in the schema.
    * @default false
    *
    * @exampleMarkdown

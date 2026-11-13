@@ -328,6 +328,18 @@ export function buildScalars(
   if (schema) {
     const typeMap = schema.getTypeMap();
 
+    // `defaultScalarType === null` means `strictScalars` is enabled
+    if (defaultScalarType === null && scalarsMapping && typeof scalarsMapping === 'object') {
+      const unknownScalarNames = Object.keys(scalarsMapping).filter(
+        name => !isScalarType(typeMap[name]) && !defaultScalarsMapping[name],
+      );
+      if (unknownScalarNames.length > 0) {
+        throw new Error(
+          `The "scalars" configuration field maps scalar types that do not exist in the schema: ${unknownScalarNames.join(', ')}. Please remove them when using "strictScalars"!`,
+        );
+      }
+    }
+
     Object.keys(typeMap)
       .map(typeName => typeMap[typeName])
       .filter(type => isScalarType(type))
