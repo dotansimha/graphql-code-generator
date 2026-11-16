@@ -250,19 +250,15 @@ export async function codegen(options: Types.GenerateOptions): Promise<string> {
 }
 
 function resolveCompareValue(a: string) {
-  if (
-    a.startsWith('/*') ||
-    a.startsWith('//') ||
-    a.startsWith(' *') ||
-    a.startsWith(' */') ||
-    a.startsWith('*/')
-  ) {
+  const stripped = a.replace(/^(\s*(\/\*[\s\S]*?\*\/|\/\/[^\n\r]*))+/, '').trim();
+
+  if (stripped.length === 0 || a.startsWith(' *') || a.startsWith(' */') || a.startsWith('*/')) {
     return 0;
   }
-  if (a.startsWith('package')) {
+  if (stripped.startsWith('package')) {
     return 1;
   }
-  if (a.startsWith('import')) {
+  if (stripped.startsWith('import')) {
     return 2;
   }
   return 3;
