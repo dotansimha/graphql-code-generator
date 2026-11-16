@@ -411,8 +411,6 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
     ]);
     expect(sharedTypeFileResult).toMatchInlineSnapshot(`
       "import { Scalar1 } from '@org/scalars';
-
-
       export type UserInput = {
         id: string | number;
         scalar1?: Scalar1 | null | undefined;
@@ -486,11 +484,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
         { outputFile: '' },
       ),
     ]);
-    expect(sharedTypeFileResult).toMatchInlineSnapshot(`
-      "
-
-      "
-    `);
+    expect(sharedTypeFileResult).toMatchInlineSnapshot(`""`);
     validateTs(sharedTypeFileResult, undefined, undefined, undefined, undefined, true);
 
     const operationFileResult = mergeOutputs([
@@ -558,11 +552,7 @@ describe('TypeScript Operations Plugin - Import Types with external custom Scala
         { outputFile: '' },
       ),
     ]);
-    expect(sharedTypeFileResult).toMatchInlineSnapshot(`
-      "
-
-      "
-    `);
+    expect(sharedTypeFileResult).toMatchInlineSnapshot(`""`);
     validateTs(sharedTypeFileResult, undefined, undefined, undefined, undefined, true);
 
     const operationFileResult = mergeOutputs([

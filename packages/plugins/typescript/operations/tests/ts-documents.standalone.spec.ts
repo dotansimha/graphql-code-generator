@@ -657,9 +657,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     ]);
 
     expect(result).toMatchInlineSnapshot(`
-      "
-
-      export type ResponseErrorType =
+      "export type ResponseErrorType =
         | 'NOT_FOUND'
         | 'INPUT_VALIDATION_ERROR'
         | 'FORBIDDEN_ERROR'
@@ -755,11 +753,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
       await plugin(schema, [{ document }], { generateOperationTypes: false }, { outputFile: '' }),
     ]);
 
-    expect(result).toMatchInlineSnapshot(`
-      "
-
-      "
-    `);
+    expect(result).toMatchInlineSnapshot(`""`);
 
     validateTs(result, undefined, undefined, undefined, undefined, true);
   });
@@ -864,8 +858,7 @@ describe('TypeScript Operations Plugin - Standalone', () => {
     const result = mergeOutputs([await plugin(schema, [{ document }], {}, { outputFile: '' })]);
 
     expect(result).toMatchInlineSnapshot(`
-      "
-      /** Internal type. DO NOT USE DIRECTLY. */
+      "/** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type UserPartFragment = { id: string, name: string };
       "

@@ -67,7 +67,6 @@ describe('TypeScript Operations Plugin - external fragment imports', () => {
     expect(categoryResult).toMatchInlineSnapshot(`
       "import type * as Types from './types';
 
-
       /** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type CategoryFragment = { id: string, kind: Types.CategoryKind };
@@ -97,8 +96,7 @@ describe('TypeScript Operations Plugin - external fragment imports', () => {
     ]);
 
     expect(bookResult).toMatchInlineSnapshot(`
-      "
-      /** Internal type. DO NOT USE DIRECTLY. */
+      "/** Internal type. DO NOT USE DIRECTLY. */
       export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
       export type BookFragment = { id: string, category: CategoryFragment };
       "
