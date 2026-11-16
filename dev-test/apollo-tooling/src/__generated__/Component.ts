@@ -1,12 +1,12 @@
-/** Internal type. DO NOT USE DIRECTLY. */
-type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-/** Internal type. DO NOT USE DIRECTLY. */
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /* tslint:disable */
 /* eslint-disable */
 // @generated
 // This file was automatically generated and should not be edited.
 
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export enum UserManagerRoleType {
   ROLE_TYPE_1 = 'ROLE_TYPE_1',
   ROLE_TYPE_2 = 'ROLE_TYPE_2',
