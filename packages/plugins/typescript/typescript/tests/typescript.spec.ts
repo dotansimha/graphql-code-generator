@@ -1,4 +1,11 @@
-import { buildSchema, GraphQLEnumType, GraphQLObjectType, GraphQLSchema, parse } from 'graphql';
+import {
+  buildSchema,
+  GraphQLEnumType,
+  GraphQLObjectType,
+  GraphQLScalarType,
+  GraphQLSchema,
+  parse,
+} from 'graphql';
 import { mergeOutputs, Types } from '@graphql-codegen/plugin-helpers';
 import { validateTs } from '@graphql-codegen/testing';
 import { plugin } from '../src/index.js';
@@ -10,6 +17,32 @@ describe('TypeScript', () => {
     `);
     const result = await plugin(schema, [], {}, { outputFile: '' });
     expect(result.prepend).toBeSimilarStringTo('export type Maybe<T> =');
+  });
+
+  describe('codegenScalarType extension', () => {
+    const schemaWithScalarExtension = (codegenScalarType: unknown) =>
+      new GraphQLSchema({
+        query: new GraphQLObjectType({
+          name: 'Query',
+          fields: {
+            a: {
+              type: new GraphQLScalarType({ name: 'MyScalar', extensions: { codegenScalarType } }),
+            },
+          },
+        }),
+      });
+
+    it('maps a string codegenScalarType to both input and output', async () => {
+      const schema = schemaWithScalarExtension('MyType');
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`MyScalar: { input: MyType; output: MyType; }`);
+    });
+
+    it('maps an object codegenScalarType to distinct input and output', async () => {
+      const schema = schemaWithScalarExtension({ input: 'MyInput', output: 'MyOutput' });
+      const result = await plugin(schema, [], {}, { outputFile: '' });
+      expect(result.content).toBeSimilarStringTo(`MyScalar: { input: MyInput; output: MyOutput; }`);
+    });
   });
 
   describe('description to comment', () => {
