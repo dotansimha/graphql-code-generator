@@ -1,0 +1,28 @@
+diff --git a/dist/typescript-json-schema.js b/dist/typescript-json-schema.js
+index e59b11eb0062d855ab7acff06332a98563af36fc..520689006291370f5a0c882e0b3d55e23ac7b9c0 100644
+--- a/dist/typescript-json-schema.js
++++ b/dist/typescript-json-schema.js
+@@ -825,7 +825,8 @@ class JsonSchemaGenerator {
+                     }
+                     const indexSymbol = indexSignature.parameters[0].symbol;
+                     const indexType = this.tc.getTypeOfSymbolAtLocation(indexSymbol, node);
+-                    const isIndexedObject = indexType.flags === ts.TypeFlags.String || indexType.flags === ts.TypeFlags.Number;
++                    const isIndexedObject = indexType.flags === ts.TypeFlags.String || indexType.flags === ts.TypeFlags.Number ||
++                        (!!(indexType.flags & ts.TypeFlags.Union) && indexType.types.every((t) => t.flags & (ts.TypeFlags.StringLike | ts.TypeFlags.ESSymbolLike)));
+                     if (indexType.flags !== ts.TypeFlags.Number && !isIndexedObject) {
+                         throw new Error("Not supported: IndexSignatureDeclaration with index symbol other than a number or a string");
+                     }
+diff --git a/typescript-json-schema.ts b/typescript-json-schema.ts
+index c39f74680b38ac1e01248c80c468d9cc02b0e310..ea54188998b7a3ca3191d42f9cb1331d8f6fd56f 100644
+--- a/typescript-json-schema.ts
++++ b/typescript-json-schema.ts
+@@ -1154,7 +1154,8 @@ export class JsonSchemaGenerator {
+                     }
+                     const indexSymbol: ts.Symbol = (<any>indexSignature.parameters[0]).symbol;
+                     const indexType = this.tc.getTypeOfSymbolAtLocation(indexSymbol, node);
+-                    const isIndexedObject = indexType.flags === ts.TypeFlags.String || indexType.flags === ts.TypeFlags.Number;
++                    const isIndexedObject = indexType.flags === ts.TypeFlags.String || indexType.flags === ts.TypeFlags.Number ||
++                        (!!(indexType.flags & ts.TypeFlags.Union) && (<ts.UnionType>indexType).types.every((t) => t.flags & (ts.TypeFlags.StringLike | ts.TypeFlags.ESSymbolLike)));
+                     if (indexType.flags !== ts.TypeFlags.Number && !isIndexedObject) {
+                         throw new Error(
+                             "Not supported: IndexSignatureDeclaration with index symbol other than a number or a string"
