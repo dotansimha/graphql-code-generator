@@ -22,7 +22,11 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
     );
 
     expect(result.content).toMatchInlineSnapshot(`
-      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { me: { id: string } | null };
@@ -50,7 +54,11 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
-      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { me: { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } } | null };
@@ -81,7 +89,11 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
-      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { me: { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } } | null };
@@ -114,7 +126,11 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
-      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { me: (
@@ -153,7 +169,11 @@ describe('TypeScript Operations Plugin - apolloUnmask', () => {
       { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
-      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { me: (
