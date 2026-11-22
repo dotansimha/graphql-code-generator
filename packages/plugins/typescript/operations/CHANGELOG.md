@@ -1,5 +1,14 @@
 # @graphql-codegen/typescript-operations
 
+## 7.0.2
+
+### Patch Changes
+
+- [#11120](https://github.com/dotansimha/graphql-code-generator/pull/11120)
+  [`32225d7`](https://github.com/dotansimha/graphql-code-generator/commit/32225d723d490202390207db3d9f0bc107d6040d)
+  Thanks [@mohsinaliwork686-rgb](https://github.com/mohsinaliwork686-rgb)! - Generate the `Exact`
+  and `Incremental` utility types after the imports instead of above them
+
 ## 7.0.1
 
 ### Patch Changes
