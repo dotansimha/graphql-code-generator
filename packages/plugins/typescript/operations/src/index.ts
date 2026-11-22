@@ -139,17 +139,25 @@ export const plugin: PluginFunction<
     }`;
   }
 
+  const imports = [
+    ...visitor.getImports(),
+    ...visitor.getExternalSchemaTypeImports(),
+    ...visitor.getEnumsImports(),
+    ...visitor.getScalarsImports(),
+  ];
+  const others = [
+    ...visitor.getGlobalDeclarations(visitor.config.noExport),
+    visitor.getExactUtilityType(),
+    visitor.getIncrementalUtilityType(),
+  ];
+
+  // Only imports go in `prepend`. Core sorts the `prepend` values of all plugins together and puts
+  // any value that starts with a comment first, so the utility types (which start with a JSDoc
+  // comment) would end up above the imports. Starting `content` with them keeps them after all
+  // imports, and outside `declare global`.
   return {
-    prepend: [
-      ...visitor.getImports(),
-      ...visitor.getExternalSchemaTypeImports(),
-      ...visitor.getEnumsImports(),
-      ...visitor.getScalarsImports(),
-      ...visitor.getGlobalDeclarations(visitor.config.noExport),
-      visitor.getExactUtilityType(),
-      visitor.getIncrementalUtilityType(),
-    ],
-    content,
+    prepend: imports,
+    content: [...others, content].filter(Boolean).join('\n'),
   };
 };
 
