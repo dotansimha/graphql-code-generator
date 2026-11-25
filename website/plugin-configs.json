@@ -220,7 +220,7 @@
     {
       "file": "./node_modules/@graphql-codegen/python-operations/typings/config.d.ts",
       "identifier": "PythonOperationsPluginConfig",
-      "name": "python"
+      "name": "python-operations"
     }
   ]
 }

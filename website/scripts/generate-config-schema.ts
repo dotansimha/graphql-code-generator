@@ -3,7 +3,8 @@
  * assembled from Types.Config and every plugin and preset config type listed
  * in plugin-configs.json. Editors use it for autocomplete, and
  * the-guild.dev/graphql/codegen renders each plugin's Config API Reference
- * from it.
+ * from it, including the `exampleMarkdown` usage examples from the config
+ * types' JSDoc.
  *
  *   pnpm --filter website generate-config-schema
  */
@@ -110,10 +111,6 @@ function buildSchema(): TJS.Definition {
   };
 
   const configuredOutput = schema.definitions['Types.ConfiguredOutput'] as TJS.Definition;
-  const configuredPlugin = schema.definitions['Types.ConfiguredPlugin'] as TJS.Definition;
-  configuredPlugin.properties = Object.fromEntries(
-    plugins.map(plugin => [plugin.name, { $ref: `#/definitions/${plugin.identifier}` }]),
-  );
   configuredOutput.properties!.config = { additionalProperties: true };
   configuredOutput.allOf = plugins.map(plugin => ({
     if: { properties: { plugins: { contains: { type: 'string', const: plugin.name } } } },
@@ -125,8 +122,6 @@ function buildSchema(): TJS.Definition {
 }
 
 const schema = buildSchema();
-// Usage examples are documentation, not schema.
-jsonPath.apply(schema, `$..${MARKDOWN_JSDOC_KEY}`, () => undefined);
 // Defaults would be auto-completed as literal values; mention them instead.
 jsonPath.apply(schema, '$..*', value => {
   if (value && typeof value === 'object' && value[DEFAULT_JSDOC_KEY] !== undefined) {
