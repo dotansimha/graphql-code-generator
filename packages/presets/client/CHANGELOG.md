@@ -1,5 +1,23 @@
 # @graphql-codegen/client-preset
 
+## 7.0.1
+
+### Patch Changes
+
+- [#11111](https://github.com/dotansimha/graphql-code-generator/pull/11111)
+  [`46d9d09`](https://github.com/dotansimha/graphql-code-generator/commit/46d9d0953e35747cbbbf48e7a23682c36f00b44c)
+  Thanks [@RClaudiuM](https://github.com/RClaudiuM)! - Fix `@skip`/`@include` handling of
+  `__typename` and of inline fragments on interfaces
+  - `__typename` selected only with `@skip` or `@include` (on the field or on an enclosing inline
+    fragment) is now optional, unless `nonOptionalTypename` is set
+  - Fields of a conditional inline fragment on an interface-typed field, or of a conditional
+    fragment typed with an interface, are kept as optional fields instead of being dropped
+
+- Updated dependencies
+  [[`46d9d09`](https://github.com/dotansimha/graphql-code-generator/commit/46d9d0953e35747cbbbf48e7a23682c36f00b44c)]:
+  - @graphql-codegen/visitor-plugin-common@8.0.3
+  - @graphql-codegen/typescript-operations@7.0.3
+
 ## 7.0.0
 
 ### Major Changes
