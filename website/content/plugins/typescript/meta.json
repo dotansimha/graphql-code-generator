@@ -29,7 +29,8 @@
     "typescript-vue-apollo",
     "typescript-vue-apollo-smart-ops",
     "typescript-vue-urql",
-    "typescript-mock-data"
+    "typescript-mock-data",
+    "typescript-mock-builder"
   ],
   "title": "TypeScript"
 }

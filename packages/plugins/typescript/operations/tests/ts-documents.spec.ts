@@ -41,7 +41,21 @@ describe('TypeScript Operations Plugin', () => {
         { outputFile: '' },
       );
 
-      expect(content).not.toContain('export');
+      // `Incremental` is always exported, see `getIncrementalUtilityType`
+      expect(content).toMatchInlineSnapshot(`
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+        type NotificationsQuery = { notifications: Array<
+            | { text: string, id: string }
+            | { imageUrl: string, id: string, metadata: { created: string } }
+          > };
+        "
+      `);
       await validate(content);
     });
 
@@ -136,7 +150,9 @@ describe('TypeScript Operations Plugin', () => {
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type PostFragment = { id: string, comments: Array<
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type PostFragment = { id: string, comments: Array<
             | { text: string }
             | Record<PropertyKey, never>
           > };
@@ -180,7 +196,11 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type notificationsqueryvariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type notificationsqueryvariables = Exact<{ [key: string]: never; }>;
 
 
         export type notificationsquery = { readonly notifications: ReadonlyArray<
@@ -223,7 +243,11 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toMatchInlineSnapshot(
         `
-        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type NotificationsQueryResult = { notifications: Array<
@@ -235,7 +259,11 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type NotificationsQueryResult = { notifications: Array<
@@ -278,7 +306,11 @@ describe('TypeScript Operations Plugin', () => {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type notificationsqueryvariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type notificationsqueryvariables = Exact<{ [key: string]: never; }>;
 
 
         export type notificationsquery = { notifications: Array<
@@ -319,7 +351,11 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toMatchInlineSnapshot(
         `
-        "export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type inotificationsqueryvariables = Exact<{ [key: string]: never; }>;
 
 
         export type inotificationsquery = { notifications: Array<
@@ -462,7 +498,11 @@ describe('TypeScript Operations Plugin', () => {
         )
       ).content;
       expect(withUsage).toMatchInlineSnapshot(`
-        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type NotificationsQuery = { notifications: Array<
@@ -596,7 +636,11 @@ describe('TypeScript Operations Plugin', () => {
       )
     ).content;
     expect(withUsage).toMatchInlineSnapshot(`
-      "export type NotificationsVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type NotificationsVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Notifications = { notifications: Array<
@@ -640,7 +684,11 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toMatchInlineSnapshot(
         `
-        "export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Q1Query = { test: { foo: string | null } | null };
@@ -680,7 +728,11 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toMatchInlineSnapshot(
         `
-        "export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Q1Query = { test: { __typename: 'Test', foo: string | null } | null };
@@ -721,7 +773,11 @@ describe('TypeScript Operations Plugin', () => {
 
       expect(content).toMatchInlineSnapshot(
         `
-        "export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Q1QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Q1Query = { __typename: 'Query', test: { __typename: 'Test', foo: string | null } | null };
@@ -847,7 +903,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "type Node_A_Fragment = { __typename: 'A', id: string };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        type Node_A_Fragment = { __typename: 'A', id: string };
 
         type Node_B_Fragment = { __typename: 'B', id: string };
 
@@ -883,7 +943,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { dummy: string | null, type: 'Query' };
@@ -907,7 +971,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { __typename: 'Query', dummy: string | null };
@@ -930,7 +998,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { __typename: 'Query', dummy: string | null };
@@ -961,7 +1033,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UnionTestQuery = { __typename: 'Query', unionTest:
@@ -1000,7 +1076,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type NotificationsQuery = { __typename: 'Query', notifications: Array<
@@ -1033,7 +1113,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type NotificationsQuery = { notifications: Array<
@@ -1066,7 +1150,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UnionTestQuery = { unionTest:
@@ -1094,14 +1182,22 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { dummy: string | null };
         "
       `);
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { dummy: string | null };
@@ -1129,7 +1225,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { dummy: string | null };
@@ -1141,7 +1241,11 @@ export type Q2Query = { search: Array<
         "
       `);
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { dummy: string | null };
@@ -1153,7 +1257,11 @@ export type Q2Query = { search: Array<
         "
       `);
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { dummy: string | null };
@@ -1165,7 +1273,11 @@ export type Q2Query = { search: Array<
         "
       `);
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { dummy: string | null };
@@ -1569,7 +1681,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type Role =
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Role =
           | 'USER'
           | 'ADMIN';
 
@@ -1609,7 +1725,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserFieldsFragment = { id: string, profile: { age: number | null } | null };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserFieldsFragment = { id: string, profile: { age: number | null } | null };
 
         export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1649,7 +1769,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserFieldsFragment = { id: string };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserFieldsFragment = { id: string };
 
         export type UserProfileFragment = { profile: { age: number | null } | null };
 
@@ -1710,7 +1834,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { b:
@@ -1776,7 +1904,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { myType: { foo: string, bar: string, test: string } };
@@ -1837,7 +1969,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { b:
@@ -1880,7 +2016,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type NotificationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type NotificationsQuery = { notifications: Array<
@@ -1915,7 +2055,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UnionTestQuery = { unionTest:
@@ -1954,7 +2098,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UnionTestQuery = { mixedNotifications: Array<
@@ -1997,7 +2145,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UnionTestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UnionTestQuery = { search: Array<
@@ -2031,7 +2183,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type testQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type testQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type testQuery = { notifications: Array<{ id: string }> };
@@ -2060,7 +2216,9 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "type N_TextNotification_Fragment = { text: string, id: string };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        type N_TextNotification_Fragment = { text: string, id: string };
 
         type N_ImageNotification_Fragment = { id: string };
 
@@ -2122,7 +2280,9 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "type N_A_Fragment = { text: string, id: string };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        type N_A_Fragment = { text: string, id: string };
 
         type N_ZMkK3KeglIQrCEb6gIP8zgzig3OXIb4iuHrFFPW86a4_Fragment = { id: string };
 
@@ -2154,7 +2314,9 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type NFragment = { notifications: Array<{ text: string }> };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type NFragment = { notifications: Array<{ text: string }> };
         "
       `);
       await validate(content);
@@ -2184,7 +2346,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type testQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type testQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type testQuery = { notifications: Array<{ id: string }> };
@@ -2216,7 +2382,9 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "type N_TextNotification_Fragment = { text: string, id: string };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        type N_TextNotification_Fragment = { text: string, id: string };
 
         type N_ImageNotification_Fragment = { id: string };
 
@@ -2250,7 +2418,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type TestQuery = { notifications: Array<
@@ -2293,7 +2465,11 @@ export type Q2Query = { search: Array<
         { outputFile: '' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type CurrentUserQuery = { me: { username: string, id: string, profile: { age: number | null } | null } | null };
@@ -2330,7 +2506,11 @@ export type Q2Query = { search: Array<
 
       expect(content).toMatchInlineSnapshot(
         `
-        "export type MeQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type MeQueryVariables = Exact<{
           repoFullName: string;
         }>;
 
@@ -2368,7 +2548,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type MeQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type MeQueryVariables = Exact<{
           repoFullName: string;
         }>;
 
@@ -2423,7 +2607,11 @@ export type Q2Query = { search: Array<
 
       const o = await validate(content);
       expect(o).toMatchInlineSnapshot(`
-        "export type Information_EntryType =
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Information_EntryType =
           | 'NAME'
           | 'ADDRESS';
 
@@ -2485,7 +2673,11 @@ export type Q2Query = { search: Array<
 
       const o = await validate(content);
       expect(o).toMatchInlineSnapshot(`
-        "export type Information_EntryType =
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Information_EntryType =
           | 'NAME'
           | 'ADDRESS';
 
@@ -2549,7 +2741,11 @@ export type Q2Query = { search: Array<
 
       const o = await validate(content);
       expect(o).toMatchInlineSnapshot(`
-        "export type Information_EntryType =
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Information_EntryType =
           | 'NAME'
           | 'ADDRESS';
 
@@ -2580,7 +2776,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type DummyQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type DummyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type DummyQuery = { dummy: string | null };
@@ -2607,7 +2807,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type DummyQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type DummyQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type DummyQuery = { customName: string | null, customName2: { age: number | null } | null };
@@ -2638,7 +2842,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type Role =
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Role =
           | 'USER'
           | 'ADMIN';
 
@@ -2672,7 +2880,9 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserFieldsFragment = { id: string, username: string, profile: { age: number | null } | null };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserFieldsFragment = { id: string, username: string, profile: { age: number | null } | null };
         "
       `);
       await validate(content);
@@ -2701,7 +2911,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type LoginMutationVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type LoginMutationVariables = Exact<{ [key: string]: never; }>;
 
 
         export type LoginMutation = { login: { id: string, username: string, profile: { age: number | null } | null } | null };
@@ -2725,7 +2939,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type TestQuery = { dummy: string | null };
@@ -2751,7 +2969,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type TestSubscriptionVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type TestSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
         export type TestSubscription = { userCreated: { id: string } | null };
@@ -2785,7 +3007,11 @@ export type Q2Query = { search: Array<
 
       expect(content).toMatchInlineSnapshot(
         `
-        "export type InputType = {
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type InputType = {
           t?: string | null | undefined;
         };
 
@@ -2824,7 +3050,11 @@ export type Q2Query = { search: Array<
 
       expect(content).toMatchInlineSnapshot(
         `
-        "export type TestQueryQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type TestQueryQueryVariables = Exact<{
           test?: unknown;
         }>;
 
@@ -2851,7 +3081,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type TestQueryQuery = { dummy: string | null };
@@ -2897,7 +3131,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type SubmitMessageMutationVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type SubmitMessageMutationVariables = Exact<{
           message: string;
         }>;
 
@@ -2937,7 +3175,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type PostQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type PostQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type PostQuery = { post: { __typename: 'Post' } };
@@ -2978,7 +3220,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type PREFIX_Access =
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type PREFIX_Access =
           | 'Read'
           | 'Write'
           | 'All';
@@ -3022,7 +3268,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UsersQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UsersQueryVariables = Exact<{
           reverse?: boolean | null | undefined;
         }>;
 
@@ -3088,7 +3338,11 @@ export type Q2Query = { search: Array<
         { outputFile: 'graphql.ts' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type FieldQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type FieldQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type FieldQuery = { field:
@@ -3155,7 +3409,11 @@ export type Q2Query = { search: Array<
         { outputFile: 'graphql.ts' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type FieldQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type FieldQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type FieldQuery = { field:
@@ -3210,7 +3468,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type SomethingQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type SomethingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type SomethingQuery = { node:
@@ -3276,7 +3538,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserQuery = { user:
@@ -3359,7 +3625,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserQuery = { user:
@@ -3407,7 +3677,11 @@ export type Q2Query = { search: Array<
       const o = await validate(content);
 
       expect(o).toMatchInlineSnapshot(`
-        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserQueryQuery = { user: { id: string, login: string } };
@@ -3453,7 +3727,11 @@ export type Q2Query = { search: Array<
       const o = await validate(content);
 
       expect(o).toMatchInlineSnapshot(`
-        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserQueryQuery = { user: { id: string, login: string } };
@@ -3566,7 +3844,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(output).toMatchInlineSnapshot(`
-        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserQueryQuery = { user:
@@ -3718,7 +4000,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(output).toMatchInlineSnapshot(`
-        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserQueryQuery = { user:
@@ -3807,7 +4093,11 @@ export type Q2Query = { search: Array<
       const output = await validate(content);
 
       expect(output).toMatchInlineSnapshot(`
-        "export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type SearchPopularQuery = { search: Array<
@@ -3868,7 +4158,11 @@ export type Q2Query = { search: Array<
       const output = await validate(content);
 
       expect(output).toMatchInlineSnapshot(`
-        "export type SearchableFragmentFragment = { id: string | null };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type SearchableFragmentFragment = { id: string | null };
 
         export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3929,7 +4223,11 @@ export type Q2Query = { search: Array<
       const output = await validate(content);
 
       expect(output).toMatchInlineSnapshot(`
-        "export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type SearchPopularQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type SearchPopularQuery = { search: Array<{ id: string | null }> | null };
@@ -3970,7 +4268,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserIdQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserIdQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserIdQueryQuery = { user: { id: string } };
@@ -4095,7 +4397,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(output).toMatchInlineSnapshot(`
-        "export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserQueryQuery = { user:
@@ -4213,7 +4519,11 @@ export type Q2Query = { search: Array<
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type TestQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type TestQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type TestQuery = { test: never | null };
@@ -4260,7 +4570,11 @@ export type Q2Query = { search: Array<
         { outputFile: 'graphql.ts' },
       );
       expect(content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { foo: Record<PropertyKey, never> | null };
@@ -4612,7 +4926,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type TestQueryQuery = { fooBar: Array<
@@ -4680,7 +4998,9 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type ProductFragmentFragment = { id: string, title: string };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type ProductFragmentFragment = { id: string, title: string };
 
         export type PriceFragmentFragment = { id: string, item: Array<{ id: string, title: string } | null> };
         "
@@ -4743,7 +5063,9 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type DashboardVersionFragmentFragment = { tiles:
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type DashboardVersionFragmentFragment = { tiles:
             | { tileId: string, md: { viz: string, columnInfo: string } }
             | { tileId: string, md: { viz: string, columnInfo: string } }
            };
@@ -4806,7 +5128,9 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type DashboardVersionFragmentFragment = { tiles:
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type DashboardVersionFragmentFragment = { tiles:
             | { tileId: string, md: { viz: string, columnInfo: string } }
             | { tileId: string, md: { viz: string, columnInfo: string } }
            };
@@ -4862,7 +5186,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "type CatFragment_Lion_Fragment = { id: string };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        type CatFragment_Lion_Fragment = { id: string };
 
         type CatFragment_Puma_Fragment = { id: string };
 
@@ -4920,7 +5248,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type UserQuery = { user:
@@ -4962,7 +5294,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{
           testArray?: Array<string | null | undefined> | string | null | undefined;
           requireString: Array<string | null | undefined> | string;
           innerRequired: Array<string> | string;
@@ -5006,7 +5342,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{
           testArray?: Array<string | null | undefined> | null | undefined;
           requireString: Array<string | null | undefined>;
           innerRequired: Array<string>;
@@ -5064,7 +5404,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type EntityQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type EntityQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type EntityQuery = { entity:
@@ -5114,7 +5458,11 @@ function test(q: GetEntityBrandDataQuery): void {
         );
 
         expect(content).toMatchInlineSnapshot(`
-          "export type InlineFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
+          "/** Internal type. DO NOT USE DIRECTLY. */
+          type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+          /** Internal type. DO NOT USE DIRECTLY. */
+          export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+          export type InlineFragmentQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
           export type InlineFragmentQueryQuery = { user: { friends: Array<{ id: string, name: string }> } };
@@ -5153,7 +5501,11 @@ function test(q: GetEntityBrandDataQuery): void {
         );
 
         expect(content).toMatchInlineSnapshot(`
-          "export type UserFriendsIdFragmentFragment = { user: { friends: Array<{ id: string }> } };
+          "/** Internal type. DO NOT USE DIRECTLY. */
+          type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+          /** Internal type. DO NOT USE DIRECTLY. */
+          export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+          export type UserFriendsIdFragmentFragment = { user: { friends: Array<{ id: string }> } };
 
           export type UserFriendsNameFragmentFragment = { user: { friends: Array<{ name: string }> } };
 
@@ -5193,7 +5545,11 @@ function test(q: GetEntityBrandDataQuery): void {
         );
 
         expect(content).toMatchInlineSnapshot(`
-          "export type UserFriendsNameFragmentFragment = { user: { friends: Array<{ name: string }> } };
+          "/** Internal type. DO NOT USE DIRECTLY. */
+          type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+          /** Internal type. DO NOT USE DIRECTLY. */
+          export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+          export type UserFriendsNameFragmentFragment = { user: { friends: Array<{ name: string }> } };
 
           export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5231,7 +5587,11 @@ function test(q: GetEntityBrandDataQuery): void {
         );
 
         expect(content).toMatchInlineSnapshot(`
-          "export type UserFriendsNameFragmentFragment = { user: { friends: Array<{ name: string }> } };
+          "/** Internal type. DO NOT USE DIRECTLY. */
+          type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+          /** Internal type. DO NOT USE DIRECTLY. */
+          export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+          export type UserFriendsNameFragmentFragment = { user: { friends: Array<{ name: string }> } };
 
           export type SpreadFragmentWithSelectionQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5299,7 +5659,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type GetPeopleQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type GetPeopleQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type GetPeopleQuery = { people:
@@ -5435,7 +5799,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type SnakeQueryQuery = { __typename: 'Query', snake:
@@ -5538,7 +5906,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type WidgetFragmentFragment = { widgetCount: number, widgetPreference: string };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type WidgetFragmentFragment = { widgetCount: number, widgetPreference: string };
 
         export type FoodFragmentFragment = { favoriteFood: string, leastFavoriteFood: string };
 
@@ -5632,7 +6004,11 @@ function test(q: GetEntityBrandDataQuery): void {
       );
 
       expect(content).toMatchInlineSnapshot(`
-        "export type WidgetFragmentFragment = { widgetName: string, widgetCount: number };
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type WidgetFragmentFragment = { widgetName: string, widgetCount: number };
 
         export type EmploymentFragmentFragment = { employment: { title: string } };
 
@@ -5774,7 +6150,11 @@ function test(q: GetEntityBrandDataQuery): void {
       { outputFile: '' },
     );
     expect(result.content).toMatchInlineSnapshot(`
-      "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type Unnamed_1_Query = { notifications: Array<
@@ -5804,7 +6184,11 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: '' },
       );
       expect(result.content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { me: UserFragmentFragment | null };
@@ -5832,7 +6216,11 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: '' },
       );
       expect(result.content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { me: { id: string } | null };
@@ -5860,7 +6248,11 @@ function test(q: GetEntityBrandDataQuery): void {
         { outputFile: '' },
       );
       expect(result.content).toMatchInlineSnapshot(`
-        "export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
         export type Unnamed_1_Query = { me: { ' $fragmentRefs'?: { 'UserFragmentFragment': UserFragmentFragment } } | null };

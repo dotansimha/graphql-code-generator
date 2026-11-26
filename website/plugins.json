@@ -203,6 +203,12 @@
     "icon": "typescript",
     "tags": ["plugin", "typescript"]
   },
+  "typescript-mock-builder": {
+    "title": "TypeScript Mock Builder",
+    "npmPackage": "graphql-codegen-mock-builder",
+    "icon": "typescript",
+    "tags": ["plugin", "typescript"]
+  },
   "typescript-mongodb": {
     "title": "TypeScript MongoDB",
     "npmPackage": "@graphql-codegen/typescript-mongodb",

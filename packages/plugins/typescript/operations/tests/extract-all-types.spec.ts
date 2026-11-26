@@ -81,7 +81,11 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' },
     );
     expect(content).toMatchInlineSnapshot(`
-      "type UserFragment_DummyUser = {
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      type UserFragment_DummyUser = {
         __typename: 'DummyUser',
         id: string,
         joinDate: unknown
@@ -398,7 +402,9 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' },
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type CallType =
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type CallType =
         | 'OUTGOING'
         | 'INCOMING'
         | 'VOICEMAIL'
@@ -567,7 +573,9 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' },
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type CallType =
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type CallType =
         | 'OUTGOING'
         | 'INCOMING'
         | 'VOICEMAIL'
@@ -741,7 +749,9 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' },
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type CallType =
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type CallType =
         | 'OUTGOING'
         | 'INCOMING'
         | 'VOICEMAIL'
@@ -984,7 +994,9 @@ describe('extractAllFieldsToTypes: true', () => {
       { outputFile: '' },
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type CallType =
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type CallType =
         | 'OUTGOING'
         | 'INCOMING'
         | 'VOICEMAIL'
@@ -1273,7 +1285,11 @@ describe('extractAllFieldsToTypes: true', () => {
     // We need to use the interface name for the nested type name.
 
     expect(content).toMatchInlineSnapshot(`
-      "export type GetAnimalsQuery_animals_Animal_owner_Trainer = { __typename: 'Trainer', name: string };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type GetAnimalsQuery_animals_Animal_owner_Trainer = { __typename: 'Trainer', name: string };
 
       export type GetAnimalsQuery_animals_Animal_owner_Veterinarian = { __typename: 'Veterinarian', name: string };
 
@@ -1373,7 +1389,11 @@ describe('extractAllFieldsToTypes: true', () => {
     // Edge case: a fragment spread on the same interface should not cause extracted types
     // for interface fields to be rooted to the first concrete parent (e.g. Cat).
     expect(content).toMatchInlineSnapshot(`
-      "export type GetFragmentPetFragment_Pet_home_House = { __typename: 'House', id: string };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type GetFragmentPetFragment_Pet_home_House = { __typename: 'House', id: string };
 
       type GetFragmentPet_Dog_Fragment = { __typename: 'Dog', id: string, home: GetFragmentPetFragment_Pet_home_House | null };
 
@@ -1480,7 +1500,11 @@ describe('extractAllFieldsToTypes: true', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type GetNotificationsQuery_notifications_AppNotification_content_TextContent = { __typename: 'TextContent', id: string };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type GetNotificationsQuery_notifications_AppNotification_content_TextContent = { __typename: 'TextContent', id: string };
 
       export type GetNotificationsQuery_notifications_AppNotification_content_ImageContent = { __typename: 'ImageContent', id: string };
 
@@ -1557,7 +1581,11 @@ describe('extractAllFieldsToTypes: true', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type AppNotificationFragment_AppNotification_content_TextContent = { __typename: 'TextContent', id: string };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type AppNotificationFragment_AppNotification_content_TextContent = { __typename: 'TextContent', id: string };
 
       export type AppNotificationFragment_AppNotification_content_ImageContent = { __typename: 'ImageContent', id: string };
 
@@ -1661,7 +1689,11 @@ describe('extractAllFieldsToTypesCompact: true', () => {
       },
     );
     expect(content).toMatchInlineSnapshot(`
-      "export type GetCompanyInfo_company_office_location = { __typename: 'Location', formatted: string | null };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type GetCompanyInfo_company_office_location = { __typename: 'Location', formatted: string | null };
 
       export type GetCompanyInfo_company_office = { __typename: 'Office', id: string, location: GetCompanyInfo_company_office_location | null };
 

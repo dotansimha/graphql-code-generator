@@ -26,12 +26,12 @@ interface.
 Now, let's try to load and use it with the codegen. Specify the path to your `.js` file in your
 `codegen.yml` config file:
 
-```yaml title="codegen.yml" {5}
+```yaml title="codegen.yml" {6}
 schema: my-schema.graphql
 documents: './src/**/*.graphql'
 generates:
-  plugins:
-    output.ts:
+  output.ts:
+    plugins:
       - my-plugin.js
 ```
 
@@ -79,7 +79,9 @@ module.exports = {
   plugin(schema, documents, config, info) {
     return documents
       .map(doc => {
-        const docsNames = doc.document.definitions.map(def => def.name.value)
+        const docsNames = doc.document.definitions.map(definition =>
+          definition.name ? definition.name.value : '<anonymous>'
+        )
 
         return `File ${doc.location} contains: ${docsNames.join(', ')}`
       })
@@ -96,7 +98,7 @@ passed to your Plugin.
 You can use it to tweak the behavior of your Plugin and allow developers to customize the output
 easily.
 
-You can pass configuration to your plugin in the following this way:
+You can pass configuration to your plugin in the following way:
 
 ```yaml title="codegen.yml" {6}
 schema: my-schema.graphql
@@ -112,11 +114,7 @@ And then, you can use in your plugin:
 
 ```js title="my-plugin.js"
 module.exports = {
-  plugin(schema, documents, config, info) {
-    if (extname(info.outputFile) === '.graphql') {
-      return 'baz'
-    }
-
+  plugin(schema, documents, config) {
     return config.myConfig === 'some-value' ? 'foo' : 'bar'
   }
 }
@@ -130,12 +128,12 @@ pointing to your Plugin file.
 Then, publish it to npm using `npm publish` and test it by installing the published package from
 npm, and use it in your YML config file:
 
-```yaml title="codegen.yml" {5}
+```yaml title="codegen.yml" {6}
 schema: my-schema.graphql
 documents: './src/**/*.graphql'
 generates:
-  plugins:
-    output.ts:
+  output.ts:
+    plugins:
       - my-custom-plugin-package
 ```
 

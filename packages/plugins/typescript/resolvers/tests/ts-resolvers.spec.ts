@@ -728,6 +728,82 @@ __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
     expect(mergedOutputs).toContain(`import { MyC as GQL_C } from '../enums.js';`);
   });
 
+  describe('#10204 - enumValues mapping an enum with an object', () => {
+    const testSchema = buildSchema(/* GraphQL */ `
+      type Query {
+        review: Review
+      }
+
+      type Review {
+        status: ReviewStatus!
+      }
+
+      enum ReviewStatus {
+        PREVIEW
+        FULL
+        DISCARDED
+      }
+    `);
+    const enumValues = {
+      ReviewStatus: {
+        PREVIEW: 'preview',
+        FULL: 'full',
+        DISCARDED: 'discarded',
+      },
+    };
+
+    it('uses the enum the typescript plugin generates in ResolversTypes', async () => {
+      const config = { enumValues, typesPrefix: 'GQL_' };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+      const tsContent = (await tsPlugin(testSchema, [], config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+      const mergedOutputs = mergeOutputs([tsContent, result]);
+
+      expect(mergedOutputs).toContain(`export enum GQL_ReviewStatus {`);
+      expect(mergedOutputs).not.toContain(`ReviewStatus: null;`);
+      expect(mergedOutputs).toContain(`ReviewStatus: GQL_ReviewStatus;`);
+      // Type-check under `strict`: a field resolver returning one of the enum's values compiles
+      validateTs(
+        mergeOutputs([
+          mergedOutputs,
+          `
+            export const resolvers: GQL_Resolvers = {
+              Review: {
+                status: () => GQL_ReviewStatus.Preview,
+              },
+            };
+          `,
+        ]),
+        undefined,
+        false,
+        true,
+        [],
+        true,
+      );
+    });
+
+    it('respects enumPrefix: false', async () => {
+      const config = { enumValues, typesPrefix: 'GQL_', enumPrefix: false };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+      const tsContent = (await tsPlugin(testSchema, [], config, {
+        outputFile: 'graphql.ts',
+      })) as Types.ComplexPluginOutput;
+      const mergedOutputs = mergeOutputs([tsContent, result]);
+
+      expect(mergedOutputs).toContain(`export enum ReviewStatus {`);
+      expect(mergedOutputs).toContain(`ReviewStatus: ReviewStatus;`);
+      validateTs(mergedOutputs, undefined, false, true, [], true);
+    });
+
+    it('respects namespacedImportName', async () => {
+      const config = { enumValues, namespacedImportName: 'Types' };
+      const result = await plugin(testSchema, [], config, { outputFile: '' });
+
+      expect(result.content).toContain(`ReviewStatus: Types.ReviewStatus;`);
+    });
+  });
+
   it('Should allow to generate optional __resolveType', async () => {
     const result = (await plugin(
       resolversTestingSchema,

@@ -1,7 +1,11 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`TypeScript Operations Plugin > Issues > #2699 - Issues with multiple interfaces and unions 1`] = `
-"export type GetEntityBrandDataQueryVariables = Exact<{
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type GetEntityBrandDataQueryVariables = Exact<{
   gid: string | number;
   brand: string | number;
 }>;
@@ -47,7 +51,11 @@ export type ElementMetadataFragment =
 `;
 
 exports[`TypeScript Operations Plugin > Issues > #2916 - Missing import prefix with near-operation-file preset 1`] = `
-"export type Department =
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Department =
   | 'Direction'
   | 'Development';
 
@@ -59,7 +67,11 @@ export type UserQuery = { user: { id: string, username: string, email: string, d
 `;
 
 exports[`TypeScript Operations Plugin > Issues > #3064 - fragments over interfaces causes issues with fields 1`] = `
-"type Venue_Hotel_Fragment = { id: string, gpsPosition: { lat: number, lng: number } };
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+type Venue_Hotel_Fragment = { id: string, gpsPosition: { lat: number, lng: number } };
 
 type Venue_Transport_Fragment = { id: string };
 
@@ -84,7 +96,11 @@ function test(q: QQuery) {
 `;
 
 exports[`TypeScript Operations Plugin > Issues > #6874 - generates types when parent type differs from spread fragment member types 1`] = `
-"export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type SnakeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type SnakeQueryQuery = { snake:
@@ -104,7 +120,11 @@ export type AnimalFragmentFragment =
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct __typename when using both inline fragment and spread over type 1`] = `
-"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = { user: { id: string, name: string | null } | null };
@@ -114,7 +134,11 @@ export type UserFragment = { id: string, name: string | null };
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct __typename when using fragment over type 1`] = `
-"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = { user: { id: string, name: string | null } | null };
@@ -122,7 +146,11 @@ export type UserQueryQuery = { user: { id: string, name: string | null } | null 
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct __typename when using fragment spread over type 1`] = `
-"export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type UserQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UserQueryQuery = { user: { id: string, name: string | null } | null };
@@ -132,7 +160,11 @@ export type UserFragment = { id: string, name: string | null };
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should generate the correct __typename when using fragment spread over union 1`] = `
-"export type UserFragmentFragment = { id: string };
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type UserFragmentFragment = { id: string };
 
 export type AaaQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -145,7 +177,11 @@ export type AaaQuery = { user:
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid __typename usage and split types according to that (with usage) 1`] = `
-"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown, ipv4Gateway: unknown };
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown, ipv4Gateway: unknown };
 
 type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: unknown, ipv6Gateway: unknown };
 
@@ -165,7 +201,11 @@ export type QqQuery = { routes: Array<
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid __typename usage and split types according to that (with usage) 2`] = `
-"type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown, ipv4Gateway: unknown };
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+type NetRoute_Ipv4Route_Fragment = { __typename: 'IPV4Route', ipv4Address: unknown, ipv4Gateway: unknown };
 
 type NetRoute_Ipv6Route_Fragment = { __typename: 'IPV6Route', ipv6Address: unknown, ipv6Gateway: unknown };
 
@@ -187,7 +227,11 @@ export type QqQuery = { routes: Array<
 `;
 
 exports[`TypeScript Operations Plugin > Selection Set > Should have valid fragments intersection on different types (with usage) #2498 1`] = `
-"export type TomFragment = { id: string, foo: string };
+"/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type TomFragment = { id: string, foo: string };
 
 export type JerryFragment = { id: string, bar: string };
 

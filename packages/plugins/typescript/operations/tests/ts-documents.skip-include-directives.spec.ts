@@ -39,7 +39,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       { outputFile: 'graphql.ts' },
     );
     expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{
           showProperty: boolean;
         }>;
 
@@ -84,7 +88,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{
           showProperty: boolean;
         }> | undefined;
 
@@ -123,7 +131,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type UserQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
         withUser?: boolean;
       }>;
 
@@ -166,7 +178,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type NameFragment = { name: string | null };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type NameFragment = { name: string | null };
 
       export type UserQueryVariables = Exact<{
         withName?: boolean;
@@ -214,7 +230,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{
           showAddress: boolean;
         }>;
 
@@ -266,7 +286,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{
           showAddress: boolean;
           showName: boolean;
         }>;
@@ -310,7 +334,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-        "export type MyQueryQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type MyQueryQueryVariables = Exact<{
           include: boolean;
         }>;
 
@@ -357,7 +385,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type UserQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
         withUser?: boolean;
       }>;
 
@@ -404,7 +436,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
       { outputFile: 'graphql.ts' },
     );
     expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryVariables = Exact<{
           showProperty: boolean;
         }>;
 
@@ -447,7 +483,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type GetUsersQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type GetUsersQueryVariables = Exact<{
         included: boolean;
       }>;
 
@@ -511,7 +551,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type UserQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
         included: boolean;
       }>;
 
@@ -584,7 +628,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type UserQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
         included: boolean;
       }>;
 
@@ -668,7 +716,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     expect(content).toContain('LibraryQuery');
     expect(content).toContain('featured');
     expect(content).toMatchInlineSnapshot(`
-      "type PublicationFragment_Book_Fragment = { id: string, title: string };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      type PublicationFragment_Book_Fragment = { id: string, title: string };
 
       type PublicationFragment_Magazine_Fragment = { id: string, issue: number };
 
@@ -747,7 +799,11 @@ describe('TypeScript Operations Plugin - @include directives', () => {
     expect(content).toContain('LibraryQuery');
     expect(content).toContain('featured');
     expect(content).toMatchInlineSnapshot(`
-      "export type BookFragmentFragment = { id: string, title: string };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type BookFragmentFragment = { id: string, title: string };
 
       export type MagazineFragmentFragment = { id: string, issue: number };
 
@@ -890,7 +946,11 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-        "export type UserQueryQueryVariables = Exact<{
+        "/** Internal type. DO NOT USE DIRECTLY. */
+        type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+        /** Internal type. DO NOT USE DIRECTLY. */
+        export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+        export type UserQueryQueryVariables = Exact<{
           skipFirstName: boolean;
           skipAddress: boolean;
         }>;
@@ -931,7 +991,11 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
         },
       );
       expect(content).toMatchInlineSnapshot(`
-      "export type TextNotificationFragmentFragment = { text?: string };
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type TextNotificationFragmentFragment = { text?: string };
 
 
       export type TextNotificationFragmentFragmentVariables = Exact<{
@@ -971,7 +1035,11 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type GetUsersQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type GetUsersQueryVariables = Exact<{
         skipName: boolean;
       }>;
 
@@ -1035,7 +1103,11 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type UserQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
         skip: boolean;
       }>;
 
@@ -1108,7 +1180,11 @@ describe('TypeScript Operations Plugin - @skip directive', () => {
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type UserQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserQueryVariables = Exact<{
         skip: boolean;
       }>;
 
@@ -1375,7 +1451,11 @@ describe('TypeScript Operations Plugin - @include and @skip with @defer', () => 
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type UserSkipQueryVariables = Exact<{ [key: string]: never; }>;
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type UserSkipQueryVariables = Exact<{ [key: string]: never; }>;
 
 
       export type UserSkipQuery = { user: { id: string } & { name?: string, niName?: string } & { age?: number | null, createdAt?: string } & ({ age?: number | null, createdAt?: string } | { age?: never, createdAt?: never }) | null };
