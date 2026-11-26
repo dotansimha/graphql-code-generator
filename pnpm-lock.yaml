@@ -19,6 +19,7 @@ overrides:
 
 patchedDependencies:
   bob-the-bundler@7.0.1: ae094f164c44292465775b71c129fc3305c94d7ad5df4dfb5a00ed7d23181369
+  typescript-json-schema@0.67.2: 212935bf0cd48e458e07a2eca13a6cda2279a5ae62dbe051f3f36f8024a739fa
 
 importers:
 
@@ -1727,7 +1728,7 @@ importers:
         version: 4.22.0
       typescript-json-schema:
         specifier: 0.67.2
-        version: 0.67.2(@swc/core@1.15.33)
+        version: 0.67.2(patch_hash=212935bf0cd48e458e07a2eca13a6cda2279a5ae62dbe051f3f36f8024a739fa)(@swc/core@1.15.33)
 
 packages:
 
@@ -18731,7 +18732,7 @@ snapshots:
 
   typedarray@0.0.6: {}
 
-  typescript-json-schema@0.67.2(@swc/core@1.15.33):
+  typescript-json-schema@0.67.2(patch_hash=212935bf0cd48e458e07a2eca13a6cda2279a5ae62dbe051f3f36f8024a739fa)(@swc/core@1.15.33):
     dependencies:
       '@types/json-schema': 7.0.15
       '@types/node': 24.12.4

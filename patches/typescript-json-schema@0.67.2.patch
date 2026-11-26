@@ -1,0 +1,13 @@
+diff --git a/dist/typescript-json-schema.js b/dist/typescript-json-schema.js
+index e59b11eb0062d855ab7acff06332a98563af36fc..6ee627b297a547a436c286426671ff2dacb1e0b9 100644
+--- a/dist/typescript-json-schema.js
++++ b/dist/typescript-json-schema.js
+@@ -825,7 +825,7 @@ class JsonSchemaGenerator {
+                     }
+                     const indexSymbol = indexSignature.parameters[0].symbol;
+                     const indexType = this.tc.getTypeOfSymbolAtLocation(indexSymbol, node);
+-                    const isIndexedObject = indexType.flags === ts.TypeFlags.String || indexType.flags === ts.TypeFlags.Number;
++                    const isIndexedObject = indexType.flags === ts.TypeFlags.String || indexType.flags === ts.TypeFlags.Number || (indexType.isUnion() && indexType.types.some((member) => member.flags === ts.TypeFlags.String));
+                     if (indexType.flags !== ts.TypeFlags.Number && !isIndexedObject) {
+                         throw new Error("Not supported: IndexSignatureDeclaration with index symbol other than a number or a string");
+                     }
