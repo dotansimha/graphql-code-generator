@@ -1518,7 +1518,11 @@ describe('TypeScript Operations Plugin - @include and @skip on __typename and in
     const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
 
     expect(content).toMatchInlineSnapshot(`
-      "export type MeQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type MeQueryVariables = Exact<{
         skip: boolean;
         include: boolean;
       }>;
@@ -1544,7 +1548,11 @@ describe('TypeScript Operations Plugin - @include and @skip on __typename and in
     const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
 
     expect(content).toMatchInlineSnapshot(`
-      "export type MeQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type MeQueryVariables = Exact<{
         skip: boolean;
       }>;
 
@@ -1571,7 +1579,11 @@ describe('TypeScript Operations Plugin - @include and @skip on __typename and in
     );
 
     expect(content).toMatchInlineSnapshot(`
-      "export type MeQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type MeQueryVariables = Exact<{
         skip: boolean;
       }>;
 
@@ -1599,7 +1611,11 @@ describe('TypeScript Operations Plugin - @include and @skip on __typename and in
     const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
 
     expect(content).toMatchInlineSnapshot(`
-      "export type NodeQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type NodeQueryVariables = Exact<{
         include: boolean;
         skip: boolean;
       }>;
@@ -1627,7 +1643,11 @@ describe('TypeScript Operations Plugin - @include and @skip on __typename and in
     const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
 
     expect(content).toMatchInlineSnapshot(`
-      "export type NodeQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type NodeQueryVariables = Exact<{
         include: boolean;
       }>;
 
@@ -1655,7 +1675,11 @@ describe('TypeScript Operations Plugin - @include and @skip on __typename and in
     const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
 
     expect(content).toMatchInlineSnapshot(`
-      "export type SearchQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type SearchQueryVariables = Exact<{
         include: boolean;
       }>;
 
@@ -1684,7 +1708,11 @@ describe('TypeScript Operations Plugin - @include and @skip on __typename and in
     const { content } = await plugin(schema, [{ location: '', document }], {}, { outputFile: '' });
 
     expect(content).toMatchInlineSnapshot(`
-      "export type MeQueryVariables = Exact<{
+      "/** Internal type. DO NOT USE DIRECTLY. */
+      type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+      /** Internal type. DO NOT USE DIRECTLY. */
+      export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+      export type MeQueryVariables = Exact<{
         include: boolean;
       }>;
 
