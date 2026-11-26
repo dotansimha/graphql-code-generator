@@ -186,6 +186,98 @@ describe('isUsingTypes', () => {
 
       expect(isUsingTypes(ast, [], schema)).toBeTruthy();
     });
+
+    it('community #934 - should not crash when selecting fields on union type', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type A {
+          id: Int!
+        }
+
+        type B {
+          id: Int!
+          fieldOnlyOnB: String
+        }
+
+        union AorB = B | A
+
+        type Query {
+          getABList: [AorB!]!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query {
+          getABList {
+            ... on B {
+              fieldOnlyOnB
+            }
+            invalidField {
+              invalidSubField
+            }
+          }
+        }
+      `);
+
+      expect(() => isUsingTypes(ast, [], schema)).not.toThrow();
+      expect(isUsingTypes(ast, [], schema)).toBeTruthy();
+    });
+
+    it('should correctly detect types and nullable fields on interface types', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        interface Node {
+          id: ID!
+          nullableField: String
+        }
+
+        type Query {
+          node: Node!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query GetNode {
+          node {
+            id
+            nullableField
+          }
+        }
+      `);
+
+      expect(isUsingTypes(ast, [], schema)).toBeTruthy();
+    });
+
+    it('should handle untyped inline fragments on unions without error', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type A {
+          id: ID!
+        }
+
+        type B {
+          id: ID!
+          name: String
+        }
+
+        union SearchResult = A | B
+
+        type Query {
+          search: [SearchResult!]!
+        }
+      `);
+
+      const ast = parse(/* GraphQL */ `
+        query Search($includeExtra: Boolean!) {
+          search {
+            ... @include(if: $includeExtra) {
+              ... on B {
+                name
+              }
+            }
+          }
+        }
+      `);
+
+      expect(isUsingTypes(ast, [], schema)).toBeTruthy();
+    });
   });
 
   it('Should work with __typename on fragments', () => {
