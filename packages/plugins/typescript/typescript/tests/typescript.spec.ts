@@ -2373,6 +2373,58 @@ describe('TypeScript', () => {
       }).toThrow('Unknown scalar type MyScalar');
     });
 
+    it('Should throw an error when `scalars` maps a scalar missing from the schema while using `strictScalars`', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        scalar MyScalar
+
+        type MyType {
+          foo: String
+          bar: MyScalar!
+        }
+      `);
+
+      expect(() => {
+        plugin(
+          schema,
+          [],
+          { strictScalars: true, scalars: { MyScalar: 'string', Missing: 'number' } },
+          { outputFile: '' },
+        );
+      }).toThrow('maps scalar types that do not exist in the schema: Missing');
+    });
+
+    it('Should not throw when `scalars` only maps existing and built-in scalars while using `strictScalars`', async () => {
+      const schema = buildSchema(/* GraphQL */ `
+        scalar MyScalar
+
+        type MyType {
+          foo: String
+          bar: MyScalar!
+        }
+      `);
+
+      const result = (await plugin(
+        schema,
+        [],
+        { strictScalars: true, scalars: { MyScalar: 'string', ID: 'number' } },
+        { outputFile: '' },
+      )) as Types.ComplexPluginOutput;
+
+      expect(result.content).toContain('MyScalar: { input: string; output: string; }');
+    });
+
+    it('Should not throw for scalars missing from the schema without `strictScalars`', () => {
+      const schema = buildSchema(/* GraphQL */ `
+        type MyType {
+          foo: String
+        }
+      `);
+
+      expect(() => {
+        plugin(schema, [], { scalars: { Missing: 'number' } }, { outputFile: '' });
+      }).not.toThrow();
+    });
+
     it('Should allow overriding default scalar type', async () => {
       const schema = buildSchema(/* GraphQL */ `
         scalar MyScalar
