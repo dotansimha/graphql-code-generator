@@ -166,6 +166,8 @@ export const preset: Types.OutputPreset<ClientPresetConfig> = {
       nonOptionalTypename: options.config.nonOptionalTypename,
       avoidOptionals: options.config.avoidOptionals,
       documentMode: options.config.documentMode,
+      documentVariablePrefix: options.config.documentVariablePrefix,
+      documentVariableSuffix: options.config.documentVariableSuffix,
       skipTypeNameForRoot: options.config.skipTypeNameForRoot,
       customDirectives: options.config.customDirectives,
       immutableTypes: options.config.immutableTypes,
