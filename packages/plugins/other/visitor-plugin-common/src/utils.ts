@@ -751,6 +751,7 @@ export function getSelectionSetCacheKey(selectionSet: SelectionSetNode): string 
 
 export const getNodeComment = (
   node: FieldDefinitionNode | EnumValueDefinitionNode | InputValueDefinitionNode,
+  indentLevel = 1,
 ): string => {
   let commentText = node.description?.value;
   const deprecationDirective = node.directives?.find(v => v.name.value === 'deprecated');
@@ -758,7 +759,7 @@ export const getNodeComment = (
     const deprecationReason = getDeprecationReason(deprecationDirective);
     commentText = `${commentText ? `${commentText}\n` : ''}@deprecated ${deprecationReason}`;
   }
-  const comment = transformComment(commentText, 1);
+  const comment = transformComment(commentText, indentLevel);
   return comment;
 };
 

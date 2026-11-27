@@ -1,5 +1,13 @@
 import autoBind from 'auto-bind';
-import { DirectiveNode, Kind, NameNode, TypeNode, ValueNode, VariableNode } from 'graphql';
+import {
+  DirectiveNode,
+  Kind,
+  NameNode,
+  StringValueNode,
+  TypeNode,
+  ValueNode,
+  VariableNode,
+} from 'graphql';
 import { BaseVisitorConvertOptions } from './base-visitor.js';
 import {
   ConvertNameFn,
@@ -7,7 +15,7 @@ import {
   ParsedDirectiveArgumentAndInputFieldMappings,
   ParsedEnumValuesMap,
 } from './types.js';
-import { getBaseTypeNode, indent } from './utils.js';
+import { getBaseTypeNode, getNodeComment, indent } from './utils.js';
 
 export interface InterfaceOrVariable {
   name?: NameNode;
@@ -15,6 +23,7 @@ export interface InterfaceOrVariable {
   type: TypeNode;
   defaultValue?: ValueNode;
   directives?: ReadonlyArray<DirectiveNode>;
+  description?: StringValueNode;
 }
 
 export class OperationVariablesToObject {
@@ -129,8 +138,9 @@ export class OperationVariablesToObject {
 
     const formattedFieldString = this.formatFieldString(fieldName, isNonNullType, hasDefaultValue);
     const formattedTypeString = this.formatTypeString(fieldType, isNonNullType, hasDefaultValue);
+    const comment = getNodeComment(variable as any, 0);
 
-    return `${formattedFieldString}: ${formattedTypeString}`;
+    return `${comment}${formattedFieldString}: ${formattedTypeString}`;
   }
 
   public wrapAstTypeWithModifiers(
