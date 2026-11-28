@@ -579,11 +579,13 @@ export async function renderConfigExamples({
         ) {
           common++;
         }
-        body = results.flatMap(([label, lines]) => [
-          '',
-          `// ${label}`,
-          ...trimBlankLines({ lines: lines.slice(common) }),
-        ]);
+        if (results.some(([, lines]) => lines.length > common)) {
+          body = results.flatMap(([label, lines]) => [
+            '',
+            `// ${label}`,
+            ...trimBlankLines({ lines: lines.slice(common) }),
+          ]);
+        }
       } else if (results.length > 0) {
         body = mergeVariants({ variantOutputs: results });
       }

@@ -99,4 +99,26 @@ describe('renderConfigExamples', () => {
       ['```ts', 'type A = string; // default', 'type A = number; // strict=true', '```'].join('\n'),
     );
   });
+
+  it('shows identical whole outputs once', async () => {
+    const markdown = await renderConfigExamples({
+      title: 'Examples',
+      generate: () => 'type A = string;',
+      examples: [
+        {
+          option: 'strict',
+          schema,
+          operation,
+          showWholeOutput: true,
+          variants: [{ config: {} }, { config: { strict: true } }],
+        },
+      ],
+    });
+
+    expect(markdown).toContain(
+      ['```ts', '// Output is identical for every setting:', '', 'type A = string;', '```'].join(
+        '\n',
+      ),
+    );
+  });
 });
