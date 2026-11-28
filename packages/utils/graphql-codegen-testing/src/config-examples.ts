@@ -383,6 +383,12 @@ export async function renderConfigExamples({
       ...declChanges,
     ]);
 
+    /**
+     * Maps a base line index to the matching line index in a variant's output. `start` selects the start or the end of a changed range.
+     *
+     * e.g. base `['a', 'b', 'c']`, other `['a', 'x', 'y', 'c']`
+     * → `{ lineIndex: 1, start: true }` → `1`, `{ lineIndex: 2, start: false }` → `3`, so the variant's slice is `['x', 'y']`
+     */
     const mapIndex = ({
       variantIndex,
       lineIndex,
