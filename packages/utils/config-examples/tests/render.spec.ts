@@ -1,4 +1,4 @@
-import { renderConfigExamples, type ConfigExampleGenerate } from '../src/config-examples.js';
+import { renderConfigExamples, type ConfigExampleGenerate } from '../src/render.js';
 
 const schema = /* GraphQL */ `
   type Query {
@@ -49,7 +49,7 @@ describe('renderConfigExamples', () => {
             'export type A = A_Query;',
           ].join('\n');
 
-    const markdown = await renderConfigExamples({
+    const { markdown } = await renderConfigExamples({
       title: 'Examples',
       generate,
       examples: [
@@ -82,7 +82,7 @@ describe('renderConfigExamples', () => {
   });
 
   it('labels a variant with empty config and no label as default', async () => {
-    const markdown = await renderConfigExamples({
+    const { markdown } = await renderConfigExamples({
       title: 'Examples',
       generate: ({ config }) => (config.strict ? 'type A = number;' : 'type A = string;'),
       examples: [
@@ -101,7 +101,7 @@ describe('renderConfigExamples', () => {
   });
 
   it('shows identical whole outputs once', async () => {
-    const markdown = await renderConfigExamples({
+    const { markdown } = await renderConfigExamples({
       title: 'Examples',
       generate: () => 'type A = string;',
       examples: [
@@ -120,5 +120,46 @@ describe('renderConfigExamples', () => {
         '\n',
       ),
     );
+  });
+
+  it('leaves out omitted lines when the output is identical for every setting', async () => {
+    const { byOption } = await renderConfigExamples({
+      title: 'Examples',
+      generate: () => ['type Helper = unknown;', 'type A = string;'].join('\n'),
+      omitFromIdenticalOutput: /^type Helper/,
+      examples: [
+        {
+          option: 'strict',
+          schema,
+          operation,
+          variants: [{ config: {} }, { config: { strict: true } }],
+        },
+      ],
+    });
+
+    expect(byOption.strict).toContain(
+      ['```ts', '// Output is identical for every setting:', '', 'type A = string;', '```'].join(
+        '\n',
+      ),
+    );
+  });
+
+  it('renders each option on its own, without the document heading', async () => {
+    const { markdown, byOption } = await renderConfigExamples({
+      title: 'Examples',
+      generate: ({ config }) => (config.strict ? 'type A = number;' : 'type A = string;'),
+      examples: [
+        {
+          option: 'strict',
+          schema,
+          operation,
+          variants: [{ config: {} }, { config: { strict: true } }],
+        },
+      ],
+    });
+
+    expect(Object.keys(byOption)).toEqual(['strict']);
+    expect(byOption.strict.startsWith('**Schema**')).toBe(true);
+    expect(markdown).toContain(['## `strict`', '', byOption.strict].join('\n'));
   });
 });

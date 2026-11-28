@@ -69,4 +69,3 @@ expect.extend({
 export * from './mock-graphql-server.js';
 export * from './resolvers-common.js';
 export * from './typescript.js';
-export * from './config-examples.js';

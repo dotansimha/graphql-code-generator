@@ -12,16 +12,30 @@ Never write example output by hand.
 
 ## Where examples live
 
-| Plugin                  | Examples spec                                                          | Generated file                                                                 |
-| ----------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `typescript-operations` | `packages/plugins/typescript/operations/tests/config-examples.spec.ts` | `packages/plugins/typescript/operations/tests/__examples__/config-examples.md` |
+All examples live in the private `@graphql-codegen/config-examples` package
+(`packages/utils/config-examples`), one spec per plugin:
 
-The spec renders the examples with `renderConfigExamples` from `@graphql-codegen/testing` and
-compares them to the generated file with `toMatchFileSnapshot`. The test fails when plugin output no
-longer matches the examples.
+- `tests/<plugin>.spec.ts`: the examples, as a list of `ConfigExample`s, and a `generate` function
+  that calls the plugin. `<plugin>` is the plugin's `name` in `website/plugin-configs.json`, e.g.
+  `typescript-operations`.
+- `tests/__examples__/<plugin>.md`: every option's examples as one document, for reading.
+- `tests/__examples__/<plugin>.json`: each option's examples on their own, for the docs.
 
-For a plugin without an examples spec, create one following the `typescript-operations` spec: a list
-of `ConfigExample`s, and a `generate` function that calls the plugin.
+The spec renders the examples with `renderConfigExamples` from `src/render.ts` and compares both
+files with `toMatchFileSnapshot`, so the test fails when plugin output no longer matches the
+examples. The package's tests are separate from the plugin's: after changing what a plugin
+generates, run them too.
+
+For a plugin without an examples spec, add `tests/<plugin>.spec.ts` following
+`tests/typescript-operations.spec.ts`, and add the plugin to the package's `devDependencies`.
+
+## How examples reach the docs
+
+The docs page for each plugin renders its Config API Reference from `website/config.schema.json`.
+`pnpm --filter website generate-config-schema` builds that schema from each option's
+`@exampleMarkdown` JSDoc, then appends the option's entry from `tests/__examples__/<plugin>.json`
+under a "Generated output" heading. Keep the hand-written `@exampleMarkdown` for the `codegen.ts`
+usage; the generated output goes in the spec, never in `config.ts`.
 
 ## Adding or updating an example
 
@@ -39,7 +53,7 @@ of `ConfigExample`s, and a `generate` function that calls the plugin.
 2. Regenerate the examples:
 
    ```bash
-   pnpm vitest run --project typescript-operations config-examples -u
+   pnpm vitest run packages/utils/config-examples -u
    ```
 
 3. Read the generated section and check that:
@@ -47,7 +61,13 @@ of `ConfigExample`s, and a `generate` function that calls the plugin.
      doesn't exercise the option. Fix the schema, operation or `sharedConfig`, or add a `note`
      explaining why there's no effect;
    - each `// option=value` label matches the line it marks.
-4. Commit the spec and the generated file together.
+4. Regenerate the docs schema:
+
+   ```bash
+   pnpm --filter website generate-config-schema
+   ```
+
+5. Commit the spec, both generated files and `website/config.schema.json` together.
 
 ## Output format
 

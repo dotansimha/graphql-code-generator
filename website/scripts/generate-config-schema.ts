@@ -4,11 +4,11 @@
  * in plugin-configs.json. Editors use it for autocomplete, and
  * the-guild.dev/graphql/codegen renders each plugin's Config API Reference
  * from it, including the `exampleMarkdown` usage examples from the config
- * types' JSDoc.
+ * types' JSDoc, followed by generated output examples where a plugin has them.
  *
  *   pnpm --filter website generate-config-schema
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import jsonPath from 'jsonpath';
 import prettier from 'prettier';
@@ -30,6 +30,7 @@ const ROOT_IDENTIFIER = 'Types.Config';
 const MARKDOWN_JSDOC_KEY = 'exampleMarkdown';
 const DEFAULT_JSDOC_KEY = 'default';
 const OUT_PATH = join(CWD, 'config.schema.json');
+const CONFIG_EXAMPLES_DIR = join(REPO_ROOT, 'packages/utils/config-examples/tests/__examples__');
 
 const { plugins, presets } = JSON.parse(readFileSync(join(CWD, 'plugin-configs.json'), 'utf8')) as {
   plugins: ConfigType[];
@@ -121,7 +122,36 @@ function buildSchema(): TJS.Definition {
   return schema;
 }
 
+/**
+ * Appends each option's generated output examples (written by the
+ * `@graphql-codegen/config-examples` specs) to its `exampleMarkdown`, under a
+ * "Generated output" heading. Plugins without an examples file are left as they are.
+ */
+function addGeneratedExamples({ schema }: { schema: TJS.Definition }): void {
+  for (const plugin of plugins) {
+    const examplesPath = join(CONFIG_EXAMPLES_DIR, `${plugin.name}.json`);
+    if (!existsSync(examplesPath)) {
+      continue;
+    }
+    const examples = JSON.parse(readFileSync(examplesPath, 'utf8')) as Record<string, string>;
+    const definition = schema.definitions?.[plugin.identifier] as TJS.Definition | undefined;
+    for (const [option, markdown] of Object.entries(examples)) {
+      const property = definition?.properties?.[option] as Record<string, string> | undefined;
+      if (!property) {
+        throw new Error(
+          `${examplesPath} has examples for "${option}", but ${plugin.identifier} has no such option`,
+        );
+      }
+      const generated = `## Generated output\n\n${markdown.trim()}`;
+      property[MARKDOWN_JSDOC_KEY] = property[MARKDOWN_JSDOC_KEY]
+        ? `${property[MARKDOWN_JSDOC_KEY]}\n\n${generated}`
+        : generated;
+    }
+  }
+}
+
 const schema = buildSchema();
+addGeneratedExamples({ schema });
 // Defaults would be auto-completed as literal values; mention them instead.
 jsonPath.apply(schema, '$..*', value => {
   if (value && typeof value === 'object' && value[DEFAULT_JSDOC_KEY] !== undefined) {

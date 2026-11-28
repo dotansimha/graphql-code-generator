@@ -40,6 +40,13 @@ export type ConfigExampleGenerate = (params: {
   config: Record<string, unknown>;
 }) => Promise<string> | string;
 
+export interface RenderedConfigExamples {
+  /** Every option's examples as one document, under `title`. */
+  markdown: string;
+  /** Each option's examples on their own, keyed by option name, for the docs' `exampleMarkdown`. */
+  byOption: Record<string, string>;
+}
+
 /**
  * Runs `generate` once per variant of every example, and renders the results as Markdown.
  * For each example, only the declarations that differ between variants are shown.
@@ -50,12 +57,15 @@ export async function renderConfigExamples({
   generate,
   title,
   intro,
+  omitFromIdenticalOutput,
 }: {
   examples: ConfigExample[];
   generate: ConfigExampleGenerate;
   title: string;
   intro?: string;
-}): Promise<string> {
+  /** Lines to leave out when an example's output is identical for every setting (e.g. a plugin's helper types). */
+  omitFromIdenticalOutput?: RegExp;
+}): Promise<RenderedConfigExamples> {
   /** Formats a config value the way it would be written in codegen.ts. */
   const formatValue = ({ value }: { value: unknown }): string => {
     if (typeof value === 'string') {
@@ -508,42 +518,50 @@ export async function renderConfigExamples({
     return trimBlankLines({ lines: out });
   };
 
-  const preamble =
-    /^(\/\*\* Internal type\. DO NOT USE DIRECTLY\. \*\/|type Exact<|export type Incremental<)/;
+  /** Joins lines into Markdown with single blank lines between blocks and one trailing newline. */
+  const toMarkdown = ({ lines }: { lines: string[] }): string =>
+    lines
+      .join('\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trimEnd() + '\n';
 
   const md = [`# ${title}`, ''];
   if (intro) {
     md.push(intro, '');
   }
 
-  const byOption = new Map<string, ConfigExample[]>();
+  const examplesByOption = new Map<string, ConfigExample[]>();
   for (const example of examples) {
-    byOption.set(example.option, [...(byOption.get(example.option) ?? []), example]);
+    examplesByOption.set(example.option, [
+      ...(examplesByOption.get(example.option) || []),
+      example,
+    ]);
   }
 
-  for (const [option, optionExamples] of byOption) {
-    md.push(`## \`${option}\``, '');
+  const byOption: Record<string, string> = {};
+  for (const [option, optionExamples] of examplesByOption) {
+    const section: string[] = [];
     for (const example of optionExamples) {
       if (example.title) {
-        md.push(`### ${example.title}`, '');
+        section.push(`### ${example.title}`, '');
       }
       if (example.note) {
-        md.push(`> ${example.note}`, '');
+        section.push(`> ${example.note}`, '');
       }
       if (example.sharedConfig && example.sharedConfigLabel !== false) {
-        md.push(
+        section.push(
           `Shared config: \`${example.sharedConfigLabel ?? formatValue({ value: example.sharedConfig })}\``,
           '',
         );
       }
       for (const block of example.extraBlocks ?? []) {
-        md.push(`**${block.label}**`, '', '```' + block.lang, block.code.trim(), '```', '');
+        section.push(`**${block.label}**`, '', '```' + block.lang, block.code.trim(), '```', '');
       }
 
       const schemaSdl = print(parse(example.schema));
       const operation = print(parse(example.operation));
-      md.push('**Schema**', '', '```graphql', schemaSdl, '```', '');
-      md.push('**Operation**', '', '```graphql', operation, '```', '');
+      section.push('**Schema**', '', '```graphql', schemaSdl, '```', '');
+      section.push('**Operation**', '', '```graphql', operation, '```', '');
 
       const results: Array<[label: string, lines: string[]]> = [];
       const errors: string[] = [];
@@ -593,14 +611,16 @@ export async function renderConfigExamples({
         body = [
           '// Output is identical for every setting:',
           '',
-          ...results[0][1].filter(line => !preamble.test(line)),
+          ...results[0][1].filter(
+            line => !omitFromIdenticalOutput || !omitFromIdenticalOutput.test(line),
+          ),
         ];
       }
       if (errors.length > 0) {
         body = [...body, '', ...errors];
       }
 
-      md.push(
+      section.push(
         '**Generated TypeScript**',
         '',
         '```ts',
@@ -609,12 +629,9 @@ export async function renderConfigExamples({
         '',
       );
     }
+    md.push(`## \`${option}\``, '', ...section);
+    byOption[option] = toMarkdown({ lines: section });
   }
 
-  return (
-    md
-      .join('\n')
-      .replace(/\n{3,}/g, '\n\n')
-      .trimEnd() + '\n'
-  );
+  return { markdown: toMarkdown({ lines: md }), byOption };
 }
