@@ -1523,6 +1523,9 @@ importers:
       '@graphql-codegen/typescript-operations':
         specifier: workspace:^
         version: link:../../plugins/typescript/operations/dist
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
 
   packages/utils/graphql-codegen-testing:
     dependencies:

@@ -11,7 +11,8 @@
   },
   "devDependencies": {
     "@graphql-codegen/plugin-helpers": "workspace:^",
-    "@graphql-codegen/typescript-operations": "workspace:^"
+    "@graphql-codegen/typescript-operations": "workspace:^",
+    "typescript": "6.0.3"
   },
   "bob": false
 }
