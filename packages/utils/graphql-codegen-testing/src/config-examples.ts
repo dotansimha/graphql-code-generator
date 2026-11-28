@@ -182,6 +182,9 @@ export async function renderConfigExamples({
           otherIndex++;
           baseGapStart = baseIndex;
           otherGapStart = otherIndex;
+        } else if (lcs[baseIndex + 1][otherIndex + 1] === lcs[baseIndex][otherIndex]) {
+          baseIndex++;
+          otherIndex++;
         } else if (lcs[baseIndex + 1][otherIndex] >= lcs[baseIndex][otherIndex + 1]) {
           baseIndex++;
         } else {
@@ -244,7 +247,62 @@ export async function renderConfigExamples({
       return ranges;
     };
 
+    const declaredName = /^export (?:type|interface|enum|const) (\w+)/;
+
+    /**
+     * Reorders a variant's statements so that those declaring the same name as a base statement follow the base order.
+     * A statement with no matching name stays after the statement before it. Blank-line gaps stay in place.
+     *
+     * e.g. base `['export type A = 1;', '', 'export type B = 2;']`, other `['export type B = 3;', '', 'export type A = 4;']`
+     * → `['export type A = 4;', '', 'export type B = 3;']`
+     */
+    const alignByName = ({ base, other }: { base: string[]; other: string[] }): string[] => {
+      const baseOrder = new Map<string, number>();
+      for (const [statementIndex, [start, end]] of statements({ lines: base }).entries()) {
+        const name = base
+          .slice(start, end)
+          .map(line => declaredName.exec(line)?.[1])
+          .find(Boolean);
+        if (name && !baseOrder.has(name)) {
+          baseOrder.set(name, statementIndex);
+        }
+      }
+      const otherRanges = statements({ lines: other });
+      if (otherRanges.length === 0) {
+        return other;
+      }
+      let previousKey = -1;
+      const keyed = otherRanges.map(([start, end]) => {
+        const name = other
+          .slice(start, end)
+          .map(line => declaredName.exec(line)?.[1])
+          .find(Boolean);
+        const order = name ? baseOrder.get(name) : undefined;
+        previousKey = order ?? previousKey;
+        return { start, end, key: previousKey, matched: order !== undefined };
+      });
+      const sorted = [...keyed].sort(
+        (left, right) => left.key - right.key || Number(right.matched) - Number(left.matched),
+      );
+      const aligned = other.slice(0, otherRanges[0][0]);
+      for (const [position, [, end]] of otherRanges.entries()) {
+        const gapEnd =
+          position + 1 < otherRanges.length ? otherRanges[position + 1][0] : other.length;
+        aligned.push(
+          ...other.slice(sorted[position].start, sorted[position].end),
+          ...other.slice(end, gapEnd),
+        );
+      }
+      return aligned;
+    };
+
     const base = variantOutputs[0][1];
+    const alignedOutputs = variantOutputs.map(
+      ([label, lines], variantIndex): [string, string[]] => [
+        label,
+        variantIndex === 0 ? lines : alignByName({ base, other: lines }),
+      ],
+    );
     const labels = variantOutputs.map(([label]) => label);
     const stmts = statements({ lines: base });
     const stmtIndex = ({ lineIndex }: { lineIndex: number }): number =>
@@ -253,9 +311,9 @@ export async function renderConfigExamples({
     const lineChanges = new Map<number, Map<number, string>>();
     const declChanges = new Set<number>();
     const added = new Map<number, Array<[number, string[]]>>();
-    const allOps = variantOutputs.map(([, lines]) => opcodes({ base, other: lines }));
+    const allOps = alignedOutputs.map(([, lines]) => opcodes({ base, other: lines }));
 
-    for (const [variantIndex, [, lines]] of variantOutputs.entries()) {
+    for (const [variantIndex, [, lines]] of alignedOutputs.entries()) {
       if (variantIndex === 0) {
         continue;
       }
@@ -347,7 +405,7 @@ export async function renderConfigExamples({
           return start ? otherStart : otherEnd;
         }
       }
-      return variantOutputs[variantIndex][1].length;
+      return alignedOutputs[variantIndex][1].length;
     };
 
     const out: string[] = [];
@@ -405,7 +463,7 @@ export async function renderConfigExamples({
           candidates.push([
             labels[variantIndex],
             trimBlankLines({
-              lines: variantOutputs[variantIndex][1].slice(
+              lines: alignedOutputs[variantIndex][1].slice(
                 mapIndex({ variantIndex, lineIndex: rangeStart, start: true }),
                 mapIndex({ variantIndex, lineIndex: rangeEnd, start: false }),
               ),

@@ -1180,10 +1180,10 @@ export type GetUserQuery_user_User = { id: string, friends: Array<GetUserQuery_u
 export type GetUserQuery_user = { id: string, friends: Array<GetUserQuery_user_friends> }; // extractAllFieldsToTypesCompact=true
 
 export type GetUserQuery_Query = { user: GetUserQuery_user_User | null }; // extractAllFieldsToTypesCompact=false (default)
-export type GetUserQuery = { user: GetUserQuery_user | null }; // extractAllFieldsToTypesCompact=true
+// extractAllFieldsToTypesCompact=true: (not generated)
 
 export type GetUserQuery = GetUserQuery_Query; // extractAllFieldsToTypesCompact=false (default)
-// extractAllFieldsToTypesCompact=true: (not generated)
+export type GetUserQuery = { user: GetUserQuery_user | null }; // extractAllFieldsToTypesCompact=true
 ```
 
 ## `declarationKind`
