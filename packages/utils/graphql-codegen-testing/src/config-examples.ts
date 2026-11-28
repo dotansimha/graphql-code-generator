@@ -547,9 +547,9 @@ export async function renderConfigExamples({
           Object.entries(variant.config)
             .map(([key, value]) => `${key}=${formatValue({ value })}`)
             .join(', ');
+        const schema = buildSchema(example.schema);
+        example.prepareSchema?.({ schema });
         try {
-          const schema = buildSchema(example.schema);
-          example.prepareSchema?.({ schema });
           const output = await generate({
             schema,
             document: parse(example.operation),
