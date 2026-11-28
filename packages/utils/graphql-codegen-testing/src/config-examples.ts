@@ -550,9 +550,10 @@ export async function renderConfigExamples({
       for (const variant of example.variants) {
         const label =
           variant.label ??
-          Object.entries(variant.config)
+          (Object.entries(variant.config)
             .map(([key, value]) => `${key}=${formatValue({ value })}`)
-            .join(', ');
+            .join(', ') ||
+            'default');
         const schema = buildSchema(example.schema);
         example.prepareSchema?.({ schema });
         try {

@@ -80,4 +80,23 @@ describe('renderConfigExamples', () => {
       ].join('\n'),
     );
   });
+
+  it('labels a variant with empty config and no label as default', async () => {
+    const markdown = await renderConfigExamples({
+      title: 'Examples',
+      generate: ({ config }) => (config.strict ? 'type A = number;' : 'type A = string;'),
+      examples: [
+        {
+          option: 'strict',
+          schema,
+          operation,
+          variants: [{ config: {} }, { config: { strict: true } }],
+        },
+      ],
+    });
+
+    expect(markdown).toContain(
+      ['```ts', 'type A = string; // default', 'type A = number; // strict=true', '```'].join('\n'),
+    );
+  });
 });
