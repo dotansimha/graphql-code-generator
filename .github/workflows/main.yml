@@ -68,6 +68,33 @@ jobs:
       - name: Types Check
         run: pnpm types:check
 
+  config-docs-check:
+    name: 📖 Config Docs Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          standalone: true
+          cache: true
+      - name: Install Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: Install packages
+        run: pnpm install
+
+      - name: Config examples cover every option and match plugin output
+        run: pnpm vitest run packages/utils/config-examples
+      - name: Config docs schema is up to date
+        # The docs render each plugin's Config API Reference from this file. Regenerate it with
+        # `pnpm --filter website generate-config-schema` (see agents/config-option-examples.md).
+        run: |
+          pnpm --filter website generate-config-schema
+          git diff --exit-code -- website/config.schema.json
+
   dev-tests:
     name: Validating dev-tests
     runs-on: ${{ matrix.os }}

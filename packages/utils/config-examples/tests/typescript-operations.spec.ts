@@ -1,6 +1,8 @@
+import { fileURLToPath } from 'node:url';
 import { isEnumType, parse } from 'graphql';
 import { mergeOutputs } from '@graphql-codegen/plugin-helpers';
 import { plugin } from '@graphql-codegen/typescript-operations';
+import { getDocumentedOptions } from '../src/documented-options.js';
 import { renderConfigExamples, type ConfigExample } from '../src/render.js';
 
 /**
@@ -736,6 +738,25 @@ const examples: ConfigExample[] = [
 ];
 
 describe('typescript-operations config examples', () => {
+  it('has an example for every documented option', () => {
+    const documentedOptions = getDocumentedOptions({
+      file: fileURLToPath(
+        new URL('../../../plugins/typescript/operations/src/config.ts', import.meta.url),
+      ),
+      typeName: 'TypeScriptDocumentsPluginConfig',
+    });
+    const exampleOptions = new Set(examples.map(example => example.option));
+
+    expect(
+      documentedOptions.filter(option => !exampleOptions.has(option)),
+      'Options without an example. Add one: see agents/config-option-examples.md',
+    ).toEqual([]);
+    expect(
+      [...exampleOptions].filter(option => !documentedOptions.includes(option)),
+      'Examples for options that are not documented',
+    ).toEqual([]);
+  });
+
   it('matches the documented examples', async () => {
     const { markdown, byOption } = await renderConfigExamples({
       examples,

@@ -29,6 +29,16 @@ generates, run them too.
 For a plugin without an examples spec, add `tests/<plugin>.spec.ts` following
 `tests/typescript-operations.spec.ts`, and add the plugin to the package's `devDependencies`.
 
+## What fails when examples or docs are missing
+
+- `tests/<plugin>.spec.ts` lists the plugin's documented options from its config type in `config.ts`
+  (inherited options included, `@ignore` options left out) with `getDocumentedOptions`. It fails
+  when an option has no example, or an example names an option that isn't documented. A new option
+  needs an example in the same PR.
+- CI's Config Docs Check job runs the config-examples tests, then regenerates
+  `website/config.schema.json` and fails if it differs from the committed file. Any change to an
+  option's JSDoc or examples needs the regenerated schema in the same PR.
+
 ## How examples reach the docs
 
 The docs page for each plugin renders its Config API Reference from `website/config.schema.json`.
