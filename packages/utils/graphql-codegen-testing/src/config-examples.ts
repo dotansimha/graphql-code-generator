@@ -31,27 +31,425 @@ export interface ConfigExample {
   /** Show each variant's full output instead of merging (for options that restructure the whole file). */
   showWholeOutput?: boolean;
   /** Mutate the built schema before generating (e.g. to set enum internal values). */
-  prepareSchema?: (schema: GraphQLSchema) => void;
+  prepareSchema?: (params: { schema: GraphQLSchema }) => void;
 }
 
-export type ConfigExampleGenerate = (
-  schema: GraphQLSchema,
-  document: DocumentNode,
-  config: Record<string, unknown>,
-) => Promise<string> | string;
+export type ConfigExampleGenerate = (params: {
+  schema: GraphQLSchema;
+  document: DocumentNode;
+  config: Record<string, unknown>;
+}) => Promise<string> | string;
 
 /**
  * Runs `generate` once per variant of every example, and renders the results as Markdown.
  * For each example, only the declarations that differ between variants are shown.
  * Lines that differ are printed once per variant, each followed by a `// <label>` comment.
  */
-export async function renderConfigExamples(
-  examples: ConfigExample[],
-  options: { generate: ConfigExampleGenerate; title: string; intro?: string },
-): Promise<string> {
-  const md: string[] = [`# ${options.title}`, ''];
-  if (options.intro) {
-    md.push(options.intro, '');
+export async function renderConfigExamples({
+  examples,
+  generate,
+  title,
+  intro,
+}: {
+  examples: ConfigExample[];
+  generate: ConfigExampleGenerate;
+  title: string;
+  intro?: string;
+}): Promise<string> {
+  /** Formats a config value the way it would be written in codegen.ts. */
+  const formatValue = ({ value }: { value: unknown }): string => {
+    if (typeof value === 'string') {
+      return `'${value}'`;
+    }
+    if (Array.isArray(value)) {
+      return `[${value.map(item => formatValue({ value: item })).join(', ')}]`;
+    }
+    if (value && typeof value === 'object') {
+      return `{ ${Object.entries(value)
+        .map(([key, entryValue]) => `${key}: ${formatValue({ value: entryValue })}`)
+        .join(', ')} }`;
+    }
+    return String(value);
+  };
+
+  /** Drops leading, trailing and repeated blank lines, and empties whitespace-only lines. */
+  const trimBlankLines = ({ lines }: { lines: string[] }): string[] => {
+    const result: string[] = [];
+    for (const line of lines) {
+      if (line.trim() === '' && (result.length === 0 || result[result.length - 1] === '')) {
+        continue;
+      }
+      result.push(line.trim() === '' ? '' : line);
+    }
+    while (result.length > 0 && result[result.length - 1] === '') {
+      result.pop();
+    }
+    return result;
+  };
+
+  /**
+   * Merges the outputs of several variants against the first one.
+   * - Lines changed one-for-one are printed once per variant with a trailing `// <label>`.
+   * - Declarations whose shape changes are printed whole, once per variant, under a `// <label>` line.
+   * - Declarations that only some variants generate are marked `(added)` / `(not generated)`.
+   *
+   * e.g. `[['default', ['type A = string;']], ['x=true', ['type A = number;']]]`
+   * → `['type A = string; // default', 'type A = number; // x=true']`
+   */
+  const mergeVariants = ({
+    variantOutputs,
+  }: {
+    variantOutputs: Array<[string, string[]]>;
+  }): string[] => {
+    const continuation = /^(\s|\}|\||\)|&)/;
+
+    type Opcode = ['equal' | 'replace' | 'insert' | 'delete', number, number, number, number];
+
+    /**
+     * Line diff (LCS), returned as difflib-style opcodes: `[tag, baseStart, baseEnd, otherStart, otherEnd]`.
+     *
+     * e.g. base `['a', 'b', 'c']`, other `['a', 'x', 'c']`
+     * → `[['equal', 0, 1, 0, 1], ['replace', 1, 2, 1, 2], ['equal', 2, 3, 2, 3]]`
+     */
+    const opcodes = ({ base, other }: { base: string[]; other: string[] }): Opcode[] => {
+      const baseLength = base.length;
+      const otherLength = other.length;
+      const lcs = Array.from({ length: baseLength + 1 }, () =>
+        new Array<number>(otherLength + 1).fill(0),
+      );
+      for (let baseIndex = baseLength - 1; baseIndex >= 0; baseIndex--) {
+        for (let otherIndex = otherLength - 1; otherIndex >= 0; otherIndex--) {
+          lcs[baseIndex][otherIndex] =
+            base[baseIndex] === other[otherIndex]
+              ? lcs[baseIndex + 1][otherIndex + 1] + 1
+              : Math.max(lcs[baseIndex + 1][otherIndex], lcs[baseIndex][otherIndex + 1]);
+        }
+      }
+      const ops: Opcode[] = [];
+      const push = ({
+        tag,
+        baseStart,
+        baseEnd,
+        otherStart,
+        otherEnd,
+      }: {
+        tag: Opcode[0];
+        baseStart: number;
+        baseEnd: number;
+        otherStart: number;
+        otherEnd: number;
+      }): void => {
+        const last = ops[ops.length - 1];
+        if (last && last[0] === tag && last[2] === baseStart && last[4] === otherStart) {
+          last[2] = baseEnd;
+          last[4] = otherEnd;
+        } else {
+          ops.push([tag, baseStart, baseEnd, otherStart, otherEnd]);
+        }
+      };
+      let baseIndex = 0;
+      let otherIndex = 0;
+      let baseGapStart = 0;
+      let otherGapStart = 0;
+      const flushGap = (): void => {
+        if (baseGapStart < baseIndex || otherGapStart < otherIndex) {
+          const tag =
+            baseGapStart < baseIndex && otherGapStart < otherIndex
+              ? 'replace'
+              : baseGapStart < baseIndex
+                ? 'delete'
+                : 'insert';
+          push({
+            tag,
+            baseStart: baseGapStart,
+            baseEnd: baseIndex,
+            otherStart: otherGapStart,
+            otherEnd: otherIndex,
+          });
+        }
+      };
+      while (baseIndex < baseLength && otherIndex < otherLength) {
+        if (base[baseIndex] === other[otherIndex]) {
+          flushGap();
+          push({
+            tag: 'equal',
+            baseStart: baseIndex,
+            baseEnd: baseIndex + 1,
+            otherStart: otherIndex,
+            otherEnd: otherIndex + 1,
+          });
+          baseIndex++;
+          otherIndex++;
+          baseGapStart = baseIndex;
+          otherGapStart = otherIndex;
+        } else if (lcs[baseIndex + 1][otherIndex] >= lcs[baseIndex][otherIndex + 1]) {
+          baseIndex++;
+        } else {
+          otherIndex++;
+        }
+      }
+      baseIndex = baseLength;
+      otherIndex = otherLength;
+      flushGap();
+      return ops;
+    };
+
+    /**
+     * Splits output lines into top-level statements: [start, end) ranges. A one-line JSDoc attaches to the next line.
+     *
+     * e.g. `['type A = {', '  a: string;', '};', '', '/** Doc *\/', 'type B = string;']`
+     * → `[[0, 3], [4, 6]]`
+     */
+    const statements = ({ lines }: { lines: string[] }): Array<[number, number]> => {
+      const ranges: Array<[number, number]> = [];
+      let current: number | null = null;
+      let pendingDeclaration: number | null = null;
+      for (const [lineIndex, line] of lines.entries()) {
+        if (line.trim() === '') {
+          if (current !== null) {
+            ranges.push([current, lineIndex]);
+          }
+          current = null;
+          continue;
+        }
+        if (continuation.test(line) && current !== null) {
+          continue;
+        }
+        const next = lineIndex + 1 < lines.length ? lines[lineIndex + 1] : '';
+        if (
+          line.startsWith('/**') &&
+          line.trimEnd().endsWith('*/') &&
+          next.trim() &&
+          !next.startsWith('/**')
+        ) {
+          if (current !== null && pendingDeclaration !== lineIndex) {
+            ranges.push([current, lineIndex]);
+          }
+          current = lineIndex;
+          pendingDeclaration = lineIndex + 1;
+          continue;
+        }
+        if (pendingDeclaration === lineIndex) {
+          pendingDeclaration = null;
+          continue;
+        }
+        if (current !== null) {
+          ranges.push([current, lineIndex]);
+        }
+        current = lineIndex;
+      }
+      if (current !== null) {
+        ranges.push([current, lines.length]);
+      }
+      return ranges;
+    };
+
+    const base = variantOutputs[0][1];
+    const labels = variantOutputs.map(([label]) => label);
+    const stmts = statements({ lines: base });
+    const stmtIndex = ({ lineIndex }: { lineIndex: number }): number =>
+      stmts.findIndex(([start, end]) => start <= lineIndex && lineIndex < end);
+
+    const lineChanges = new Map<number, Map<number, string>>();
+    const declChanges = new Set<number>();
+    const added = new Map<number, Array<[number, string[]]>>();
+    const allOps = variantOutputs.map(([, lines]) => opcodes({ base, other: lines }));
+
+    for (const [variantIndex, [, lines]] of variantOutputs.entries()) {
+      if (variantIndex === 0) {
+        continue;
+      }
+      for (const [tag, baseStart, baseEnd, otherStart, otherEnd] of allOps[variantIndex]) {
+        if (tag === 'equal') {
+          continue;
+        }
+        if (tag === 'replace' && baseEnd - baseStart === otherEnd - otherStart) {
+          let allInStatements = true;
+          for (let lineIndex = baseStart; lineIndex < baseEnd; lineIndex++) {
+            if (stmtIndex({ lineIndex }) === -1) {
+              allInStatements = false;
+            }
+          }
+          if (allInStatements) {
+            for (let offset = 0; offset < baseEnd - baseStart; offset++) {
+              const changes = lineChanges.get(baseStart + offset) || new Map<number, string>();
+              changes.set(variantIndex, lines[otherStart + offset]);
+              lineChanges.set(baseStart + offset, changes);
+            }
+            continue;
+          }
+        }
+        const inserted = lines.slice(otherStart, otherEnd);
+        const before = stmtIndex({ lineIndex: baseStart - 1 });
+        const after = stmtIndex({ lineIndex: baseStart });
+        const firstContent = inserted.find(line => line.trim()) ?? '';
+        if (
+          tag === 'insert' &&
+          (before === -1 || after === -1 || before !== after) &&
+          inserted.length > 0 &&
+          !continuation.test(firstContent)
+        ) {
+          const body = trimBlankLines({ lines: inserted });
+          if (body.length > 0) {
+            const addedHere = added.get(baseStart) || [];
+            addedHere.push([variantIndex, body]);
+            added.set(baseStart, addedHere);
+          }
+          continue;
+        }
+        const touched = new Set<number>();
+        for (let lineIndex = baseStart; lineIndex < baseEnd; lineIndex++) {
+          if (stmtIndex({ lineIndex }) !== -1) {
+            touched.add(stmtIndex({ lineIndex }));
+          }
+        }
+        if (touched.size === 0) {
+          const nearest = before === -1 ? after : before;
+          if (nearest !== -1) {
+            touched.add(nearest);
+          }
+        }
+        for (const touchedIndex of touched) {
+          declChanges.add(touchedIndex);
+        }
+      }
+    }
+
+    for (const lineIndex of lineChanges.keys()) {
+      if (declChanges.has(stmtIndex({ lineIndex }))) {
+        lineChanges.delete(lineIndex);
+      }
+    }
+    const shown = new Set([
+      ...[...lineChanges.keys()].map(lineIndex => stmtIndex({ lineIndex })),
+      ...declChanges,
+    ]);
+
+    const mapIndex = ({
+      variantIndex,
+      lineIndex,
+      start,
+    }: {
+      variantIndex: number;
+      lineIndex: number;
+      start: boolean;
+    }): number => {
+      for (const [tag, baseStart, baseEnd, otherStart] of allOps[variantIndex]) {
+        if (tag === 'equal' && baseStart <= lineIndex && lineIndex < baseEnd) {
+          return otherStart + (lineIndex - baseStart);
+        }
+        if (tag === 'equal' && lineIndex === baseEnd && !start) {
+          return otherStart + (baseEnd - baseStart);
+        }
+      }
+      for (const [tag, baseStart, baseEnd, otherStart, otherEnd] of allOps[variantIndex]) {
+        if (tag !== 'equal' && baseStart <= lineIndex && lineIndex <= baseEnd) {
+          return start ? otherStart : otherEnd;
+        }
+      }
+      return variantOutputs[variantIndex][1].length;
+    };
+
+    const out: string[] = [];
+    const emitGroup = ({ candidates }: { candidates: Array<[string, string[]]> }): void => {
+      const groups: Array<[string[], string[]]> = [];
+      for (const [label, lines] of candidates) {
+        const group = groups.find(
+          ([groupLines]) =>
+            groupLines.length === lines.length &&
+            groupLines.every((groupLine, index) => groupLine === lines[index]),
+        );
+        if (group) {
+          group[1].push(label);
+        } else {
+          groups.push([lines, [label]]);
+        }
+      }
+      for (const [lines, groupLabels] of groups) {
+        const label = groupLabels.join(', ');
+        if (lines.length === 0) {
+          out.push(`// ${label}: (not generated)`);
+        } else if (lines.length === 1) {
+          out.push(`${lines[0]} // ${label}`);
+        } else {
+          out.push(`// ${label}`, ...lines);
+        }
+      }
+    };
+    const emitAdded = ({ position }: { position: number }): void => {
+      for (const [variantIndex, body] of added.get(position) ?? []) {
+        out.push('');
+        if (body.length === 1) {
+          out.push(`${body[0]} // ${labels[variantIndex]}`);
+        } else {
+          out.push(`// ${labels[variantIndex]}: (added)`, ...body);
+        }
+      }
+    };
+
+    let statementIndex = 0;
+    while (statementIndex < stmts.length) {
+      const [start, end] = stmts[statementIndex];
+      emitAdded({ position: start });
+      if (declChanges.has(statementIndex)) {
+        let lastIndex = statementIndex;
+        while (lastIndex + 1 < stmts.length && declChanges.has(lastIndex + 1)) {
+          lastIndex++;
+        }
+        const rangeStart = stmts[statementIndex][0];
+        const rangeEnd = stmts[lastIndex][1];
+        const candidates: Array<[string, string[]]> = [
+          [labels[0], base.slice(rangeStart, rangeEnd)],
+        ];
+        for (let variantIndex = 1; variantIndex < variantOutputs.length; variantIndex++) {
+          candidates.push([
+            labels[variantIndex],
+            trimBlankLines({
+              lines: variantOutputs[variantIndex][1].slice(
+                mapIndex({ variantIndex, lineIndex: rangeStart, start: true }),
+                mapIndex({ variantIndex, lineIndex: rangeEnd, start: false }),
+              ),
+            }),
+          ]);
+        }
+        out.push('');
+        emitGroup({ candidates });
+        statementIndex = lastIndex + 1;
+        continue;
+      }
+      if (shown.has(statementIndex)) {
+        out.push('');
+        for (let lineIndex = start; lineIndex < end; lineIndex++) {
+          const changes = lineChanges.get(lineIndex);
+          if (changes) {
+            emitGroup({
+              candidates: [
+                [labels[0], [base[lineIndex]]],
+                ...labels
+                  .slice(1)
+                  .map((label, index): [string, string[]] => [
+                    label,
+                    [changes.get(index + 1) ?? base[lineIndex]],
+                  ]),
+              ],
+            });
+          } else {
+            out.push(base[lineIndex]);
+          }
+        }
+      }
+      statementIndex++;
+    }
+    emitAdded({ position: base.length });
+    return trimBlankLines({ lines: out });
+  };
+
+  const preamble =
+    /^(\/\*\* Internal type\. DO NOT USE DIRECTLY\. \*\/|type Exact<|export type Incremental<)/;
+
+  const md = [`# ${title}`, ''];
+  if (intro) {
+    md.push(intro, '');
   }
 
   const byOption = new Map<string, ConfigExample[]>();
@@ -62,7 +460,87 @@ export async function renderConfigExamples(
   for (const [option, optionExamples] of byOption) {
     md.push(`## \`${option}\``, '');
     for (const example of optionExamples) {
-      md.push(...(await renderExample(example, options.generate)));
+      if (example.title) {
+        md.push(`### ${example.title}`, '');
+      }
+      if (example.note) {
+        md.push(`> ${example.note}`, '');
+      }
+      if (example.sharedConfig && example.sharedConfigLabel !== false) {
+        md.push(
+          `Shared config: \`${example.sharedConfigLabel ?? formatValue({ value: example.sharedConfig })}\``,
+          '',
+        );
+      }
+      for (const block of example.extraBlocks ?? []) {
+        md.push(`**${block.label}**`, '', '```' + block.lang, block.code.trim(), '```', '');
+      }
+
+      const schemaSdl = print(parse(example.schema));
+      const operation = print(parse(example.operation));
+      md.push('**Schema**', '', '```graphql', schemaSdl, '```', '');
+      md.push('**Operation**', '', '```graphql', operation, '```', '');
+
+      const results: Array<[label: string, lines: string[]]> = [];
+      const errors: string[] = [];
+      for (const variant of example.variants) {
+        const label =
+          variant.label ??
+          Object.entries(variant.config)
+            .map(([key, value]) => `${key}=${formatValue({ value })}`)
+            .join(', ');
+        try {
+          const schema = buildSchema(example.schema);
+          example.prepareSchema?.({ schema });
+          const output = await generate({
+            schema,
+            document: parse(example.operation),
+            config: { ...example.sharedConfig, ...variant.config },
+          });
+          results.push([label, output.replace(/^\n+|\n+$/g, '').split('\n')]);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : String(error);
+          errors.push(`// ${label} → throws: ${message}`);
+        }
+      }
+
+      let body: string[] = [];
+      if (results.length > 0 && example.showWholeOutput) {
+        let common = 0;
+        while (
+          results.every(
+            ([, lines]) => lines.length > common && lines[common] === results[0][1][common],
+          )
+        ) {
+          common++;
+        }
+        body = results.flatMap(([label, lines]) => [
+          '',
+          `// ${label}`,
+          ...trimBlankLines({ lines: lines.slice(common) }),
+        ]);
+      } else if (results.length > 0) {
+        body = mergeVariants({ variantOutputs: results });
+      }
+      if (results.length > 0 && body.length === 0) {
+        body = [
+          '// Output is identical for every setting:',
+          '',
+          ...results[0][1].filter(line => !preamble.test(line)),
+        ];
+      }
+      if (errors.length > 0) {
+        body = [...body, '', ...errors];
+      }
+
+      md.push(
+        '**Generated TypeScript**',
+        '',
+        '```ts',
+        trimBlankLines({ lines: body }).join('\n'),
+        '```',
+        '',
+      );
     }
   }
 
@@ -72,341 +550,4 @@ export async function renderConfigExamples(
       .replace(/\n{3,}/g, '\n\n')
       .trimEnd() + '\n'
   );
-}
-
-async function renderExample(
-  example: ConfigExample,
-  generate: ConfigExampleGenerate,
-): Promise<string[]> {
-  const out: string[] = [];
-  if (example.title) {
-    out.push(`### ${example.title}`, '');
-  }
-  if (example.note) {
-    out.push(`> ${example.note}`, '');
-  }
-  if (example.sharedConfig && example.sharedConfigLabel !== false) {
-    out.push(
-      `Shared config: \`${example.sharedConfigLabel ?? formatValue(example.sharedConfig)}\``,
-      '',
-    );
-  }
-  for (const block of example.extraBlocks ?? []) {
-    out.push(`**${block.label}**`, '', '```' + block.lang, block.code.trim(), '```', '');
-  }
-
-  const schemaSdl = print(parse(example.schema));
-  const operation = print(parse(example.operation));
-  out.push('**Schema**', '', '```graphql', schemaSdl, '```', '');
-  out.push('**Operation**', '', '```graphql', operation, '```', '');
-
-  const results: Array<[label: string, lines: string[]]> = [];
-  const errors: string[] = [];
-  for (const variant of example.variants) {
-    const label = variant.label ?? formatConfigLabel(variant.config);
-    try {
-      const schema = buildSchema(example.schema);
-      example.prepareSchema?.(schema);
-      const output = await generate(schema, parse(example.operation), {
-        ...example.sharedConfig,
-        ...variant.config,
-      });
-      results.push([label, output.replace(/^\n+|\n+$/g, '').split('\n')]);
-    } catch (e) {
-      errors.push(`// ${label} → throws: ${(e as Error).message}`);
-    }
-  }
-
-  let body =
-    results.length === 0
-      ? []
-      : example.showWholeOutput
-        ? wholeOutputs(results)
-        : mergeVariants(results);
-  if (results.length > 0 && body.length === 0) {
-    body = ['// Output is identical for every setting:', '', ...withoutPreamble(results[0][1])];
-  }
-  if (errors.length > 0) {
-    body = [...body, '', ...errors];
-  }
-
-  out.push('**Generated TypeScript**', '', '```ts', trimBlankLines(body).join('\n'), '```', '');
-  return out;
-}
-
-/** Formats a config value the way it would be written in codegen.ts. */
-function formatValue(value: unknown): string {
-  if (typeof value === 'string') return `'${value}'`;
-  if (Array.isArray(value)) return `[${value.map(formatValue).join(', ')}]`;
-  if (value && typeof value === 'object') {
-    return `{ ${Object.entries(value)
-      .map(([k, v]) => `${k}: ${formatValue(v)}`)
-      .join(', ')} }`;
-  }
-  return String(value);
-}
-
-function formatConfigLabel(config: Record<string, unknown>): string {
-  return Object.entries(config)
-    .map(([k, v]) => `${k}=${formatValue(v)}`)
-    .join(', ');
-}
-
-function trimBlankLines(lines: string[]): string[] {
-  const res: string[] = [];
-  for (const line of lines) {
-    if (line.trim() === '' && (res.length === 0 || res[res.length - 1] === '')) continue;
-    res.push(line.trim() === '' ? '' : line);
-  }
-  while (res.length > 0 && res[res.length - 1] === '') res.pop();
-  return res;
-}
-
-const PREAMBLE =
-  /^(\/\*\* Internal type\. DO NOT USE DIRECTLY\. \*\/|type Exact<|export type Incremental<)/;
-
-function withoutPreamble(lines: string[]): string[] {
-  return lines.filter(l => !PREAMBLE.test(l));
-}
-
-function wholeOutputs(results: Array<[string, string[]]>): string[] {
-  let common = 0;
-  while (results.every(([, l]) => l.length > common && l[common] === results[0][1][common]))
-    common++;
-  return results.flatMap(([label, lines]) => [
-    '',
-    `// ${label}`,
-    ...trimBlankLines(lines.slice(common)),
-  ]);
-}
-
-type Opcode = ['equal' | 'replace' | 'insert' | 'delete', number, number, number, number];
-
-/** Line diff (LCS), returned as difflib-style opcodes. */
-function opcodes(a: string[], b: string[]): Opcode[] {
-  const n = a.length;
-  const m = b.length;
-  const lcs: number[][] = Array.from({ length: n + 1 }, () => new Array<number>(m + 1).fill(0));
-  for (let i = n - 1; i >= 0; i--) {
-    for (let j = m - 1; j >= 0; j--) {
-      lcs[i][j] = a[i] === b[j] ? lcs[i + 1][j + 1] + 1 : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
-    }
-  }
-  const ops: Opcode[] = [];
-  const push = (tag: Opcode[0], i1: number, i2: number, j1: number, j2: number) => {
-    const last = ops[ops.length - 1];
-    if (last && last[0] === tag && last[2] === i1 && last[4] === j1) {
-      last[2] = i2;
-      last[4] = j2;
-    } else {
-      ops.push([tag, i1, i2, j1, j2]);
-    }
-  };
-  let i = 0;
-  let j = 0;
-  let gi = 0;
-  let gj = 0;
-  const flushGap = () => {
-    if (gi < i || gj < j) {
-      push(gi < i && gj < j ? 'replace' : gi < i ? 'delete' : 'insert', gi, i, gj, j);
-    }
-  };
-  while (i < n && j < m) {
-    if (a[i] === b[j]) {
-      flushGap();
-      push('equal', i, i + 1, j, j + 1);
-      i++;
-      j++;
-      gi = i;
-      gj = j;
-    } else if (lcs[i + 1][j] >= lcs[i][j + 1]) {
-      i++;
-    } else {
-      j++;
-    }
-  }
-  i = n;
-  j = m;
-  flushGap();
-  return ops;
-}
-
-const CONTINUATION = /^(\s|\}|\||\)|&)/;
-
-/** Splits output lines into top-level statements: [start, end) ranges. A one-line JSDoc attaches to the next line. */
-function statements(lines: string[]): Array<[number, number]> {
-  const st: Array<[number, number]> = [];
-  let cur: number | null = null;
-  let pendingDeclaration: number | null = null;
-  for (const [i, line] of lines.entries()) {
-    if (line.trim() === '') {
-      if (cur !== null) st.push([cur, i]);
-      cur = null;
-      continue;
-    }
-    if (CONTINUATION.test(line) && cur !== null) continue;
-    const next = lines[i + 1];
-    if (
-      line.startsWith('/**') &&
-      line.trimEnd().endsWith('*/') &&
-      next?.trim() &&
-      !next.startsWith('/**')
-    ) {
-      if (cur !== null && pendingDeclaration !== i) st.push([cur, i]);
-      cur = i;
-      pendingDeclaration = i + 1;
-      continue;
-    }
-    if (pendingDeclaration === i) {
-      pendingDeclaration = null;
-      continue;
-    }
-    if (cur !== null) st.push([cur, i]);
-    cur = i;
-  }
-  if (cur !== null) st.push([cur, lines.length]);
-  return st;
-}
-
-/**
- * Merges the outputs of several variants against the first one.
- * - Lines changed one-for-one are printed once per variant with a trailing `// <label>`.
- * - Declarations whose shape changes are printed whole, once per variant, under a `// <label>` line.
- * - Declarations that only some variants generate are marked `(added)` / `(not generated)`.
- */
-function mergeVariants(vs: Array<[string, string[]]>): string[] {
-  const base = vs[0][1];
-  const labels = vs.map(([label]) => label);
-  const stmts = statements(base);
-  const stmtIndex = (i: number) => stmts.findIndex(([s, e]) => s <= i && i < e);
-
-  const lineChanges = new Map<number, Map<number, string>>();
-  const declChanges = new Set<number>();
-  const added = new Map<number, Array<[number, string[]]>>();
-  const allOps = vs.map(([, lines]) => opcodes(base, lines));
-
-  for (const [k, [, lines]] of vs.entries()) {
-    if (k === 0) continue;
-    for (const [tag, i1, i2, j1, j2] of allOps[k]) {
-      if (tag === 'equal') continue;
-      if (tag === 'replace' && i2 - i1 === j2 - j1) {
-        let allInStatements = true;
-        for (let t = i1; t < i2; t++) if (stmtIndex(t) === -1) allInStatements = false;
-        if (allInStatements) {
-          for (let t = 0; t < i2 - i1; t++) {
-            if (!lineChanges.has(i1 + t)) lineChanges.set(i1 + t, new Map());
-            lineChanges.get(i1 + t)!.set(k, lines[j1 + t]);
-          }
-          continue;
-        }
-      }
-      const inserted = lines.slice(j1, j2);
-      const before = stmtIndex(i1 - 1);
-      const after = stmtIndex(i1);
-      const firstContent = inserted.find(l => l.trim()) ?? '';
-      if (
-        tag === 'insert' &&
-        (before === -1 || after === -1 || before !== after) &&
-        inserted.length > 0 &&
-        !CONTINUATION.test(firstContent)
-      ) {
-        const body = trimBlankLines(inserted);
-        if (body.length > 0) {
-          if (!added.has(i1)) added.set(i1, []);
-          added.get(i1)!.push([k, body]);
-        }
-        continue;
-      }
-      const touched = new Set<number>();
-      for (let i = i1; i < i2; i++) if (stmtIndex(i) !== -1) touched.add(stmtIndex(i));
-      if (touched.size === 0) {
-        const n = before === -1 ? after : before;
-        if (n !== -1) touched.add(n);
-      }
-      for (const n of touched) declChanges.add(n);
-    }
-  }
-
-  for (const i of lineChanges.keys()) {
-    if (declChanges.has(stmtIndex(i))) lineChanges.delete(i);
-  }
-  const shown = new Set([...[...lineChanges.keys()].map(stmtIndex), ...declChanges]);
-
-  const mapIndex = (k: number, i: number, start: boolean): number => {
-    for (const [tag, i1, i2, j1] of allOps[k]) {
-      if (tag === 'equal' && i1 <= i && i < i2) return j1 + (i - i1);
-      if (tag === 'equal' && i === i2 && !start) return j1 + (i2 - i1);
-    }
-    for (const [tag, i1, i2, j1, j2] of allOps[k]) {
-      if (tag !== 'equal' && i1 <= i && i <= i2) return start ? j1 : j2;
-    }
-    return vs[k][1].length;
-  };
-
-  const out: string[] = [];
-  const emitGroup = (candidates: Array<[string, string[]]>) => {
-    const groups: Array<[string[], string[]]> = [];
-    for (const [label, lines] of candidates) {
-      const g = groups.find(
-        ([l]) => l.length === lines.length && l.every((x, idx) => x === lines[idx]),
-      );
-      if (g) g[1].push(label);
-      else groups.push([lines, [label]]);
-    }
-    for (const [lines, groupLabels] of groups) {
-      const label = groupLabels.join(', ');
-      if (lines.length === 0) out.push(`// ${label}: (not generated)`);
-      else if (lines.length === 1) out.push(`${lines[0]} // ${label}`);
-      else out.push(`// ${label}`, ...lines);
-    }
-  };
-  const emitAdded = (pos: number) => {
-    for (const [k, body] of added.get(pos) ?? []) {
-      out.push('');
-      if (body.length === 1) out.push(`${body[0]} // ${labels[k]}`);
-      else out.push(`// ${labels[k]}: (added)`, ...body);
-    }
-  };
-
-  let n = 0;
-  while (n < stmts.length) {
-    const [s, e] = stmts[n];
-    emitAdded(s);
-    if (declChanges.has(n)) {
-      let m = n;
-      while (m + 1 < stmts.length && declChanges.has(m + 1)) m++;
-      const a = stmts[n][0];
-      const b = stmts[m][1];
-      const candidates: Array<[string, string[]]> = [[labels[0], base.slice(a, b)]];
-      for (let k = 1; k < vs.length; k++) {
-        candidates.push([
-          labels[k],
-          trimBlankLines(vs[k][1].slice(mapIndex(k, a, true), mapIndex(k, b, false))),
-        ]);
-      }
-      out.push('');
-      emitGroup(candidates);
-      n = m + 1;
-      continue;
-    }
-    if (shown.has(n)) {
-      out.push('');
-      for (let i = s; i < e; i++) {
-        const changes = lineChanges.get(i);
-        if (changes) {
-          emitGroup([
-            [labels[0], [base[i]]],
-            ...labels
-              .slice(1)
-              .map((label, idx): [string, string[]] => [label, [changes.get(idx + 1) ?? base[i]]]),
-          ]);
-        } else {
-          out.push(base[i]);
-        }
-      }
-    }
-    n++;
-  }
-  emitAdded(base.length);
-  return trimBlankLines(out);
 }
