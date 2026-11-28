@@ -1,0 +1,18 @@
+{
+  "name": "@graphql-codegen/config-examples",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Generated output examples for plugin config options, used by the docs",
+  "repository": "git@github.com:dotansimha/graphql-code-generator.git",
+  "license": "MIT",
+  "private": true,
+  "peerDependencies": {
+    "graphql": "^16.0.0 || ^17.0.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/plugin-helpers": "workspace:^",
+    "@graphql-codegen/typescript-operations": "workspace:^",
+    "typescript": "6.0.3"
+  },
+  "bob": false
+}
